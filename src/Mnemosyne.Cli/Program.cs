@@ -656,11 +656,31 @@ static async Task<int> IpcTest()
         vf[1] += 20; // lift into the air
         vt[1] += 20;
         sw.Restart();
-        var fly = await client.FindPathAsync(volZone.CacheKey, vf, vt, fly: true);
-        Console.WriteLine(fly.Ok
-            ? $"findPath(fly, x6f2): {fly.Waypoints!.Length} waypoints in {sw.ElapsedMilliseconds} ms round-trip"
-            : $"findPath(fly) failed: {fly.Error}");
-        flyOk = fly.Ok;
+        // A zone's flight volume decodes *off* the request, so the first fly query after a zone
+        // load - or after the service restarts - answers `meshNotReady`, and the consumer is meant
+        // to poll for it (protocol doc; Ariadne's MeshWait is that consumer). Asking once and
+        // calling the answer a failure read a perfectly healthy service as broken.
+        var polls = 0;
+        while (true)
+        {
+            var fly = await client.FindPathAsync(volZone.CacheKey, vf, vt, fly: true);
+            if (fly.Result != "meshNotReady" || polls >= 40)
+            {
+                if (polls > 0)
+                    Console.WriteLine();
+                Console.WriteLine(fly.Ok
+                    ? $"findPath(fly, x6f2): {fly.Waypoints!.Length} waypoints in {sw.ElapsedMilliseconds} ms round-trip ({polls} volume polls)"
+                    : fly.Result == "meshNotReady"
+                        ? $"findPath(fly) failed: still meshNotReady after {polls} polls"
+                        : $"findPath(fly) failed: {fly.Error}");
+                flyOk = fly.Ok;
+                break;
+            }
+            if (polls++ == 0)
+                Console.Write("findPath(fly): waiting for the zone's volume ");
+            Console.Write(".");
+            await Task.Delay(500);
+        }
     }
 
     // reachableCells: the exploration op, end to end — a JSON request out and a grid back
@@ -676,8 +696,11 @@ static async Task<int> IpcTest()
           + $"reachableOutside {cells.ReachableOutside}, {sw.ElapsedMilliseconds} ms round-trip"
         : $"reachableCells failed: {cells.Error} [{cells.Result}]");
 
-    // and the off-mesh case: a point in the air answers startOffMesh, carrying a nearest point
-    var air = new[] { from[0], from[1] + 500, from[2] };
+    // and the off-mesh case: a point in the air answers startOffMesh, carrying a nearest point.
+    // The height is deliberate: the op's snap is 5 m, so above that counts as off-mesh, while its
+    // consolation point is only searched within 20 m (QueryOps.ReachableCells) — 500 m up is
+    // honestly answered with no nearest at all, which is what this harness used to demand.
+    var air = new[] { from[0], from[1] + 12, from[2] };
     var offMesh = await client.SendAsync<ReachableCellsResponse>(new Request
     {
         Op = "reachableCells", CacheKey = limsa.CacheKey, From = air, Radius = 30, CellSize = 2,
