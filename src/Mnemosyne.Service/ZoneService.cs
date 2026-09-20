@@ -698,7 +698,7 @@ public sealed partial class ZoneService
                 }
                 // the coarse octree has no notion of the avoid circle, so an avoid request
                 // has to go down the voxel path (which is also what vnavmesh does)
-                var flightPath = avoidApplies ? [] : zone.Flight.FindPath(from, to, out _);
+                var flightPath = avoidApplies ? [] : zone.Flight.FindPath(from, to, out _, 0); // TEMPORARY: coarse stage off, to reach the fine engine
                 if (flightPath.Count >= 2)
                 {
                     waypoints = flightPath;
@@ -711,13 +711,43 @@ public sealed partial class ZoneService
                     var fromVoxel = VoxelSearch.FindNearestEmptyVoxel(zone.Volume, from, new Vector3(3, 3, 3));
                     var toVoxel = VoxelSearch.FindNearestEmptyVoxel(zone.Volume, to, new Vector3(3, 3, 3));
                     if (fromVoxel == VoxelMap.InvalidVoxel)
-                        return OffMesh(req, Results.StartOffMesh, "no empty voxel near `from`", null);
+                    {
+                        // Nothing flyable inside the snap box: widen it once and name the closest
+                        // empty voxel there is - the same "here is the nearest thing to you" the
+                        // walk side gives for an off-mesh start.
+                        var fallback = VoxelSearch.FindNearestEmptyVoxel(zone.Volume, from, new Vector3(20, 20, 20));
+                        Vector3? at = fallback == VoxelMap.InvalidVoxel ? null : VoxelSearch.FindClosestVoxelPoint(zone.Volume, fallback, from);
+                        return OffMesh(req, Results.StartOffMesh, "no empty voxel near `from`",
+                            at is { } p ? [p.X, p.Y, p.Z] : null);
+                    }
                     if (toVoxel == VoxelMap.InvalidVoxel)
-                        return OffMesh(req, Results.TargetOffMesh, "no empty voxel near `to`", null);
+                    {
+                        // The goal is not in the volume at all. Name the closest point the flight
+                        // can *certainly* reach (a bounded walk over the coarse graph - see
+                        // FlightPathfinder.NearestReachable), which is what a consumer needs to fly
+                        // as close as it can and walk the rest.
+                        var reach = zone.Flight?.NearestReachable(from, to);
+                        return OffMesh(req, Results.TargetOffMesh, "no empty voxel near `to`",
+                            reach is { } r ? [r.X, r.Y, r.Z] : null);
+                    }
                     var voxelPath = zone.VolumeQuery.FindPath(fromVoxel, toVoxel, from, to, false, false,
                         CancellationToken.None, avoidCenter, effAvoidRadius); // raycast=true measured 9x SLOWER offline
                     if (voxelPath.Count == 0)
-                        return Error(req, "no volume path found", Results.NoRouteOnMesh);
+                    {
+                        // The fine engine is the authority on whether the volume connects, so a
+                        // failure here is a real no-route - but the coarse graph can still name
+                        // the closest point the flight could have reached, and that is the useful
+                        // half of the answer: the caller's walk fallback takes it from there.
+                        var reachable = zone.Flight?.NearestReachable(from, to);
+                        return new FindPathResponse
+                        {
+                            Id = req.Id,
+                            Ok = false,
+                            Error = "no volume path found",
+                            Result = Results.NoRouteOnMesh,
+                            Nearest = reachable is { } reach ? [reach.X, reach.Y, reach.Z] : null,
+                        };
+                    }
                     // The voxel search emits one waypoint per grid step, so the raw route
                     // zigzags through open air - 64 waypoints over 161 m for a 53 m hop, and
                     // it flies as badly as it reads. vnavmesh never smoothed these either.

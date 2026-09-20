@@ -221,6 +221,69 @@ public sealed class FlightPathfinder(VoxelMap volume)
         return waypoints;
     }
 
+    // ---- naming a point the flight can certainly reach ------------------------------------------
+
+    /// <summary>Closest point the flight can *certainly* reach from <paramref name="from"/>,
+    /// measured to <paramref name="to"/>: a bounded breadth-first walk over the coarse graph
+    /// from the start's entry leaves, returning the nearest centre it visited. Anything visited
+    /// is provably reachable — the coarse graph's empty leaves are clear at full resolution — so
+    /// this can only ever understate, never lie. That is what a failed fly search can still tell
+    /// a consumer: "how close can I get", which the caller's walk fallback then completes.
+    ///
+    /// A bounded walk and not a full component map, deliberately. The octree has no cheap
+    /// neighbour lookup — `CollectFaceNeighbors` probes the tree spatially, per direction — so
+    /// labelling every leaf of a field zone's octree costs seconds: measured, a cold fly request
+    /// went from 1,434 ms to 16,066 ms with the full map in its path. A failed search only needs
+    /// a good-enough point nearby, and `maxVisits` bounds this the same way the search's budget
+    /// bounds the search.</summary>
+    public Vector3? NearestReachable(Vector3 from, Vector3 to, int maxVisits = 1_200)
+    {
+        // The caller's point can sit inside a solid voxel - a floor surface is exactly that - and
+        // every entry test from there fails (VoxelLineOfSight wants empty space), which silently
+        // produced "no nearest at all" for the plane's own takeoff position. FindPath snaps its
+        // endpoints for this reason; do the same here, and keep the raw point when the snap fails.
+        var p = from;
+        SnapToEmpty(ref p);
+        var starts = FindEntries(p);
+        if (starts.Count == 0)
+            return null;
+
+        var nodes = Nav.Nodes;
+        var seen = new HashSet<int>(starts);
+        var queue = new Queue<int>(starts);
+        var scratch = new List<int>();
+        Vector3? best = null;
+        var bestDist = float.MaxValue;
+        var visits = 0;
+
+        while (queue.Count > 0 && visits < maxVisits)
+        {
+            var node = queue.Dequeue();
+            ++visits;
+
+            var dist = Vector3.DistanceSquared(nodes[node].Center, to);
+            if (dist < bestDist)
+            {
+                bestDist = dist;
+                best = nodes[node].Center;
+            }
+
+            for (var dir = 0; dir < 6; ++dir)
+            {
+                scratch.Clear();
+                Nav.CollectFaceNeighbors(node, dir, scratch);
+                foreach (var neighbour in scratch)
+                {
+                    if (neighbour < 0 || neighbour >= nodes.Length || nodes[neighbour].State != FlightNav.StateEmpty)
+                        continue;
+                    if (seen.Add(neighbour))
+                        queue.Enqueue(neighbour);
+                }
+            }
+        }
+        return best;
+    }
+
     private static float Heuristic(Vector3 a, Vector3 b) => Vector3.Distance(a, b) * 1.7f; // weighted: narrows the search corridor; closed nodes never reopen so no re-expansion churn, and any-angle smoothing recovers path quality
 
     // coarse empty leaves reachable from p by an exact-LOS escape leg (up to MaxEntries,

@@ -89,9 +89,12 @@ public static class FindPath
         if (resp is not FindPathResponse p)
             return resp == null ? "no response" : $"ok={resp.Ok} result={resp.Result ?? "(none)"} error={resp.Error}";
 
-        var nearest = p.Nearest is { Length: >= 3 } n ? $"   nearest ({n[0]:f1}, {n[1]:f1}, {n[2]:f1})" : "";
+        var nearest = p.Nearest is { Length: >= 3 } n
+            ? $"   nearest ({n[0]:f1}, {n[1]:f1}, {n[2]:f1})"
+            : p.Ok ? "" : "   nearest (none)";
+        var why = p.Ok || string.IsNullOrEmpty(p.Error) ? "" : $"   why: {p.Error}";
         var eta = p.EtaSeconds is { } e ? $"   eta {e:f1}s" : "";
         var legs = p.Legs is { Count: > 0 } l ? $"   legs {string.Join(">", l.Select(x => x.Mode))}" : "";
-        return $"ok={p.Ok} result={p.Result ?? "(none)"} partial={p.Partial} waypoints={p.Waypoints?.Length ?? 0}{nearest}{eta}{legs}";
+        return $"ok={p.Ok} result={p.Result ?? "(none)"} partial={p.Partial} waypoints={p.Waypoints?.Length ?? 0}{nearest}{eta}{legs}{why}";
     }
 }
