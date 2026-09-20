@@ -22,7 +22,8 @@ public sealed partial class ZoneService
         public required ZoneOverrides Overrides;
         public required bool HasVolume;
         public required string FastPath;
-        public VoxelMap? Volume; // lazily loaded on first fly request
+        public VoxelMap? Volume; // loaded on demand, in the background: never inside a request
+        public Task? VolumeLoad; // the in-flight load; a request that finds it running gets meshNotReady
         public VoxelPathfind? VolumeQuery;
         public FlightPathfinder? Flight; // coarse octree planner; VolumeQuery is its fallback
         public readonly object Lock = new();
@@ -127,6 +128,11 @@ public sealed partial class ZoneService
         /// once the air detour is costed at the calibrated flight speed. The waypoints are a
         /// walk route - stay on the ground.</summary>
         public const string GroundFaster = "groundFaster";
+        /// <summary>The search ran out of its step budget before it could decide, so the
+        /// waypoints are the best route found toward the goal and `partial` is true. Distinct
+        /// from NoRouteOnMesh, which is a *proof* that no route exists: one is retryable from
+        /// the last waypoint, the other will not change until the mesh does.</summary>
+        public const string BudgetExhausted = "budgetExhausted";
         /// <summary>Bad request or a fault - not a routing outcome. Kept distinct so a
         /// consumer never retries a malformed call as if the mesh were merely cold.</summary>
         public const string Failed = "failed";
@@ -607,8 +613,17 @@ public sealed partial class ZoneService
             Vector3? walkTailFrom = null;          // where a fly route had to land and walk on
             int flyLegCount = 0;                   // waypoints belonging to the fly leg
             bool groundWasFaster = false;          // a fly request answered with a ground route
+            bool budgetExhausted = false;          // a search ran out of budget: this route is the best it found
+            Vector3? disconnectedTo = null;        // `to` is in another island; this is the closest reachable ground
             if (req.Fly == true)
             {
+                // The volume is tens of MB to decode - 5.4 s measured on a field zone - and a
+                // client holds a 10 s request timeout, so it must never be paid for inside a
+                // request. Kick it once, answer meshNotReady, and let the client poll: the same
+                // shape as a zone that is still building.
+                if (LoadVolumeInBackground(zone))
+                    return Error(req, "volume loading", Results.MeshNotReady);
+
                 // Plan the whole trip, not just the flight. The ad-hoc version flew until
                 // the volume search gave up and walked from wherever that happened to be -
                 // which in game meant landing at the side of a building and running around to
@@ -619,8 +634,6 @@ public sealed partial class ZoneService
                 // hop stops pretending flying is worth it.
                 if (_speeds.FlySpeed is { } planFly and > 0.5f && _speeds.GroundSpeed is { } planGround and > 0.5f)
                 {
-                    if (zone.Volume == null && zone.HasVolume)
-                        zone.Volume = FastCache.LoadVolume(zone.FastPath);
                     if (zone.Volume != null)
                     {
                         zone.Flight ??= new FlightPathfinder(zone.Volume);
@@ -673,12 +686,6 @@ public sealed partial class ZoneService
                     }
                 }
 
-                if (zone.Volume == null && zone.HasVolume)
-                {
-                    var sw = System.Diagnostics.Stopwatch.StartNew();
-                    zone.Volume = FastCache.LoadVolume(zone.FastPath);
-                    Console.WriteLine($"lazy volume load for '{zone.Key}' in {sw.ElapsedMilliseconds} ms");
-                }
                 if (zone.Volume == null)
                     return Error(req, "zone has no flying volume");
 
@@ -715,7 +722,8 @@ public sealed partial class ZoneService
                     // zigzags through open air - 64 waypoints over 161 m for a 53 m hop, and
                     // it flies as badly as it reads. vnavmesh never smoothed these either.
                     waypoints = VolumePathSmoother.Smooth(zone.Volume, voxelPath);
-                    partial = Vector3.Distance(waypoints[^1], to) > 10; // budget exhausted short of the goal
+                    partial = Vector3.Distance(waypoints[^1], to) > 10; // stopped short of the goal
+                    budgetExhausted = partial; // the voxel search ran to its step cap and returned the best it had
                 }
 
                 // A flight route that stops short is usually not a budget problem - it is the
@@ -801,12 +809,26 @@ public sealed partial class ZoneService
                 }
                 if (result == null)
                     return ClassifyWalkFailure(req, zone, from, to);
-                if (result.Partial)
+                if (result.DisconnectedTo is { } unreachable)
                 {
-                    // A partial walk route means the two ends are in different components.
-                    // Whether that is a mesh defect or an honest disconnect is the whole
-                    // question a consumer needs answered, so answer it - but still hand
-                    // back the waypoints, since walking toward the goal is usually right.
+                    // The islands proved `to` is in another component, and this route runs to the
+                    // closest reachable ground instead. No search can do better than that - and
+                    // this is exactly the case that used to pay for an exhaustive one.
+                    disconnectedTo = unreachable;
+                }
+                else if (result.BudgetExhausted)
+                {
+                    // Not a proof of anything: the search ran out of budget with a route toward
+                    // the goal. Answering noRouteOnMesh here would be a claim it has not earned.
+                    budgetExhausted = true;
+                }
+                else if (result.Partial)
+                {
+                    // A partial walk route with the search finished means the two ends are in
+                    // different components. Whether that is a mesh defect or an honest
+                    // disconnect is the whole question a consumer needs answered, so answer it -
+                    // but still hand back the waypoints, since walking toward the goal is usually
+                    // right.
                     walkFailure = ClassifyWalkFailure(req, zone, from, to);
                 }
                 waypoints = result.Waypoints;
@@ -844,8 +866,12 @@ public sealed partial class ZoneService
                 Result = avoidIgnored ? Results.AvoidIgnored
                     : groundWasFaster ? Results.GroundFaster
                     : walkTailFrom != null ? Results.WalkedTail
+                    : disconnectedTo != null ? Results.NoRouteOnMesh
+                    : budgetExhausted && partial ? Results.BudgetExhausted
                     : walkFailure?.Result ?? (partial ? Results.NoRouteOnMesh : Results.Ok),
-                Nearest = walkFailure?.Nearest,
+                Nearest = walkFailure?.Nearest ?? (disconnectedTo is { } dc
+                    ? new[] { dc.X, dc.Y, dc.Z }
+                    : null),
                 // Padding can insert waypoints into the tail, so the split is recomputed from
                 // the final array rather than remembered from before it ran.
                 Legs = groundWasFaster
@@ -879,6 +905,45 @@ public sealed partial class ZoneService
         var dx = a.X - b.X;
         var dz = a.Z - b.Z;
         return MathF.Sqrt(dx * dx + dz * dz);
+    }
+
+    /// <summary>Load the flying volume off the request thread, once per zone however many clients
+    /// ask for it. Returns true while a load is still in flight, so the caller can answer
+    /// meshNotReady and let the client poll: the decode measured 5.4 s on a field zone against a
+    /// 10 s client timeout, and the octree build that follows it belongs off the request path
+    /// too. With the load out of the way, a fly request is a search again - which is what the
+    /// caller's budget is for.</summary>
+    private static bool LoadVolumeInBackground(LoadedZone zone)
+    {
+        if (zone.Volume != null)
+            return false; // loaded
+        if (!zone.HasVolume)
+            return false; // nothing to load; the caller reports that
+        if (zone.VolumeLoad is { IsCompleted: false })
+            return true; // already in flight: this request waits for the next poll
+        if (zone.VolumeLoad is { IsCompleted: true })
+            return false; // finished without producing a volume; do not spin on it every request
+
+        zone.VolumeLoad = Task.Run(() =>
+        {
+            try
+            {
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                var volume = FastCache.LoadVolume(zone.FastPath);
+                lock (zone.Lock)
+                {
+                    zone.Volume = volume;
+                    if (volume != null)
+                        zone.Flight = new FlightPathfinder(volume); // the octree, off the request too
+                }
+                Console.WriteLine($"volume for '{zone.Key}' loaded in {sw.ElapsedMilliseconds} ms (off-request)");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"volume load for '{zone.Key}' failed: {ex.Message}");
+            }
+        });
+        return true;
     }
 
     /// <summary>When a zone's edits were last written, or default if it has none. One service

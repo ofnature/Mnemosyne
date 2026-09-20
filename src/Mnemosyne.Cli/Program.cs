@@ -67,6 +67,10 @@ if (args.Length > 0 && args[0] == "flyprobe")
 if (args.Length > 0 && args[0] == "probe")
     return Mnemosyne.Cli.Probe.Run(args);
 
+// findpath: one path question, timed, in process — the harness for the bounded-search work
+if (args.Length > 0 && args[0] == "findpath")
+    return Mnemosyne.Cli.FindPath.Run(args);
+
 // capture-test (roadmap phase 3): push an offline scene through buildZone's wire path
 if (args.Length > 0 && args[0] == "capture-test")
     return Mnemosyne.Cli.CaptureTest.Run(args.Length > 1 ? args[1] : "s1t1");
