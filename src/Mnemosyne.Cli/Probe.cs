@@ -107,6 +107,25 @@ public static class Probe
         return found;
     }
 
+    /// <summary>Resolve for *rebuilding*: the one job where an older-version cache file is the
+    /// point rather than a reason to skip. Dungeon meshes are exactly what goes stale, because a
+    /// client only refreshes one while it is inside the duty — so a rebuild request must be able
+    /// to say "this stale zone, again" instead of "no current-version zone matches". Every other
+    /// verb keeps the version filter: running queries against a stale mesh is not a feature.</summary>
+    internal static (string Path, string Key)? ResolveForBuild(string hint)
+    {
+        if (ResolveZone(hint) is { } current)
+            return current;
+        var stale = MeshCache.Enumerate()
+            .Where(e => e.Key.Contains(hint, StringComparison.OrdinalIgnoreCase))
+            .OrderByDescending(e => new FileInfo(e.Path).Length)
+            .FirstOrDefault();
+        if (stale == null)
+            return null;
+        Console.WriteLine($"'{stale.Key}' is an older mesh version - rebuilding it anyway (that is the point)");
+        return (stale.Path, stale.Key);
+    }
+
     internal static (string Path, string Key)? ResolveZone(string hint)
     {
         var cached = MeshCache.Enumerate()

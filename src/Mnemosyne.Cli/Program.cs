@@ -128,8 +128,11 @@ if (args.Length > 0 && args[0] == "build")
     // Resolve through the shared lookup so the built store counts as a reference too.
     // Gridania's vnavmesh cache files are all stale-version, so without that fallback this
     // command refuses to rebuild exactly the zones that most need rebuilding.
-    if (Mnemosyne.Cli.Probe.ResolveZoneOrReport(target) is not { } entry)
+    if (Mnemosyne.Cli.Probe.ResolveForBuild(target) is not { } entry)
+    {
+        Console.WriteLine($"no zone (of any mesh version) matches '{target}'");
         return 1;
+    }
     if (ZoneNames.Lookup(entry.Key)?.Bg is not { Length: > 0 } bgPath)
     {
         Console.WriteLine("no bg path known for zone");
