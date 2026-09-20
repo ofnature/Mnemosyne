@@ -698,7 +698,7 @@ public sealed partial class ZoneService
                 }
                 // the coarse octree has no notion of the avoid circle, so an avoid request
                 // has to go down the voxel path (which is also what vnavmesh does)
-                var flightPath = avoidApplies ? [] : zone.Flight.FindPath(from, to, out _, 0); // TEMPORARY: coarse stage off, to reach the fine engine
+                var flightPath = avoidApplies ? [] : zone.Flight.FindPath(from, to, out _);
                 if (flightPath.Count >= 2)
                 {
                     waypoints = flightPath;
