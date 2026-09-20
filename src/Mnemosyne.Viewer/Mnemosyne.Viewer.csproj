@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mnemosyne.Core\Mnemosyne.Core.csproj" />
+    <ProjectReference Include="..\Mnemosyne.Client\Mnemosyne.Client.csproj" />
+    <ProjectReference Include="..\Mnemosyne.Protocol\Mnemosyne.Protocol.csproj" />
+    <ProjectReference Include="..\Mnemosyne.Builder\Mnemosyne.Builder.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lumina" Version="7.6.1" />
+    <PackageReference Include="Raylib-cs" Version="8.0.0" />
+    <!-- collision rendering uses the builder's SceneExtractor types (Matrix4x3 et al) -->
+    <Reference Include="FFXIVClientStructs">
+      <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="InteropGenerator.Runtime">
+      <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\InteropGenerator.Runtime.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

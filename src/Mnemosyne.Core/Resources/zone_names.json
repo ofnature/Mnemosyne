@@ -1,0 +1,2358 @@
+﻿{
+    "ffxiv_sea_s1_twn_s1t1_level_s1t1":  {
+                                             "name":  "Limsa Lominsa Upper Decks",
+                                             "bg":  "ffxiv/sea_s1/twn/s1t1/level/s1t1"
+                                         },
+    "ffxiv_sea_s1_twn_s1t2_level_s1t2":  {
+                                             "name":  "Limsa Lominsa Lower Decks",
+                                             "bg":  "ffxiv/sea_s1/twn/s1t2/level/s1t2"
+                                         },
+    "ffxiv_wil_w1_twn_w1t1_level_w1t1":  {
+                                             "name":  "Ul\u0027dah - Steps of Nald",
+                                             "bg":  "ffxiv/wil_w1/twn/w1t1/level/w1t1"
+                                         },
+    "ffxiv_wil_w1_twn_w1t2_level_w1t2":  {
+                                             "name":  "Ul\u0027dah - Steps of Thal",
+                                             "bg":  "ffxiv/wil_w1/twn/w1t2/level/w1t2"
+                                         },
+    "ffxiv_fst_f1_twn_f1t1_level_f1t1":  {
+                                             "name":  "New Gridania",
+                                             "bg":  "ffxiv/fst_f1/twn/f1t1/level/f1t1"
+                                         },
+    "ffxiv_fst_f1_twn_f1t2_level_f1t2":  {
+                                             "name":  "Old Gridania",
+                                             "bg":  "ffxiv/fst_f1/twn/f1t2/level/f1t2"
+                                         },
+    "ffxiv_sea_s1_fld_s1f1_level_s1f1":  {
+                                             "name":  "Middle La Noscea",
+                                             "bg":  "ffxiv/sea_s1/fld/s1f1/level/s1f1"
+                                         },
+    "ffxiv_sea_s1_fld_s1f2_level_s1f2":  {
+                                             "name":  "Lower La Noscea",
+                                             "bg":  "ffxiv/sea_s1/fld/s1f2/level/s1f2"
+                                         },
+    "ffxiv_sea_s1_hou_s1h1_level_s1h1":  {
+                                             "name":  "Mist",
+                                             "bg":  "ffxiv/sea_s1/hou/s1h1/level/s1h1"
+                                         },
+    "ffxiv_sea_s1_fld_s1f3_level_s1f3":  {
+                                             "name":  "Eastern La Noscea",
+                                             "bg":  "ffxiv/sea_s1/fld/s1f3/level/s1f3"
+                                         },
+    "ffxiv_sea_s1_fld_s1f4_level_s1f4":  {
+                                             "name":  "Western La Noscea",
+                                             "bg":  "ffxiv/sea_s1/fld/s1f4/level/s1f4"
+                                         },
+    "ffxiv_sea_s1_fld_s1f5_level_s1f5":  {
+                                             "name":  "Upper La Noscea",
+                                             "bg":  "ffxiv/sea_s1/fld/s1f5/level/s1f5"
+                                         },
+    "ffxiv_wil_w1_fld_w1f1_level_w1f1":  {
+                                             "name":  "Western Thanalan",
+                                             "bg":  "ffxiv/wil_w1/fld/w1f1/level/w1f1"
+                                         },
+    "ffxiv_wil_w1_fld_w1f2_level_w1f2":  {
+                                             "name":  "Central Thanalan",
+                                             "bg":  "ffxiv/wil_w1/fld/w1f2/level/w1f2"
+                                         },
+    "ffxiv_wil_w1_dun_w1d7_level_w1d7":  {
+                                             "name":  "Halatali",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d7/level/w1d7"
+                                         },
+    "ffxiv_wil_w1_evt_w1eb_level_w1eb":  {
+                                             "name":  "The Gold Saucer",
+                                             "bg":  "ffxiv/wil_w1/evt/w1eb/level/w1eb"
+                                         },
+    "ffxiv_wil_w1_fld_w1f3_level_w1f3":  {
+                                             "name":  "Eastern Thanalan",
+                                             "bg":  "ffxiv/wil_w1/fld/w1f3/level/w1f3"
+                                         },
+    "ffxiv_wil_w1_fld_w1f4_level_w1f4":  {
+                                             "name":  "Southern Thanalan",
+                                             "bg":  "ffxiv/wil_w1/fld/w1f4/level/w1f4"
+                                         },
+    "ffxiv_wil_w1_fld_w1f5_level_w1f5":  {
+                                             "name":  "Northern Thanalan",
+                                             "bg":  "ffxiv/wil_w1/fld/w1f5/level/w1f5"
+                                         },
+    "ffxiv_fst_f1_fld_f1f1_level_f1f1":  {
+                                             "name":  "Central Shroud",
+                                             "bg":  "ffxiv/fst_f1/fld/f1f1/level/f1f1"
+                                         },
+    "ffxiv_sea_s1_pvp_s1p5_level_s1p5":  {
+                                             "name":  "The Feasting Grounds",
+                                             "bg":  "ffxiv/sea_s1/pvp/s1p5/level/s1p5"
+                                         },
+    "ffxiv_lak_l1_rad_l1r3_level_l1r3":  {
+                                             "name":  "The World of Darkness",
+                                             "bg":  "ffxiv/lak_l1/rad/l1r3/level/l1r3"
+                                         },
+    "ffxiv_fst_f1_fld_f1f2_level_f1f2":  {
+                                             "name":  "East Shroud",
+                                             "bg":  "ffxiv/fst_f1/fld/f1f2/level/f1f2"
+                                         },
+    "ffxiv_fst_f1_fld_f1f3_level_f1f3":  {
+                                             "name":  "South Shroud",
+                                             "bg":  "ffxiv/fst_f1/fld/f1f3/level/f1f3"
+                                         },
+    "ffxiv_fst_f1_fld_f1f4_level_f1f4":  {
+                                             "name":  "North Shroud",
+                                             "bg":  "ffxiv/fst_f1/fld/f1f4/level/f1f4"
+                                         },
+    "ffxiv_roc_r1_fld_r1f1_level_r1f1":  {
+                                             "name":  "Coerthas Central Highlands",
+                                             "bg":  "ffxiv/roc_r1/fld/r1f1/level/r1f1"
+                                         },
+    "ffxiv_lak_l1_fld_l1f1_level_l1f1":  {
+                                             "name":  "Mor Dhona",
+                                             "bg":  "ffxiv/lak_l1/fld/l1f1/level/l1f1"
+                                         },
+    "ffxiv_sea_s1_dun_s1d3_level_s1d3":  {
+                                             "name":  "The Wanderer\u0027s Palace",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d3/level/s1d3"
+                                         },
+    "ffxiv_sea_s1_dun_s1d4_level_s1d4":  {
+                                             "name":  "Pharos Sirius",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d4/level/s1d4"
+                                         },
+    "ffxiv_fst_f1_dun_f1d3_level_f1d3":  {
+                                             "name":  "Amdapor Keep",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d3/level/f1d3"
+                                         },
+    "ffxiv_roc_r1_rad_r1r1_level_r1r1":  {
+                                             "name":  "Dzemael Darkhold",
+                                             "bg":  "ffxiv/roc_r1/rad/r1r1/level/r1r1"
+                                         },
+    "ffxiv_roc_r1_rad_r1r2_level_r1r2":  {
+                                             "name":  "Aurum Vale",
+                                             "bg":  "ffxiv/roc_r1/rad/r1r2/level/r1r2"
+                                         },
+    "ffxiv_lak_l1_rad_l1r1_level_l1r1":  {
+                                             "name":  "Labyrinth of the Ancients",
+                                             "bg":  "ffxiv/lak_l1/rad/l1r1/level/l1r1"
+                                         },
+    "ffxiv_zon_z1_jai_z1j1_level_z1j1":  {
+                                             "name":  "Mordion Gaol",
+                                             "bg":  "ffxiv/zon_z1/jai/z1j1/level/z1j1"
+                                         },
+    "ffxiv_sea_s1_twn_s1ti_level_s1ti":  {
+                                             "name":  "Mizzenmast Inn",
+                                             "bg":  "ffxiv/sea_s1/twn/s1ti/level/s1ti"
+                                         },
+    "ffxiv_wil_w1_twn_w1ti_level_w1ti":  {
+                                             "name":  "The Hourglass",
+                                             "bg":  "ffxiv/wil_w1/twn/w1ti/level/w1ti"
+                                         },
+    "ffxiv_fst_f1_twn_f1ti_level_f1ti":  {
+                                             "name":  "The Roost",
+                                             "bg":  "ffxiv/fst_f1/twn/f1ti/level/f1ti"
+                                         },
+    "ffxiv_sea_s1_fld_s1f6_level_s1f6":  {
+                                             "name":  "Outer La Noscea",
+                                             "bg":  "ffxiv/sea_s1/fld/s1f6/level/s1f6"
+                                         },
+    "ffxiv_sea_s1_dun_s1d8_level_s1d8":  {
+                                             "name":  "The Wanderer\u0027s Palace",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d8/level/s1d8"
+                                         },
+    "ffxiv_fst_f1_dun_f1d7_level_f1d7":  {
+                                             "name":  "Amdapor Keep",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d7/level/f1d7"
+                                         },
+    "ffxiv_wil_w1_bah_w1b1_level_w1b1":  {
+                                             "name":  "IC-06 Central Decks",
+                                             "bg":  "ffxiv/wil_w1/bah/w1b1/level/w1b1"
+                                         },
+    "ffxiv_wil_w1_bah_w1b2_level_w1b2":  {
+                                             "name":  "IC-06 Regeneration Grid",
+                                             "bg":  "ffxiv/wil_w1/bah/w1b2/level/w1b2"
+                                         },
+    "ffxiv_wil_w1_bah_w1b3_level_w1b3":  {
+                                             "name":  "IC-06 Main Bridge",
+                                             "bg":  "ffxiv/wil_w1/bah/w1b3/level/w1b3"
+                                         },
+    "ffxiv_wil_w1_bah_w1b4_level_w1b4":  {
+                                             "name":  "The Burning Heart",
+                                             "bg":  "ffxiv/wil_w1/bah/w1b4/level/w1b4"
+                                         },
+    "ffxiv_sea_s1_evt_s1e4_level_s1e4":  {
+                                             "name":  "Command Room",
+                                             "bg":  "ffxiv/sea_s1/evt/s1e4/level/s1e4"
+                                         },
+    "ffxiv_fst_f1_evt_f1e4_level_f1e4":  {
+                                             "name":  "Seat of the First Bow",
+                                             "bg":  "ffxiv/fst_f1/evt/f1e4/level/f1e4"
+                                         },
+    "ffxiv_fst_f1_evt_f1e5_level_f1e5":  {
+                                             "name":  "Lotus Stand",
+                                             "bg":  "ffxiv/fst_f1/evt/f1e5/level/f1e5"
+                                         },
+    "ffxiv_wil_w1_evt_w1e4_level_w1e4":  {
+                                             "name":  "Heart of the Sworn",
+                                             "bg":  "ffxiv/wil_w1/evt/w1e4/level/w1e4"
+                                         },
+    "ffxiv_wil_w1_evt_w1e6_level_w1e6":  {
+                                             "name":  "The Waking Sands",
+                                             "bg":  "ffxiv/wil_w1/evt/w1e6/level/w1e6"
+                                         },
+    "ffxiv_sea_s1_bah_s1b1_level_s1b1":  {
+                                             "name":  "Upper Aetheroacoustic Exploratory Site",
+                                             "bg":  "ffxiv/sea_s1/bah/s1b1/level/s1b1"
+                                         },
+    "ffxiv_sea_s1_bah_s1b2_level_s1b2":  {
+                                             "name":  "Lower Aetheroacoustic Exploratory Site",
+                                             "bg":  "ffxiv/sea_s1/bah/s1b2/level/s1b2"
+                                         },
+    "ffxiv_sea_s1_bah_s1b3_level_s1b3":  {
+                                             "name":  "The Ragnarok",
+                                             "bg":  "ffxiv/sea_s1/bah/s1b3/level/s1b3"
+                                         },
+    "ffxiv_sea_s1_bah_s1b4_level_s1b4":  {
+                                             "name":  "Ragnarok Drive Cylinder",
+                                             "bg":  "ffxiv/sea_s1/bah/s1b4/level/s1b4"
+                                         },
+    "ffxiv_sea_s1_bah_s1b5_level_s1b5":  {
+                                             "name":  "Ragnarok Central Core",
+                                             "bg":  "ffxiv/sea_s1/bah/s1b5/level/s1b5"
+                                         },
+    "ffxiv_wil_w1_bah_w1b5_level_w1b5":  {
+                                             "name":  "IC-04 Main Bridge",
+                                             "bg":  "ffxiv/wil_w1/bah/w1b5/level/w1b5"
+                                         },
+    "ffxiv_sea_s1_bah_s1b7_level_s1b7":  {
+                                             "name":  "Ragnarok Main Bridge",
+                                             "bg":  "ffxiv/sea_s1/bah/s1b7/level/s1b7"
+                                         },
+    "ffxiv_sea_s1_pvp_s1p1_level_s1p1":  {
+                                             "name":  "Wolves\u0027 Den Pier",
+                                             "bg":  "ffxiv/sea_s1/pvp/s1p1/level/s1p1"
+                                         },
+    "ffxiv_zon_z1_evt_z1e5_level_z1e5":  {
+                                             "name":  "Hall of Summoning",
+                                             "bg":  "ffxiv/zon_z1/evt/z1e5/level/z1e5"
+                                         },
+    "ffxiv_ocn_o1_fld_o1fa_level_o1fa":  {
+                                             "name":  "The Whorleater",
+                                             "bg":  "ffxiv/ocn_o1/fld/o1fa/level/o1fa"
+                                         },
+    "ffxiv_sea_s1_ind_s1i1_level_s1i1":  {
+                                             "name":  "Private Cottage - Mist",
+                                             "bg":  "ffxiv/sea_s1/ind/s1i1/level/s1i1"
+                                         },
+    "ffxiv_sea_s1_ind_s1i2_level_s1i2":  {
+                                             "name":  "Private House - Mist",
+                                             "bg":  "ffxiv/sea_s1/ind/s1i2/level/s1i2"
+                                         },
+    "ffxiv_sea_s1_ind_s1i3_level_s1i3":  {
+                                             "name":  "Private Mansion - Mist",
+                                             "bg":  "ffxiv/sea_s1/ind/s1i3/level/s1i3"
+                                         },
+    "ffxiv_ocn_o1_evt_o1e2_level_o1e2":  {
+                                             "name":  "Rhotano Sea",
+                                             "bg":  "ffxiv/ocn_o1/evt/o1e2/level/o1e2"
+                                         },
+    "ffxiv_wil_w1_fld_w1fa_level_w1fa":  {
+                                             "name":  "Bowl of Embers",
+                                             "bg":  "ffxiv/wil_w1/fld/w1fa/level/w1fa"
+                                         },
+    "ffxiv_sea_s1_fld_s1fa_level_s1fa":  {
+                                             "name":  "The Navel",
+                                             "bg":  "ffxiv/sea_s1/fld/s1fa/level/s1fa"
+                                         },
+    "ffxiv_roc_r1_fld_r1fa_level_r1fa":  {
+                                             "name":  "The Howling Eye",
+                                             "bg":  "ffxiv/roc_r1/fld/r1fa/level/r1fa"
+                                         },
+    "ffxiv_fst_f1_hou_f1h1_level_f1h1":  {
+                                             "name":  "The Lavender Beds",
+                                             "bg":  "ffxiv/fst_f1/hou/f1h1/level/f1h1"
+                                         },
+    "ffxiv_wil_w1_hou_w1h1_level_w1h1":  {
+                                             "name":  "The Goblet",
+                                             "bg":  "ffxiv/wil_w1/hou/w1h1/level/w1h1"
+                                         },
+    "ffxiv_fst_f1_ind_f1i1_level_f1i1":  {
+                                             "name":  "Private Cottage - The Lavender Beds",
+                                             "bg":  "ffxiv/fst_f1/ind/f1i1/level/f1i1"
+                                         },
+    "ffxiv_fst_f1_ind_f1i2_level_f1i2":  {
+                                             "name":  "Private House - The Lavender Beds",
+                                             "bg":  "ffxiv/fst_f1/ind/f1i2/level/f1i2"
+                                         },
+    "ffxiv_fst_f1_ind_f1i3_level_f1i3":  {
+                                             "name":  "Private Mansion - The Lavender Beds",
+                                             "bg":  "ffxiv/fst_f1/ind/f1i3/level/f1i3"
+                                         },
+    "ffxiv_wil_w1_ind_w1i1_level_w1i1":  {
+                                             "name":  "Private Cottage - The Goblet",
+                                             "bg":  "ffxiv/wil_w1/ind/w1i1/level/w1i1"
+                                         },
+    "ffxiv_wil_w1_ind_w1i2_level_w1i2":  {
+                                             "name":  "Private House - The Goblet",
+                                             "bg":  "ffxiv/wil_w1/ind/w1i2/level/w1i2"
+                                         },
+    "ffxiv_wil_w1_ind_w1i3_level_w1i3":  {
+                                             "name":  "Private Mansion - The Goblet",
+                                             "bg":  "ffxiv/wil_w1/ind/w1i3/level/w1i3"
+                                         },
+    "ffxiv_wil_w1_fld_w1fb_level_w1fb":  {
+                                             "name":  "Porta Decumana",
+                                             "bg":  "ffxiv/wil_w1/fld/w1fb/level/w1fb"
+                                         },
+    "ffxiv_wil_w1_dun_w1d6_level_w1d6":  {
+                                             "name":  "Copperbell Mines",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d6/level/w1d6"
+                                         },
+    "ffxiv_fst_f1_dun_f1d4_level_f1d4":  {
+                                             "name":  "Haukke Manor",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d4/level/f1d4"
+                                         },
+    "ffxiv_lak_l1_evt_l1e1_level_l1e1":  {
+                                             "name":  "The Rising Stones",
+                                             "bg":  "ffxiv/lak_l1/evt/l1e1/level/l1e1"
+                                         },
+    "ex2_02_est_e3_fld_e3ff_level_e3ff":  {
+                                              "name":  "Kugane Ohashi",
+                                              "bg":  "ex2/02_est_e3/fld/e3ff/level/e3ff"
+                                          },
+    "ex3_01_nvt_n4_fld_n4fa_level_n4fa":  {
+                                              "name":  "The Dancing Plague",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4fa/level/n4fa"
+                                          },
+    "ffxiv_fst_f1_bah_f1b1_level_f1b1":  {
+                                             "name":  "Dalamud\u0027s Shadow",
+                                             "bg":  "ffxiv/fst_f1/bah/f1b1/level/f1b1"
+                                         },
+    "ffxiv_fst_f1_bah_f1b2_level_f1b2":  {
+                                             "name":  "The Outer Coil",
+                                             "bg":  "ffxiv/fst_f1/bah/f1b2/level/f1b2"
+                                         },
+    "ffxiv_fst_f1_bah_f1b3_level_f1b3":  {
+                                             "name":  "Central Decks",
+                                             "bg":  "ffxiv/fst_f1/bah/f1b3/level/f1b3"
+                                         },
+    "ffxiv_fst_f1_bah_f1b4_level_f1b4":  {
+                                             "name":  "The Holocharts",
+                                             "bg":  "ffxiv/fst_f1/bah/f1b4/level/f1b4"
+                                         },
+    "ffxiv_sea_s1_dun_s1d5_level_s1d5":  {
+                                             "name":  "Hullbreaker Isle",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d5/level/s1d5"
+                                         },
+    "ffxiv_sea_s1_dun_s1d6_level_s1d6":  {
+                                             "name":  "Brayflox\u0027s Longstop",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d6/level/s1d6"
+                                         },
+    "ffxiv_fst_f1_dun_f1d5_level_f1d5":  {
+                                             "name":  "The Lost City of Amdapor",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d5/level/f1d5"
+                                         },
+    "ffxiv_fst_f1_fld_f1fa_level_f1fa":  {
+                                             "name":  "Thornmarch",
+                                             "bg":  "ffxiv/fst_f1/fld/f1fa/level/f1fa"
+                                         },
+    "ffxiv_roc_r1_dun_r1d2_level_r1d2":  {
+                                             "name":  "Stone Vigil",
+                                             "bg":  "ffxiv/roc_r1/dun/r1d2/level/r1d2"
+                                         },
+    "ffxiv_roc_r1_fld_r1fb_level_r1fb":  {
+                                             "name":  "Griffin Crossing",
+                                             "bg":  "ffxiv/roc_r1/fld/r1fb/level/r1fb"
+                                         },
+    "ffxiv_wil_w1_dun_w1d8_level_w1d8":  {
+                                             "name":  "The Sunken Temple of Qarn",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d8/level/w1d8"
+                                         },
+    "ffxiv_wil_w1_dun_w1d2_level_w1d2":  {
+                                             "name":  "Hall of the Bestiarii",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d2/level/w1d2"
+                                         },
+    "ffxiv_fst_f1_bah_f1b5_level_f1b5":  {
+                                             "name":  "Main Bridge",
+                                             "bg":  "ffxiv/fst_f1/bah/f1b5/level/f1b5"
+                                         },
+    "ffxiv_lak_l1_rad_l1r2_level_l1r2":  {
+                                             "name":  "Syrcus Tower",
+                                             "bg":  "ffxiv/lak_l1/rad/l1r2/level/l1r2"
+                                         },
+    "ffxiv_fst_f1_dun_f1d6_level_f1d6":  {
+                                             "name":  "The Tam-Tara Deepcroft",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d6/level/f1d6"
+                                         },
+    "ffxiv_fst_f1_fld_f1fb_level_f1fb":  {
+                                             "name":  "The Striking Tree",
+                                             "bg":  "ffxiv/fst_f1/fld/f1fb/level/f1fb"
+                                         },
+    "ffxiv_lak_l1_pvp_l1p1_level_l1p1":  {
+                                             "name":  "Carteneau Flats: Borderland Ruins",
+                                             "bg":  "ffxiv/lak_l1/pvp/l1p1/level/l1p1"
+                                         },
+    "ffxiv_roc_r1_fld_r1fc_level_r1fc":  {
+                                             "name":  "Akh Afah Amphitheatre",
+                                             "bg":  "ffxiv/roc_r1/fld/r1fc/level/r1fc"
+                                         },
+    "ffxiv_sea_s1_ind_s1i4_level_s1i4":  {
+                                             "name":  "Private Chambers - Mist",
+                                             "bg":  "ffxiv/sea_s1/ind/s1i4/level/s1i4"
+                                         },
+    "ffxiv_fst_f1_ind_f1i4_level_f1i4":  {
+                                             "name":  "Private Chambers - The Lavender Beds",
+                                             "bg":  "ffxiv/fst_f1/ind/f1i4/level/f1i4"
+                                         },
+    "ffxiv_wil_w1_ind_w1i4_level_w1i4":  {
+                                             "name":  "Private Chambers - The Goblet",
+                                             "bg":  "ffxiv/wil_w1/ind/w1i4/level/w1i4"
+                                         },
+    "ffxiv_sea_s1_dun_s1d7_level_s1d7":  {
+                                             "name":  "Sastasha",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d7/level/s1d7"
+                                         },
+    "ffxiv_wil_w1_evt_w1ed_level_w1ed":  {
+                                             "name":  "Chocobo Square",
+                                             "bg":  "ffxiv/wil_w1/evt/w1ed/level/w1ed"
+                                         },
+    "ffxiv_sea_s1_fld_s1fb_level_s1fb":  {
+                                             "name":  "Chocobo Square",
+                                             "bg":  "ffxiv/sea_s1/fld/s1fb/level/s1fb"
+                                         },
+    "ffxiv_wil_w1_fld_w1fc_level_w1fc":  {
+                                             "name":  "Chocobo Square",
+                                             "bg":  "ffxiv/wil_w1/fld/w1fc/level/w1fc"
+                                         },
+    "ffxiv_fst_f1_fld_f1fc_level_f1fc":  {
+                                             "name":  "Chocobo Square",
+                                             "bg":  "ffxiv/fst_f1/fld/f1fc/level/f1fc"
+                                         },
+    "ffxiv_fst_f1_evt_f1e6_level_f1e6":  {
+                                             "name":  "Sanctum of the Twelve",
+                                             "bg":  "ffxiv/fst_f1/evt/f1e6/level/f1e6"
+                                         },
+    "ffxiv_roc_r1_evt_r1e2_level_r1e2":  {
+                                             "name":  "Intercessory",
+                                             "bg":  "ffxiv/roc_r1/evt/r1e2/level/r1e2"
+                                         },
+    "ex1_01_roc_r2_fld_r2f1_level_r2f1":  {
+                                              "name":  "Coerthas Western Highlands",
+                                              "bg":  "ex1/01_roc_r2/fld/r2f1/level/r2f1"
+                                          },
+    "ex1_02_dra_d2_fld_d2f1_level_d2f1":  {
+                                              "name":  "The Dravanian Forelands",
+                                              "bg":  "ex1/02_dra_d2/fld/d2f1/level/d2f1"
+                                          },
+    "ex1_02_dra_d2_fld_d2f2_level_d2f2":  {
+                                              "name":  "The Dravanian Hinterlands",
+                                              "bg":  "ex1/02_dra_d2/fld/d2f2/level/d2f2"
+                                          },
+    "ex1_02_dra_d2_fld_d2f3_level_d2f3":  {
+                                              "name":  "The Churning Mists",
+                                              "bg":  "ex1/02_dra_d2/fld/d2f3/level/d2f3"
+                                          },
+    "ex1_03_abr_a2_fld_a2f1_level_a2f1":  {
+                                              "name":  "The Sea of Clouds",
+                                              "bg":  "ex1/03_abr_a2/fld/a2f1/level/a2f1"
+                                          },
+    "ex1_03_abr_a2_fld_a2f2_level_a2f2":  {
+                                              "name":  "Azys Lla",
+                                              "bg":  "ex1/03_abr_a2/fld/a2f2/level/a2f2"
+                                          },
+    "ex2_01_gyr_g3_dun_g3d2_level_g3d2":  {
+                                              "name":  "Ala Mhigo",
+                                              "bg":  "ex2/01_gyr_g3/dun/g3d2/level/g3d2"
+                                          },
+    "ex1_01_roc_r2_twn_r2t1_level_r2t1":  {
+                                              "name":  "Foundation",
+                                              "bg":  "ex1/01_roc_r2/twn/r2t1/level/r2t1"
+                                          },
+    "ex1_01_roc_r2_twn_r2t2_level_r2t2":  {
+                                              "name":  "The Pillars",
+                                              "bg":  "ex1/01_roc_r2/twn/r2t2/level/r2t2"
+                                          },
+    "ex1_03_abr_a2_dun_a2d2_level_a2d2":  {
+                                              "name":  "Neverreap",
+                                              "bg":  "ex1/03_abr_a2/dun/a2d2/level/a2d2"
+                                          },
+    "ffxiv_sea_s1_ind_s1i5_level_s1i5":  {
+                                             "name":  "Company Workshop - Mist",
+                                             "bg":  "ffxiv/sea_s1/ind/s1i5/level/s1i5"
+                                         },
+    "ffxiv_wil_w1_ind_w1i5_level_w1i5":  {
+                                             "name":  "Company Workshop - The Goblet",
+                                             "bg":  "ffxiv/wil_w1/ind/w1i5/level/w1i5"
+                                         },
+    "ffxiv_fst_f1_ind_f1i5_level_f1i5":  {
+                                             "name":  "Company Workshop - The Lavender Beds",
+                                             "bg":  "ffxiv/fst_f1/ind/f1i5/level/f1i5"
+                                         },
+    "ffxiv_zon_z1_evt_z1e9_level_z1e9":  {
+                                             "name":  "The Chrysalis",
+                                             "bg":  "ffxiv/zon_z1/evt/z1e9/level/z1e9"
+                                         },
+    "ex1_01_roc_r2_evt_r2e1_level_r2e1":  {
+                                              "name":  "Saint Endalim\u0027s Scholasticate",
+                                              "bg":  "ex1/01_roc_r2/evt/r2e1/level/r2e1"
+                                          },
+    "ex1_01_roc_r2_evt_r2e3_level_r2e3":  {
+                                              "name":  "Seat of the Lord Commander",
+                                              "bg":  "ex1/01_roc_r2/evt/r2e3/level/r2e3"
+                                          },
+    "ex1_01_roc_r2_twn_r2ti_level_r2ti":  {
+                                              "name":  "Cloud Nine",
+                                              "bg":  "ex1/01_roc_r2/twn/r2ti/level/r2ti"
+                                          },
+    "ex1_03_abr_a2_dun_a2d3_level_a2d3":  {
+                                              "name":  "The Fractal Continuum",
+                                              "bg":  "ex1/03_abr_a2/dun/a2d3/level/a2d3"
+                                          },
+    "ffxiv_pvp_xx_pvp_s2p1_level_s2p1":  {
+                                             "name":  "Seal Rock",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s2p1/level/s2p1"
+                                         },
+    "ex1_02_dra_d2_fld_d2fa_level_d2fa":  {
+                                              "name":  "Thok ast Thok",
+                                              "bg":  "ex1/02_dra_d2/fld/d2fa/level/d2fa"
+                                          },
+    "ex1_01_roc_r2_evt_r2e4_level_r2e4":  {
+                                              "name":  "Fortemps Manor",
+                                              "bg":  "ex1/01_roc_r2/evt/r2e4/level/r2e4"
+                                          },
+    "ex1_03_abr_a2_fld_a2fa_level_a2fa":  {
+                                              "name":  "The Limitless Blue",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fa/level/a2fa"
+                                          },
+    "ex1_03_abr_a2_fld_a2fb_level_a2fb":  {
+                                              "name":  "Singularity Reactor",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fb/level/a2fb"
+                                          },
+    "ex1_01_roc_r2_evt_r2e5_level_r2e5":  {
+                                              "name":  "The Lightfeather Proving Grounds",
+                                              "bg":  "ex1/01_roc_r2/evt/r2e5/level/r2e5"
+                                          },
+    "ex1_01_roc_r2_evt_r2e6_level_r2e6":  {
+                                              "name":  "Ruling Chamber",
+                                              "bg":  "ex1/01_roc_r2/evt/r2e6/level/r2e6"
+                                          },
+    "ex1_02_dra_d2_alx_d2a1_level_d2a1":  {
+                                              "name":  "The Fist of the Father",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a1/level/d2a1"
+                                          },
+    "ex1_02_dra_d2_alx_d2a2_level_d2a2":  {
+                                              "name":  "The Cuff of the Father",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a2/level/d2a2"
+                                          },
+    "ex1_02_dra_d2_alx_d2a3_level_d2a3":  {
+                                              "name":  "The Arm of the Father",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a3/level/d2a3"
+                                          },
+    "ex1_02_dra_d2_alx_d2a4_level_d2a4":  {
+                                              "name":  "The Burden of the Father",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a4/level/d2a4"
+                                          },
+    "ex1_02_dra_d2_evt_d2e2_level_d2e2":  {
+                                              "name":  "Sacrificial Chamber",
+                                              "bg":  "ex1/02_dra_d2/evt/d2e2/level/d2e2"
+                                          },
+    "ex1_02_dra_d2_evt_d2e3_level_d2e3":  {
+                                              "name":  "Matoya\u0027s Cave",
+                                              "bg":  "ex1/02_dra_d2/evt/d2e3/level/d2e3"
+                                          },
+    "ex1_02_dra_d2_twn_d2t1_level_d2t1":  {
+                                              "name":  "Idyllshire",
+                                              "bg":  "ex1/02_dra_d2/twn/d2t1/level/d2t1"
+                                          },
+    "ffxiv_lak_l1_evt_l1e2_level_l1e2":  {
+                                             "name":  "The Eighteenth Floor",
+                                             "bg":  "ffxiv/lak_l1/evt/l1e2/level/l1e2"
+                                         },
+    "ex1_02_dra_d2_evt_d2e4_level_d2e4":  {
+                                              "name":  "Alexander",
+                                              "bg":  "ex1/02_dra_d2/evt/d2e4/level/d2e4"
+                                          },
+    "ffxiv_sea_s1_pvp_s1p3_level_s1p3":  {
+                                             "name":  "Chocobo Square",
+                                             "bg":  "ffxiv/sea_s1/pvp/s1p3/level/s1p3"
+                                         },
+    "ex1_03_abr_a2_evt_a2e2_level_a2e2":  {
+                                              "name":  "Central Azys Lla",
+                                              "bg":  "ex1/03_abr_a2/evt/a2e2/level/a2e2"
+                                          },
+    "ex1_05_zon_z2_rad_z2r1_level_z2r1":  {
+                                              "name":  "Void Ark",
+                                              "bg":  "ex1/05_zon_z2/rad/z2r1/level/z2r1"
+                                          },
+    "ex4_02_mid_m5_fld_m5fb_level_m5fb":  {
+                                              "name":  "The Gilded Araya",
+                                              "bg":  "ex4/02_mid_m5/fld/m5fb/level/m5fb"
+                                          },
+    "ffxiv_sea_s1_dun_s1d9_level_s1d9":  {
+                                             "name":  "Pharos Sirius",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d9/level/s1d9"
+                                         },
+    "ex1_02_dra_d2_dun_d2d4_level_d2d4":  {
+                                              "name":  "Saint Mocianne\u0027s Arboretum",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d4/level/d2d4"
+                                          },
+    "ex1_03_abr_a2_fld_a2fc_level_a2fc":  {
+                                              "name":  "The Diadem",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fc/level/a2fc"
+                                          },
+    "ex1_01_roc_r2_dun_r2d2_level_r2d2":  {
+                                              "name":  "The Vault",
+                                              "bg":  "ex1/01_roc_r2/dun/r2d2/level/r2d2"
+                                          },
+    "ex1_03_abr_a2_fld_a2fd_level_a2fd":  {
+                                              "name":  "Containment Bay S1T7",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fd/level/a2fd"
+                                          },
+    "ffxiv_fst_f1_dun_f1d8_level_f1d8":  {
+                                             "name":  "The Lost City of Amdapor",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d8/level/f1d8"
+                                         },
+    "ex1_02_dra_d2_alx_d2a5_level_d2a5":  {
+                                              "name":  "The Fist of the Son",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a5/level/d2a5"
+                                          },
+    "ex1_02_dra_d2_alx_d2a6_level_d2a6":  {
+                                              "name":  "The Cuff of the Son",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a6/level/d2a6"
+                                          },
+    "ex1_02_dra_d2_alx_d2a7_level_d2a7":  {
+                                              "name":  "The Arm of the Son",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a7/level/d2a7"
+                                          },
+    "ex1_02_dra_d2_alx_d2a8_level_d2a8":  {
+                                              "name":  "The Burden of the Son",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a8/level/d2a8"
+                                          },
+    "ffxiv_fst_f1_twn_f1tg_level_f1tg":  {
+                                             "name":  "Twin Adder Barracks",
+                                             "bg":  "ffxiv/fst_f1/twn/f1tg/level/f1tg"
+                                         },
+    "ffxiv_wil_w1_twn_w1tg_level_w1tg":  {
+                                             "name":  "Flame Barracks",
+                                             "bg":  "ffxiv/wil_w1/twn/w1tg/level/w1tg"
+                                         },
+    "ffxiv_sea_s1_twn_s1tg_level_s1tg":  {
+                                             "name":  "Maelstrom Barracks",
+                                             "bg":  "ffxiv/sea_s1/twn/s1tg/level/s1tg"
+                                         },
+    "ffxiv_sea_s1_pvp_s1p2_level_s1p2":  {
+                                             "name":  "The Fold",
+                                             "bg":  "ffxiv/sea_s1/pvp/s1p2/level/s1p2"
+                                         },
+    "ex1_02_dra_d2_evt_d2e5_level_d2e5":  {
+                                              "name":  "Alexander",
+                                              "bg":  "ex1/02_dra_d2/evt/d2e5/level/d2e5"
+                                          },
+    "ffxiv_pvp_xx_pvp_r2p1_level_r2p1":  {
+                                             "name":  "The Fields of Glory",
+                                             "bg":  "ffxiv/pvp_xx/pvp/r2p1/level/r2p1"
+                                         },
+    "ex1_05_zon_z2_rad_z2r2_level_z2r2":  {
+                                              "name":  "The Weeping City of Mhach",
+                                              "bg":  "ex1/05_zon_z2/rad/z2r2/level/z2r2"
+                                          },
+    "ffxiv_sea_s1_dun_s1da_level_s1da":  {
+                                             "name":  "Hullbreaker Isle",
+                                             "bg":  "ffxiv/sea_s1/dun/s1da/level/s1da"
+                                         },
+    "ffxiv_wil_w1_cnt_w1c1_level_w1c1":  {
+                                             "name":  "The Aquapolis",
+                                             "bg":  "ffxiv/wil_w1/cnt/w1c1/level/w1c1"
+                                         },
+    "ffxiv_roc_r1_fld_r1fe_level_r1fe":  {
+                                             "name":  "Steps of Faith",
+                                             "bg":  "ffxiv/roc_r1/fld/r1fe/level/r1fe"
+                                         },
+    "ex1_03_abr_a2_dun_a2d1_level_a2d1":  {
+                                              "name":  "Aetherochemical Research Facility",
+                                              "bg":  "ex1/03_abr_a2/dun/a2d1/level/a2d1"
+                                          },
+    "ffxiv_fst_f1_cnt_f1c1_level_f1c1":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c1/level/f1c1"
+                                         },
+    "ffxiv_fst_f1_cnt_f1c2_level_f1c2":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c2/level/f1c2"
+                                         },
+    "ffxiv_fst_f1_cnt_f1c3_level_f1c3":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c3/level/f1c3"
+                                         },
+    "ffxiv_fst_f1_cnt_f1c4_level_f1c4":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c4/level/f1c4"
+                                         },
+    "ex1_03_abr_a2_evt_a2e3_level_a2e3":  {
+                                              "name":  "The Parrock",
+                                              "bg":  "ex1/03_abr_a2/evt/a2e3/level/a2e3"
+                                          },
+    "ex1_03_abr_a2_evt_a2e4_level_a2e4":  {
+                                              "name":  "Leofard\u0027s Chambers",
+                                              "bg":  "ex1/03_abr_a2/evt/a2e4/level/a2e4"
+                                          },
+    "ffxiv_roc_r1_evt_r1e3_level_r1e3":  {
+                                             "name":  "Steps of Faith",
+                                             "bg":  "ffxiv/roc_r1/evt/r1e3/level/r1e3"
+                                         },
+    "ffxiv_fst_f1_evt_f1e7_level_f1e7":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/evt/f1e7/level/f1e7"
+                                         },
+    "ffxiv_fst_f1_dun_f1d9_level_f1d9":  {
+                                             "name":  "Haunted Manor",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d9/level/f1d9"
+                                         },
+    "ffxiv_sea_s1_ind_s1i6_level_s1i6":  {
+                                             "name":  "Topmast Apartment Lobby",
+                                             "bg":  "ffxiv/sea_s1/ind/s1i6/level/s1i6"
+                                         },
+    "ffxiv_fst_f1_ind_f1i6_level_f1i6":  {
+                                             "name":  "Lily Hills Apartment Lobby",
+                                             "bg":  "ffxiv/fst_f1/ind/f1i6/level/f1i6"
+                                         },
+    "ffxiv_wil_w1_ind_w1i6_level_w1i6":  {
+                                             "name":  "Sultana\u0027s Breath Apartment Lobby",
+                                             "bg":  "ffxiv/wil_w1/ind/w1i6/level/w1i6"
+                                         },
+    "ex1_03_abr_a2_fld_a2fe_level_a2fe":  {
+                                              "name":  "Containment Bay P1T6",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fe/level/a2fe"
+                                          },
+    "ex1_02_dra_d2_dun_d2d7_level_d2d7":  {
+                                              "name":  "The Great Gubal Library",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d7/level/d2d7"
+                                          },
+    "ffxiv_wil_w1_evt_w1ee_level_w1ee":  {
+                                             "name":  "The Battlehall",
+                                             "bg":  "ffxiv/wil_w1/evt/w1ee/level/w1ee"
+                                         },
+    "ex1_02_dra_d2_alx_d2a9_level_d2a9":  {
+                                              "name":  "Eyes of the Creator",
+                                              "bg":  "ex1/02_dra_d2/alx/d2a9/level/d2a9"
+                                          },
+    "ex1_02_dra_d2_alx_d2aa_level_d2aa":  {
+                                              "name":  "Breath of the Creator",
+                                              "bg":  "ex1/02_dra_d2/alx/d2aa/level/d2aa"
+                                          },
+    "ex1_02_dra_d2_alx_d2ab_level_d2ab":  {
+                                              "name":  "Heart of the Creator",
+                                              "bg":  "ex1/02_dra_d2/alx/d2ab/level/d2ab"
+                                          },
+    "ex1_02_dra_d2_alx_d2ac_level_d2ac":  {
+                                              "name":  "Soul of the Creator",
+                                              "bg":  "ex1/02_dra_d2/alx/d2ac/level/d2ac"
+                                          },
+    "ex1_02_dra_d2_evt_d2e7_level_d2e7":  {
+                                              "name":  "Heart of the Creator",
+                                              "bg":  "ex1/02_dra_d2/evt/d2e7/level/d2e7"
+                                          },
+    "ffxiv_fst_f1_cnt_f1c5_level_f1c5":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c5/level/f1c5"
+                                         },
+    "ffxiv_fst_f1_cnt_f1c6_level_f1c6":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c6/level/f1c6"
+                                         },
+    "ffxiv_fst_f1_cnt_f1c8_level_f1c8":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c8/level/f1c8"
+                                         },
+    "ffxiv_fst_f1_cnt_f1c9_level_f1c9":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c9/level/f1c9"
+                                         },
+    "ffxiv_fst_f1_cnt_f1c7_level_f1c7":  {
+                                             "name":  "The Palace of the Dead",
+                                             "bg":  "ffxiv/fst_f1/cnt/f1c7/level/f1c7"
+                                         },
+    "ffxiv_wil_w1_evt_w1ef_level_w1ef":  {
+                                             "name":  "Frondale\u0027s Home for Friendless Foundlings",
+                                             "bg":  "ffxiv/wil_w1/evt/w1ef/level/w1ef"
+                                         },
+    "ex2_01_gyr_g3_fld_g3f1_level_g3f1":  {
+                                              "name":  "The Fringes",
+                                              "bg":  "ex2/01_gyr_g3/fld/g3f1/level/g3f1"
+                                          },
+    "ex2_02_est_e3_fld_e3f1_level_e3f1":  {
+                                              "name":  "The Ruby Sea",
+                                              "bg":  "ex2/02_est_e3/fld/e3f1/level/e3f1"
+                                          },
+    "ex2_02_est_e3_fld_e3f2_level_e3f2":  {
+                                              "name":  "Yanxia",
+                                              "bg":  "ex2/02_est_e3/fld/e3f2/level/e3f2"
+                                          },
+    "ex1_02_dra_d2_dun_d2d8_level_d2d8":  {
+                                              "name":  "Sohm Al",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d8/level/d2d8"
+                                          },
+    "ex2_01_gyr_g3_fld_g3f2_level_g3f2":  {
+                                              "name":  "The Peaks",
+                                              "bg":  "ex2/01_gyr_g3/fld/g3f2/level/g3f2"
+                                          },
+    "ex2_01_gyr_g3_fld_g3f3_level_g3f3":  {
+                                              "name":  "The Lochs",
+                                              "bg":  "ex2/01_gyr_g3/fld/g3f3/level/g3f3"
+                                          },
+    "ex2_02_est_e3_fld_e3f3_level_e3f3":  {
+                                              "name":  "The Azim Steppe",
+                                              "bg":  "ex2/02_est_e3/fld/e3f3/level/e3f3"
+                                          },
+    "ex1_05_zon_z2_rad_z2r3_level_z2r3":  {
+                                              "name":  "Dun Scaith",
+                                              "bg":  "ex1/05_zon_z2/rad/z2r3/level/z2r3"
+                                          },
+    "ex2_02_est_e3_twn_e3t1_level_e3t1":  {
+                                              "name":  "Kugane",
+                                              "bg":  "ex2/02_est_e3/twn/e3t1/level/e3t1"
+                                          },
+    "ex2_02_est_e3_twn_e3ti_level_e3ti":  {
+                                              "name":  "Bokairo Inn",
+                                              "bg":  "ex2/02_est_e3/twn/e3ti/level/e3ti"
+                                          },
+    "ex2_01_gyr_g3_twn_g3t1_level_g3t1":  {
+                                              "name":  "Rhalgr\u0027s Reach",
+                                              "bg":  "ex2/01_gyr_g3/twn/g3t1/level/g3t1"
+                                          },
+    "ffxiv_lak_l1_evt_l1e3_level_l1e3":  {
+                                             "name":  "Omega Control",
+                                             "bg":  "ffxiv/lak_l1/evt/l1e3/level/l1e3"
+                                         },
+    "ex1_03_abr_a2_fld_a2fg_level_a2fg":  {
+                                              "name":  "Containment Bay Z1T9",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fg/level/a2fg"
+                                          },
+    "ex2_02_est_e3_evt_e3e1_level_e3e1":  {
+                                              "name":  "Ruby Bazaar Offices",
+                                              "bg":  "ex2/02_est_e3/evt/e3e1/level/e3e1"
+                                          },
+    "ffxiv_est_e1_hou_e1h1_level_e1h1":  {
+                                             "name":  "Shirogane",
+                                             "bg":  "ffxiv/est_e1/hou/e1h1/level/e1h1"
+                                         },
+    "ffxiv_est_e1_ind_e1i1_level_e1i1":  {
+                                             "name":  "Private Cottage - Shirogane",
+                                             "bg":  "ffxiv/est_e1/ind/e1i1/level/e1i1"
+                                         },
+    "ffxiv_est_e1_ind_e1i2_level_e1i2":  {
+                                             "name":  "Private House - Shirogane",
+                                             "bg":  "ffxiv/est_e1/ind/e1i2/level/e1i2"
+                                         },
+    "ffxiv_est_e1_ind_e1i3_level_e1i3":  {
+                                             "name":  "Private Mansion - Shirogane",
+                                             "bg":  "ffxiv/est_e1/ind/e1i3/level/e1i3"
+                                         },
+    "ffxiv_est_e1_ind_e1i4_level_e1i4":  {
+                                             "name":  "Private Chambers - Shirogane",
+                                             "bg":  "ffxiv/est_e1/ind/e1i4/level/e1i4"
+                                         },
+    "ffxiv_est_e1_ind_e1i5_level_e1i5":  {
+                                             "name":  "Company Workshop - Shirogane",
+                                             "bg":  "ffxiv/est_e1/ind/e1i5/level/e1i5"
+                                         },
+    "ffxiv_est_e1_ind_e1i6_level_e1i6":  {
+                                             "name":  "Kobai Goten Apartment Lobby",
+                                             "bg":  "ffxiv/est_e1/ind/e1i6/level/e1i6"
+                                         },
+    "ex1_03_abr_a2_fld_a2fh_level_a2fh":  {
+                                              "name":  "The Diadem",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fh/level/a2fh"
+                                          },
+    "ex2_05_zon_z3_ome_z3o6_level_z3o6":  {
+                                              "name":  "The Interdimensional Rift",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o6/level/z3o6"
+                                          },
+    "ex2_02_est_e3_dun_e3d4_level_e3d4":  {
+                                              "name":  "Kugane Castle",
+                                              "bg":  "ex2/02_est_e3/dun/e3d4/level/e3d4"
+                                          },
+    "ex2_01_gyr_g3_dun_g3d3_level_g3d3":  {
+                                              "name":  "The Temple of the Fist",
+                                              "bg":  "ex2/01_gyr_g3/dun/g3d3/level/g3d3"
+                                          },
+    "ex1_02_dra_d2_dun_d2d1_level_d2d1":  {
+                                              "name":  "Sohm Al",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d1/level/d2d1"
+                                          },
+    "ex2_02_est_e3_fld_e3fa_level_e3fa":  {
+                                              "name":  "The Blessed Treasury",
+                                              "bg":  "ex2/02_est_e3/fld/e3fa/level/e3fa"
+                                          },
+    "ex1_02_dra_d2_dun_d2d3_level_d2d3":  {
+                                              "name":  "The Great Gubal Library",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d3/level/d2d3"
+                                          },
+    "ex2_01_gyr_g3_fld_g3fb_level_g3fb":  {
+                                              "name":  "The Royal Airship Landing",
+                                              "bg":  "ex2/01_gyr_g3/fld/g3fb/level/g3fb"
+                                          },
+    "ex2_03_ocn_o3_evt_o3e1_level_o3e1":  {
+                                              "name":  "The Misery",
+                                              "bg":  "ex2/03_ocn_o3/evt/o3e1/level/o3e1"
+                                          },
+    "ex2_02_est_e3_evt_e3e5_level_e3e5":  {
+                                              "name":  "The House of the Fierce",
+                                              "bg":  "ex2/02_est_e3/evt/e3e5/level/e3e5"
+                                          },
+    "ex2_02_est_e3_evt_e3ea_level_e3ea":  {
+                                              "name":  "The Doman Enclave",
+                                              "bg":  "ex2/02_est_e3/evt/e3ea/level/e3ea"
+                                          },
+    "ex2_01_gyr_g3_evt_g3e1_level_g3e1":  {
+                                              "name":  "The First Altar of Djanan Qhat",
+                                              "bg":  "ex2/01_gyr_g3/evt/g3e1/level/g3e1"
+                                          },
+    "ex2_01_gyr_g3_evt_g3e3_level_g3e3":  {
+                                              "name":  "The Lochs",
+                                              "bg":  "ex2/01_gyr_g3/evt/g3e3/level/g3e3"
+                                          },
+    "ex2_05_zon_z3_ome_z3o1_level_z3o1":  {
+                                              "name":  "The Interdimensional Rift",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o1/level/z3o1"
+                                          },
+    "ex2_05_zon_z3_ome_z3o2_level_z3o2":  {
+                                              "name":  "Deltascape V1.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o2/level/z3o2"
+                                          },
+    "ex2_05_zon_z3_ome_z3o3_level_z3o3":  {
+                                              "name":  "Deltascape V2.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o3/level/z3o3"
+                                          },
+    "ex2_05_zon_z3_ome_z3o4_level_z3o4":  {
+                                              "name":  "Deltascape V3.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o4/level/z3o4"
+                                          },
+    "ex2_05_zon_z3_ome_z3o5_level_z3o5":  {
+                                              "name":  "Deltascape V4.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o5/level/z3o5"
+                                          },
+    "ex2_03_ocn_o3_cnt_o3c1_level_o3c1":  {
+                                              "name":  "The Lost Canals of Uznair",
+                                              "bg":  "ex2/03_ocn_o3/cnt/o3c1/level/o3c1"
+                                          },
+    "ex2_02_est_e3_dun_e3d2_level_e3d2":  {
+                                              "name":  "Bardam\u0027s Mettle",
+                                              "bg":  "ex2/02_est_e3/dun/e3d2/level/e3d2"
+                                          },
+    "ex2_01_gyr_g3_fld_g3fa_level_g3fa":  {
+                                              "name":  "Emanation",
+                                              "bg":  "ex2/01_gyr_g3/fld/g3fa/level/g3fa"
+                                          },
+    "ex2_01_gyr_g3_evt_g3e4_level_g3e4":  {
+                                              "name":  "The Royal Menagerie",
+                                              "bg":  "ex2/01_gyr_g3/evt/g3e4/level/g3e4"
+                                          },
+    "ffxiv_pvp_xx_pvp_d2p1_level_d2p1":  {
+                                             "name":  "Astragalos",
+                                             "bg":  "ffxiv/pvp_xx/pvp/d2p1/level/d2p1"
+                                         },
+    "ex2_01_gyr_g3_fld_g3fc_level_g3fc":  {
+                                              "name":  "Transparency",
+                                              "bg":  "ex2/01_gyr_g3/fld/g3fc/level/g3fc"
+                                          },
+    "ex2_05_zon_z3_fld_z3fa_level_z3fa":  {
+                                              "name":  "Eureka Anemos",
+                                              "bg":  "ex2/05_zon_z3/fld/z3fa/level/z3fa"
+                                          },
+    "ffxiv_fst_f1_bah_f1bz_level_f1bz":  {
+                                             "name":  "The Binding Coil of Bahamut",
+                                             "bg":  "ffxiv/fst_f1/bah/f1bz/level/f1bz"
+                                         },
+    "ex2_05_zon_z3_rad_z3r1_level_z3r1":  {
+                                              "name":  "The Royal City of Rabanastre",
+                                              "bg":  "ex2/05_zon_z3/rad/z3r1/level/z3r1"
+                                          },
+    "ex2_05_zon_z3_evt_z3e2_level_z3e2":  {
+                                              "name":  "The Prima Vista Tiring Room",
+                                              "bg":  "ex2/05_zon_z3/evt/z3e2/level/z3e2"
+                                          },
+    "ex2_05_zon_z3_evt_z3e3_level_z3e3":  {
+                                              "name":  "The Prima Vista Bridge",
+                                              "bg":  "ex2/05_zon_z3/evt/z3e3/level/z3e3"
+                                          },
+    "ex2_01_gyr_g3_evt_g3e6_level_g3e6":  {
+                                              "name":  "The Resonatorium",
+                                              "bg":  "ex2/01_gyr_g3/evt/g3e6/level/g3e6"
+                                          },
+    "ex2_02_est_e3_evt_e3eb_level_e3eb":  {
+                                              "name":  "The Doman Enclave",
+                                              "bg":  "ex2/02_est_e3/evt/e3eb/level/e3eb"
+                                          },
+    "ffxiv_fst_f1_evt_f1e9_level_f1e9":  {
+                                             "name":  "Sanctum of the Twelve",
+                                             "bg":  "ffxiv/fst_f1/evt/f1e9/level/f1e9"
+                                         },
+    "ex2_02_est_e3_dun_e3d5_level_e3d5":  {
+                                              "name":  "Hells\u0027 Lid",
+                                              "bg":  "ex2/02_est_e3/dun/e3d5/level/e3d5"
+                                          },
+    "ex1_03_abr_a2_dun_a2d4_level_a2d4":  {
+                                              "name":  "The Fractal Continuum",
+                                              "bg":  "ex1/03_abr_a2/dun/a2d4/level/a2d4"
+                                          },
+    "ex2_02_est_e3_evt_e3e7_level_e3e7":  {
+                                              "name":  "Kienkan",
+                                              "bg":  "ex2/02_est_e3/evt/e3e7/level/e3e7"
+                                          },
+    "ex2_02_est_e3_fld_e3fb_level_e3fb":  {
+                                              "name":  "The Jade Stoa",
+                                              "bg":  "ex2/02_est_e3/fld/e3fb/level/e3fb"
+                                          },
+    "ex2_05_zon_z3_ome_z3o7_level_z3o7":  {
+                                              "name":  "Sigmascape V1.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o7/level/z3o7"
+                                          },
+    "ex2_05_zon_z3_ome_z3o8_level_z3o8":  {
+                                              "name":  "Sigmascape V2.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o8/level/z3o8"
+                                          },
+    "ex2_05_zon_z3_ome_z3o9_level_z3o9":  {
+                                              "name":  "Sigmascape V3.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3o9/level/z3o9"
+                                          },
+    "ex2_05_zon_z3_ome_z3oa_level_z3oa":  {
+                                              "name":  "Sigmascape V4.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3oa/level/z3oa"
+                                          },
+    "ex2_02_est_e3_evt_e3ec_level_e3ec":  {
+                                              "name":  "The Doman Enclave",
+                                              "bg":  "ex2/02_est_e3/evt/e3ec/level/e3ec"
+                                          },
+    "ex2_02_est_e3_fld_e3fc_level_e3fc":  {
+                                              "name":  "The Great Hunt",
+                                              "bg":  "ex2/02_est_e3/fld/e3fc/level/e3fc"
+                                          },
+    "ex2_05_zon_z3_fld_z3fb_level_z3fb":  {
+                                              "name":  "Eureka Pagos",
+                                              "bg":  "ex2/05_zon_z3/fld/z3fb/level/z3fb"
+                                          },
+    "ex2_02_est_e3_evt_e3e8_level_e3e8":  {
+                                              "name":  "Reisen Temple",
+                                              "bg":  "ex2/02_est_e3/evt/e3e8/level/e3e8"
+                                          },
+    "ex2_02_est_e3_dun_e3d6_level_e3d6":  {
+                                              "name":  "The Swallow\u0027s Compass",
+                                              "bg":  "ex2/02_est_e3/dun/e3d6/level/e3d6"
+                                          },
+    "ex2_02_est_e3_evt_e3e9_level_e3e9":  {
+                                              "name":  "The Burn",
+                                              "bg":  "ex2/02_est_e3/evt/e3e9/level/e3e9"
+                                          },
+    "ex2_02_est_e3_cnt_e3c1_level_e3c1":  {
+                                              "name":  "Heaven-on-High",
+                                              "bg":  "ex2/02_est_e3/cnt/e3c1/level/e3c1"
+                                          },
+    "ex2_02_est_e3_cnt_e3c2_level_e3c2":  {
+                                              "name":  "Heaven-on-High",
+                                              "bg":  "ex2/02_est_e3/cnt/e3c2/level/e3c2"
+                                          },
+    "ex2_02_est_e3_cnt_e3c3_level_e3c3":  {
+                                              "name":  "Heaven-on-High",
+                                              "bg":  "ex2/02_est_e3/cnt/e3c3/level/e3c3"
+                                          },
+    "ex2_02_est_e3_cnt_e3c4_level_e3c4":  {
+                                              "name":  "Heaven-on-High",
+                                              "bg":  "ex2/02_est_e3/cnt/e3c4/level/e3c4"
+                                          },
+    "ex2_02_est_e3_cnt_e3c5_level_e3c5":  {
+                                              "name":  "Heaven-on-High",
+                                              "bg":  "ex2/02_est_e3/cnt/e3c5/level/e3c5"
+                                          },
+    "ex2_02_est_e3_cnt_e3c6_level_e3c6":  {
+                                              "name":  "Heaven-on-High",
+                                              "bg":  "ex2/02_est_e3/cnt/e3c6/level/e3c6"
+                                          },
+    "ex2_05_zon_z3_rad_z3r2_level_z3r2":  {
+                                              "name":  "The Ridorana Lighthouse",
+                                              "bg":  "ex2/05_zon_z3/rad/z3r2/level/z3r2"
+                                          },
+    "ffxiv_wil_w1_fld_w1fz_level_w1fz":  {
+                                             "name":  "Ultimacy",
+                                             "bg":  "ffxiv/wil_w1/fld/w1fz/level/w1fz"
+                                         },
+    "ex2_02_est_e3_fld_e3fd_level_e3fd":  {
+                                              "name":  "Castrum Fluminis",
+                                              "bg":  "ex2/02_est_e3/fld/e3fd/level/e3fd"
+                                          },
+    "ex2_02_est_e3_evt_e3ed_level_e3ed":  {
+                                              "name":  "Heaven-on-High",
+                                              "bg":  "ex2/02_est_e3/evt/e3ed/level/e3ed"
+                                          },
+    "ex2_02_est_e3_evt_e3ee_level_e3ee":  {
+                                              "name":  "Castrum Fluminis",
+                                              "bg":  "ex2/02_est_e3/evt/e3ee/level/e3ee"
+                                          },
+    "ex1_02_dra_d2_dun_d2d9_level_d2d9":  {
+                                              "name":  "Saint Mocianne\u0027s Arboretum",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d9/level/d2d9"
+                                          },
+    "ffxiv_pvp_xx_pvp_w1p1_level_w1p1":  {
+                                             "name":  "Hidden Gorge",
+                                             "bg":  "ffxiv/pvp_xx/pvp/w1p1/level/w1p1"
+                                         },
+    "ffxiv_wil_w1_evt_w1eg_level_w1eg":  {
+                                             "name":  "The Fall of Belah\u0027dia",
+                                             "bg":  "ffxiv/wil_w1/evt/w1eg/level/w1eg"
+                                         },
+    "ex2_03_ocn_o3_cnt_o3c2_level_o3c2":  {
+                                              "name":  "The Shifting Altars of Uznair",
+                                              "bg":  "ex2/03_ocn_o3/cnt/o3c2/level/o3c2"
+                                          },
+    "ex2_05_zon_z3_fld_z3fc_level_z3fc":  {
+                                              "name":  "Eureka Pyros",
+                                              "bg":  "ex2/05_zon_z3/fld/z3fc/level/z3fc"
+                                          },
+    "ffxiv_wil_w1_twn_w1tz_level_w1tz":  {
+                                             "name":  "Blue Sky",
+                                             "bg":  "ffxiv/wil_w1/twn/w1tz/level/w1tz"
+                                         },
+    "ex2_05_zon_z3_ome_z3oc_level_z3oc":  {
+                                              "name":  "Psiscape V1.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3oc/level/z3oc"
+                                          },
+    "ex2_05_zon_z3_ome_z3od_level_z3od":  {
+                                              "name":  "Psiscape V2.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3od/level/z3od"
+                                          },
+    "ex2_05_zon_z3_ome_z3oe_level_z3oe":  {
+                                              "name":  "The Interdimensional Rift",
+                                              "bg":  "ex2/05_zon_z3/ome/z3oe/level/z3oe"
+                                          },
+    "ex2_05_zon_z3_ome_z3of_level_z3of":  {
+                                              "name":  "The Interdimensional Rift",
+                                              "bg":  "ex2/05_zon_z3/ome/z3of/level/z3of"
+                                          },
+    "ex2_05_zon_z3_ome_z3ob_level_z3ob":  {
+                                              "name":  "The Interdimensional Rift",
+                                              "bg":  "ex2/05_zon_z3/ome/z3ob/level/z3ob"
+                                          },
+    "ex2_02_est_e3_fld_e3fe_level_e3fe":  {
+                                              "name":  "Hells\u0027 Kier",
+                                              "bg":  "ex2/02_est_e3/fld/e3fe/level/e3fe"
+                                          },
+    "ex3_01_nvt_n4_fld_n4f1_level_n4f1":  {
+                                              "name":  "Lakeland",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4f1/level/n4f1"
+                                          },
+    "ex3_01_nvt_n4_fld_n4f2_level_n4f2":  {
+                                              "name":  "Kholusia",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4f2/level/n4f2"
+                                          },
+    "ex3_01_nvt_n4_fld_n4f3_level_n4f3":  {
+                                              "name":  "Amh Araeng",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4f3/level/n4f3"
+                                          },
+    "ex3_01_nvt_n4_fld_n4f4_level_n4f4":  {
+                                              "name":  "Il Mheg",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4f4/level/n4f4"
+                                          },
+    "ex3_01_nvt_n4_fld_n4f5_level_n4f5":  {
+                                              "name":  "The Rak\u0027tika Greatwood",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4f5/level/n4f5"
+                                          },
+    "ex3_01_nvt_n4_fld_n4f6_level_n4f6":  {
+                                              "name":  "The Tempest",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4f6/level/n4f6"
+                                          },
+    "ex3_01_nvt_n4_twn_n4t1_level_n4t1":  {
+                                              "name":  "The Crystarium",
+                                              "bg":  "ex3/01_nvt_n4/twn/n4t1/level/n4t1"
+                                          },
+    "ex3_01_nvt_n4_twn_n4t2_level_n4t2":  {
+                                              "name":  "Eulmore",
+                                              "bg":  "ex3/01_nvt_n4/twn/n4t2/level/n4t2"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d2_level_n4d2":  {
+                                              "name":  "Dohn Mheg",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d2/level/n4d2"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d5_level_n4d5":  {
+                                              "name":  "Mt. Gulg",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d5/level/n4d5"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d3_level_n4d3":  {
+                                              "name":  "The Qitana Ravel",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d3/level/n4d3"
+                                          },
+    "ex2_02_est_e3_fld_e3fg_level_e3fg":  {
+                                              "name":  "The Wreath of Snakes",
+                                              "bg":  "ex2/02_est_e3/fld/e3fg/level/e3fg"
+                                          },
+    "ex2_05_zon_z3_rad_z3r3_level_z3r3":  {
+                                              "name":  "The Orbonne Monastery",
+                                              "bg":  "ex2/05_zon_z3/rad/z3r3/level/z3r3"
+                                          },
+    "ex2_05_zon_z3_fld_z3fd_level_z3fd":  {
+                                              "name":  "Eureka Hydatos",
+                                              "bg":  "ex2/05_zon_z3/fld/z3fd/level/z3fd"
+                                          },
+    "ex2_01_gyr_g3_evt_g3e7_level_g3e7":  {
+                                              "name":  "Eorzean Alliance Headquarters",
+                                              "bg":  "ex2/01_gyr_g3/evt/g3e7/level/g3e7"
+                                          },
+    "ex2_01_gyr_g3_dun_g3d5_level_g3d5":  {
+                                              "name":  "The Ghimlyt Dark",
+                                              "bg":  "ex2/01_gyr_g3/dun/g3d5/level/g3d5"
+                                          },
+    "ffxiv_wil_w1_evt_w1eh_level_w1eh":  {
+                                             "name":  "The Manderville Tables",
+                                             "bg":  "ffxiv/wil_w1/evt/w1eh/level/w1eh"
+                                         },
+    "ffxiv_wil_w1_evt_w1ei_level_w1ei":  {
+                                             "name":  "The Gold Saucer",
+                                             "bg":  "ffxiv/wil_w1/evt/w1ei/level/w1ei"
+                                         },
+    "ex3_01_nvt_n4_dun_n4d4_level_n4d4":  {
+                                              "name":  "Malikah\u0027s Well",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d4/level/n4d4"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d1_level_n4d1":  {
+                                              "name":  "Holminster Switch",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d1/level/n4d1"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d6_level_n4d6":  {
+                                              "name":  "Amaurot",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d6/level/n4d6"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d7_level_n4d7":  {
+                                              "name":  "The Twinning",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d7/level/n4d7"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d8_level_n4d8":  {
+                                              "name":  "Akadaemia Anyder",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d8/level/n4d8"
+                                          },
+    "ffxiv_lak_l1_evt_l1e5_level_l1e5":  {
+                                             "name":  "The Syrcus Trench",
+                                             "bg":  "ffxiv/lak_l1/evt/l1e5/level/l1e5"
+                                         },
+    "ex3_01_nvt_n4_twn_n4ti_level_n4ti":  {
+                                              "name":  "The Pendants Personal Suite",
+                                              "bg":  "ex3/01_nvt_n4/twn/n4ti/level/n4ti"
+                                          },
+    "ex3_01_nvt_n4_evt_n4e1_level_n4e1":  {
+                                              "name":  "The Ocular",
+                                              "bg":  "ex3/01_nvt_n4/evt/n4e1/level/n4e1"
+                                          },
+    "ex3_01_nvt_n4_fld_n4fb_level_n4fb":  {
+                                              "name":  "The Crown of the Immaculate",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4fb/level/n4fb"
+                                          },
+    "ex3_01_nvt_n4_fld_n4fc_level_n4fc":  {
+                                              "name":  "The Dying Gasp",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4fc/level/n4fc"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g1_level_n4g1":  {
+                                              "name":  "The Core",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g1/level/n4g1"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g2_level_n4g2":  {
+                                              "name":  "The Halo",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g2/level/n4g2"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g3_level_n4g3":  {
+                                              "name":  "The Nereus Trench",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g3/level/n4g3"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g4_level_n4g4":  {
+                                              "name":  "Atlas Peak",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g4/level/n4g4"
+                                          },
+    "ex3_01_nvt_n4_goe_n4gy_level_n4gy":  {
+                                              "name":  "The Core",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4gy/level/n4gy"
+                                          },
+    "ex3_01_nvt_n4_btl_n4b1_level_n4b1":  {
+                                              "name":  "The Confessional of Toupasa the Elder",
+                                              "bg":  "ex3/01_nvt_n4/btl/n4b1/level/n4b1"
+                                          },
+    "ex3_01_nvt_n4_goe_n4gz_level_n4gz":  {
+                                              "name":  "The Empty",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4gz/level/n4gz"
+                                          },
+    "ex3_01_nvt_n4_cnt_n4c1_level_n4c1":  {
+                                              "name":  "The Dungeons of Lyhe Ghiah",
+                                              "bg":  "ex3/01_nvt_n4/cnt/n4c1/level/n4c1"
+                                          },
+    "ex3_01_nvt_n4_rad_n4r1_level_n4r1":  {
+                                              "name":  "The Copied Factory",
+                                              "bg":  "ex3/01_nvt_n4/rad/n4r1/level/n4r1"
+                                          },
+    "ex3_01_nvt_n4_dun_n4d9_level_n4d9":  {
+                                              "name":  "The Grand Cosmos",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4d9/level/n4d9"
+                                          },
+    "ex3_01_nvt_n4_fld_n4fd_level_n4fd":  {
+                                              "name":  "The Dying Gasp",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4fd/level/n4fd"
+                                          },
+    "ffxiv_roc_r1_hou_r1hx_level_r1hx":  {
+                                             "name":  "The Firmament",
+                                             "bg":  "ffxiv/roc_r1/hou/r1hx/level/r1hx"
+                                         },
+    "ex1_02_dra_d2_alx_d2az_level_d2az":  {
+                                              "name":  "Liminal Space",
+                                              "bg":  "ex1/02_dra_d2/alx/d2az/level/d2az"
+                                          },
+    "ffxiv_pvp_xx_pvp_e3p1_level_e3p1":  {
+                                             "name":  "Onsal Hakair",
+                                             "bg":  "ffxiv/pvp_xx/pvp/e3p1/level/e3p1"
+                                         },
+    "ex3_01_nvt_n4_evt_n4e9_level_n4e9":  {
+                                              "name":  "Lyhe Mheg",
+                                              "bg":  "ex3/01_nvt_n4/evt/n4e9/level/n4e9"
+                                          },
+    "ex2_05_zon_z3_btl_z3b1_level_z3b1":  {
+                                              "name":  "The Imperial Palace",
+                                              "bg":  "ex2/05_zon_z3/btl/z3b1/level/z3b1"
+                                          },
+    "ex3_01_nvt_n4_evt_n4e8_level_n4e8":  {
+                                              "name":  "Excavation Tunnels",
+                                              "bg":  "ex3/01_nvt_n4/evt/n4e8/level/n4e8"
+                                          },
+    "ex3_01_nvt_n4_fld_n4fe_level_n4fe":  {
+                                              "name":  "Cinder Drift",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4fe/level/n4fe"
+                                          },
+    "ex3_01_nvt_n4_dun_n4da_level_n4da":  {
+                                              "name":  "Anamnesis Anyder",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4da/level/n4da"
+                                          },
+    "ffxiv_sea_s1_evt_s1e8_level_s1e8":  {
+                                             "name":  "The Falling City of Nym",
+                                             "bg":  "ffxiv/sea_s1/evt/s1e8/level/s1e8"
+                                         },
+    "ffxiv_ocn_o1_ang_o1a1_level_o1a1":  {
+                                             "name":  "The Endeavor",
+                                             "bg":  "ffxiv/ocn_o1/ang/o1a1/level/o1a1"
+                                         },
+    "ex1_03_abr_a2_fld_a2fx_level_a2fx":  {
+                                              "name":  "The Diadem",
+                                              "bg":  "ex1/03_abr_a2/fld/a2fx/level/a2fx"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g5_level_n4g5":  {
+                                              "name":  "The Gandof Thunder Plains",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g5/level/n4g5"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g6_level_n4g6":  {
+                                              "name":  "Ashfall",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g6/level/n4g6"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g7_level_n4g7":  {
+                                              "name":  "The Halo",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g7/level/n4g7"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g8_level_n4g8":  {
+                                              "name":  "Great Glacier",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g8/level/n4g8"
+                                          },
+    "ex3_01_nvt_n4_btl_n4b2_level_n4b2":  {
+                                              "name":  "Cid\u0027s Memory",
+                                              "bg":  "ex3/01_nvt_n4/btl/n4b2/level/n4b2"
+                                          },
+    "ex3_01_nvt_n4_btl_n4b3_level_n4b3":  {
+                                              "name":  "Trial\u0027s Threshold",
+                                              "bg":  "ex3/01_nvt_n4/btl/n4b3/level/n4b3"
+                                          },
+    "ex3_01_nvt_n4_evt_n4ea_level_n4ea":  {
+                                              "name":  "Gangos",
+                                              "bg":  "ex3/01_nvt_n4/evt/n4ea/level/n4ea"
+                                          },
+    "ex3_01_nvt_n4_dun_n4db_level_n4db":  {
+                                              "name":  "The Heroes\u0027 Gauntlet",
+                                              "bg":  "ex3/01_nvt_n4/dun/n4db/level/n4db"
+                                          },
+    "ex3_01_nvt_n4_rad_n4r2_level_n4r2":  {
+                                              "name":  "The Puppets\u0027 Bunker",
+                                              "bg":  "ex3/01_nvt_n4/rad/n4r2/level/n4r2"
+                                          },
+    "ex3_01_nvt_n4_evt_n4eb_level_n4eb":  {
+                                              "name":  "Terncliff",
+                                              "bg":  "ex3/01_nvt_n4/evt/n4eb/level/n4eb"
+                                          },
+    "ex3_01_nvt_n4_btl_n4b4_level_n4b4":  {
+                                              "name":  "Bozjan Southern Front",
+                                              "bg":  "ex3/01_nvt_n4/btl/n4b4/level/n4b4"
+                                          },
+    "ex3_01_nvt_n4_fld_n4ff_level_n4ff":  {
+                                              "name":  "The Seat of Sacrifice",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4ff/level/n4ff"
+                                          },
+    "ex3_01_nvt_n4_cnt_n4c2_level_n4c2":  {
+                                              "name":  "The Shifting Oubliettes of Lyhe Ghiah",
+                                              "bg":  "ex3/01_nvt_n4/cnt/n4c2/level/n4c2"
+                                          },
+    "ex3_02_dra_d4_dun_d4d1_level_d4d1":  {
+                                              "name":  "Matoya\u0027s Relict",
+                                              "bg":  "ex3/02_dra_d4/dun/d4d1/level/d4d1"
+                                          },
+    "ex3_01_nvt_n4_fld_n4fg_level_n4fg":  {
+                                              "name":  "Castrum Marinum Drydocks",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4fg/level/n4fg"
+                                          },
+    "ex3_01_nvt_n4_btl_n4b5_level_n4b5":  {
+                                              "name":  "Delubrum Reginae",
+                                              "bg":  "ex3/01_nvt_n4/btl/n4b5/level/n4b5"
+                                          },
+    "ex3_04_wil_w4_dun_w4d1_level_w4d1":  {
+                                              "name":  "Paglth\u0027an",
+                                              "bg":  "ex3/04_wil_w4/dun/w4d1/level/w4d1"
+                                          },
+    "ex3_01_nvt_n4_goe_n4g9_level_n4g9":  {
+                                              "name":  "Sphere of Naught",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4g9/level/n4g9"
+                                          },
+    "ex3_01_nvt_n4_goe_n4ga_level_n4ga":  {
+                                              "name":  "Laxan Loft",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4ga/level/n4ga"
+                                          },
+    "ex3_01_nvt_n4_goe_n4gb_level_n4gb":  {
+                                              "name":  "Bygone Gaol",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4gb/level/n4gb"
+                                          },
+    "ex3_01_nvt_n4_goe_n4gc_level_n4gc":  {
+                                              "name":  "The Garden of Nowhere",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4gc/level/n4gc"
+                                          },
+    "ex3_01_nvt_n4_fld_n4fh_level_n4fh":  {
+                                              "name":  "G-Savior Deck",
+                                              "bg":  "ex3/01_nvt_n4/fld/n4fh/level/n4fh"
+                                          },
+    "ex4_02_mid_m5_dun_m5d1_level_m5d1":  {
+                                              "name":  "The Tower of Zot",
+                                              "bg":  "ex4/02_mid_m5/dun/m5d1/level/m5d1"
+                                          },
+    "ex4_03_kld_k5_fld_k5f1_level_k5f1":  {
+                                              "name":  "Labyrinthos",
+                                              "bg":  "ex4/03_kld_k5/fld/k5f1/level/k5f1"
+                                          },
+    "ex4_02_mid_m5_fld_m5f1_level_m5f1":  {
+                                              "name":  "Thavnair",
+                                              "bg":  "ex4/02_mid_m5/fld/m5f1/level/m5f1"
+                                          },
+    "ex4_02_mid_m5_fld_m5f2_level_m5f2":  {
+                                              "name":  "Garlemald",
+                                              "bg":  "ex4/02_mid_m5/fld/m5f2/level/m5f2"
+                                          },
+    "ex4_04_uvs_u5_fld_u5f1_level_u5f1":  {
+                                              "name":  "Mare Lamentorum",
+                                              "bg":  "ex4/04_uvs_u5/fld/u5f1/level/u5f1"
+                                          },
+    "ex4_04_uvs_u5_fld_u5f2_level_u5f2":  {
+                                              "name":  "Ultima Thule",
+                                              "bg":  "ex4/04_uvs_u5/fld/u5f2/level/u5f2"
+                                          },
+    "ex4_01_nvt_n5_fld_n5f1_level_n5f1":  {
+                                              "name":  "Elpis",
+                                              "bg":  "ex4/01_nvt_n5/fld/n5f1/level/n5f1"
+                                          },
+    "ex4_03_kld_k5_twn_k5t1_level_k5t1":  {
+                                              "name":  "Old Sharlayan",
+                                              "bg":  "ex4/03_kld_k5/twn/k5t1/level/k5t1"
+                                          },
+    "ex4_02_mid_m5_twn_m5t1_level_m5t1":  {
+                                              "name":  "Radz-at-Han",
+                                              "bg":  "ex4/02_mid_m5/twn/m5t1/level/m5t1"
+                                          },
+    "ex3_01_nvt_n4_rad_n4r3_level_n4r3":  {
+                                              "name":  "The Tower at Paradigm\u0027s Breach",
+                                              "bg":  "ex3/01_nvt_n4/rad/n4r3/level/n4r3"
+                                          },
+    "ffxiv_roc_r1_fld_r1fz_level_r1fz":  {
+                                             "name":  "Medias Res",
+                                             "bg":  "ffxiv/roc_r1/fld/r1fz/level/r1fz"
+                                         },
+    "ex4_02_mid_m5_dun_m5d2_level_m5d2":  {
+                                              "name":  "The Tower of Babil",
+                                              "bg":  "ex4/02_mid_m5/dun/m5d2/level/m5d2"
+                                          },
+    "ex4_02_mid_m5_dun_m5d3_level_m5d3":  {
+                                              "name":  "Vanaspati",
+                                              "bg":  "ex4/02_mid_m5/dun/m5d3/level/m5d3"
+                                          },
+    "ffxiv_wil_w1_evt_w1ej_level_w1ej":  {
+                                             "name":  "Lemures Headquarters",
+                                             "bg":  "ffxiv/wil_w1/evt/w1ej/level/w1ej"
+                                         },
+    "ex4_04_uvs_u5_dun_u5d1_level_u5d1":  {
+                                              "name":  "The Dead Ends",
+                                              "bg":  "ex4/04_uvs_u5/dun/u5d1/level/u5d1"
+                                          },
+    "ex4_01_nvt_n5_dun_n5d1_level_n5d1":  {
+                                              "name":  "Ktisis Hyperboreia",
+                                              "bg":  "ex4/01_nvt_n5/dun/n5d1/level/n5d1"
+                                          },
+    "ex3_01_nvt_n4_btl_n4b6_level_n4b6":  {
+                                              "name":  "Zadnor",
+                                              "bg":  "ex3/01_nvt_n4/btl/n4b6/level/n4b6"
+                                          },
+    "ex4_04_uvs_u5_dun_u5d2_level_u5d2":  {
+                                              "name":  "Smileton",
+                                              "bg":  "ex4/04_uvs_u5/dun/u5d2/level/u5d2"
+                                          },
+    "ex4_03_kld_k5_dun_k5d1_level_k5d1":  {
+                                              "name":  "The Aitiascope",
+                                              "bg":  "ex4/03_kld_k5/dun/k5d1/level/k5d1"
+                                          },
+    "ffxiv_roc_r1_hou_r1h1_level_r1h1":  {
+                                             "name":  "Empyreum",
+                                             "bg":  "ffxiv/roc_r1/hou/r1h1/level/r1h1"
+                                         },
+    "ffxiv_roc_r1_ind_r1i1_level_r1i1":  {
+                                             "name":  "Private Cottage - Empyreum",
+                                             "bg":  "ffxiv/roc_r1/ind/r1i1/level/r1i1"
+                                         },
+    "ffxiv_roc_r1_ind_r1i2_level_r1i2":  {
+                                             "name":  "Private House - Empyreum",
+                                             "bg":  "ffxiv/roc_r1/ind/r1i2/level/r1i2"
+                                         },
+    "ffxiv_roc_r1_ind_r1i3_level_r1i3":  {
+                                             "name":  "Private Mansion - Empyreum",
+                                             "bg":  "ffxiv/roc_r1/ind/r1i3/level/r1i3"
+                                         },
+    "ffxiv_roc_r1_ind_r1i4_level_r1i4":  {
+                                             "name":  "Private Chambers - Empyreum",
+                                             "bg":  "ffxiv/roc_r1/ind/r1i4/level/r1i4"
+                                         },
+    "ffxiv_roc_r1_ind_r1i5_level_r1i5":  {
+                                             "name":  "Company Workshop - Empyreum",
+                                             "bg":  "ffxiv/roc_r1/ind/r1i5/level/r1i5"
+                                         },
+    "ffxiv_roc_r1_ind_r1i6_level_r1i6":  {
+                                             "name":  "Ingleside Apartment Lobby",
+                                             "bg":  "ffxiv/roc_r1/ind/r1i6/level/r1i6"
+                                         },
+    "ex4_04_uvs_u5_dun_u5d3_level_u5d3":  {
+                                              "name":  "The Stigma Dreamscape",
+                                              "bg":  "ex4/04_uvs_u5/dun/u5d3/level/u5d3"
+                                          },
+    "ex4_03_kld_k5_evt_k5e1_level_k5e1":  {
+                                              "name":  "Main Hall",
+                                              "bg":  "ex4/03_kld_k5/evt/k5e1/level/k5e1"
+                                          },
+    "ex4_02_mid_m5_evt_m5e1_level_m5e1":  {
+                                              "name":  "",
+                                              "bg":  "ex4/02_mid_m5/evt/m5e1/level/m5e1"
+                                          },
+    "ex4_03_kld_k5_evt_k5e2_level_k5e2":  {
+                                              "name":  "",
+                                              "bg":  "ex4/03_kld_k5/evt/k5e2/level/k5e2"
+                                          },
+    "ex4_03_kld_k5_twn_k5ti_level_k5ti":  {
+                                              "name":  "Andron",
+                                              "bg":  "ex4/03_kld_k5/twn/k5ti/level/k5ti"
+                                          },
+    "ex4_04_uvs_u5_fld_u5fa_level_u5fa":  {
+                                              "name":  "The Dark Inside",
+                                              "bg":  "ex4/04_uvs_u5/fld/u5fa/level/u5fa"
+                                          },
+    "ffxiv_fst_f1_dun_f1db_level_f1db":  {
+                                             "name":  "The Phantoms\u0027 Feast",
+                                             "bg":  "ffxiv/fst_f1/dun/f1db/level/f1db"
+                                         },
+    "ex4_03_kld_k5_fld_k5fa_level_k5fa":  {
+                                              "name":  "The Mothercrystal",
+                                              "bg":  "ex4/03_kld_k5/fld/k5fa/level/k5fa"
+                                          },
+    "ex4_04_uvs_u5_fld_u5fb_level_u5fb":  {
+                                              "name":  "The Final Day",
+                                              "bg":  "ex4/04_uvs_u5/fld/u5fb/level/u5fb"
+                                          },
+    "ex4_04_uvs_u5_cnt_u5c1_level_u5c1":  {
+                                              "name":  "The Excitatron 6000",
+                                              "bg":  "ex4/04_uvs_u5/cnt/u5c1/level/u5c1"
+                                          },
+    "ex1_01_roc_r2_evt_r2ea_level_r2ea":  {
+                                              "name":  "Strategy Room",
+                                              "bg":  "ex1/01_roc_r2/evt/r2ea/level/r2ea"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r1_level_n5r1":  {
+                                              "name":  "The Gates of PandÃ¦monium",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r1/level/n5r1"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r2_level_n5r2":  {
+                                              "name":  "The Stagnant Limbo",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r2/level/n5r2"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r3_level_n5r3":  {
+                                              "name":  "The Fervid Limbo",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r3/level/n5r3"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r4_level_n5r4":  {
+                                              "name":  "The Sanguine Limbo",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r4/level/n5r4"
+                                          },
+    "ex4_02_mid_m5_btl_m5b1_level_m5b1":  {
+                                              "name":  "Magna Glacies",
+                                              "bg":  "ex4/02_mid_m5/btl/m5b1/level/m5b1"
+                                          },
+    "ex4_04_uvs_u5_evt_u5e1_level_u5e1":  {
+                                              "name":  "Beyond the Stars",
+                                              "bg":  "ex4/04_uvs_u5/evt/u5e1/level/u5e1"
+                                          },
+    "ffxiv_sea_s1_dun_s1d1_level_s1d1":  {
+                                             "name":  "Sastasha",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d1/level/s1d1"
+                                         },
+    "ffxiv_wil_w1_rad_w1r1_level_w1r1":  {
+                                             "name":  "Cutter\u0027s Cry",
+                                             "bg":  "ffxiv/wil_w1/rad/w1r1/level/w1r1"
+                                         },
+    "ex1_01_roc_r2_dun_r2d1_level_r2d1":  {
+                                              "name":  "Dusk Vigil",
+                                              "bg":  "ex1/01_roc_r2/dun/r2d1/level/r2d1"
+                                          },
+    "ex4_02_mid_m5_evt_m5e3_level_m5e3":  {
+                                              "name":  "The Nethergate",
+                                              "bg":  "ex4/02_mid_m5/evt/m5e3/level/m5e3"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r0_level_n5r0":  {
+                                              "name":  "The Gates of PandÃ¦monium",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r0/level/n5r0"
+                                          },
+    "ex4_01_nvt_n5_evt_n5e1_level_n5e1":  {
+                                              "name":  "Propylaion",
+                                              "bg":  "ex4/01_nvt_n5/evt/n5e1/level/n5e1"
+                                          },
+    "ffxiv_pvp_xx_pvp_s5p1_level_s5p1":  {
+                                             "name":  "The Palaistra",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s5p1/level/s5p1"
+                                         },
+    "ffxiv_pvp_xx_pvp_s5p2_level_s5p2":  {
+                                             "name":  "The Volcanic Heart",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s5p2/level/s5p2"
+                                         },
+    "ffxiv_pvp_xx_pvp_s5p3_level_s5p3":  {
+                                             "name":  "Cloud Nine",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s5p3/level/s5p3"
+                                         },
+    "ffxiv_fst_f1_dun_f1d1_level_f1d1":  {
+                                             "name":  "The Tam-Tara Deepcroft",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d1/level/f1d1"
+                                         },
+    "ffxiv_wil_w1_dun_w1d1_level_w1d1":  {
+                                             "name":  "Copperbell Mines",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d1/level/w1d1"
+                                         },
+    "ffxiv_fst_f1_rad_f1r1_level_f1r1":  {
+                                             "name":  "The Thousand Maws of Toto-Rak",
+                                             "bg":  "ffxiv/fst_f1/rad/f1r1/level/f1r1"
+                                         },
+    "ffxiv_fst_f1_dun_f1d2_level_f1d2":  {
+                                             "name":  "Haukke Manor",
+                                             "bg":  "ffxiv/fst_f1/dun/f1d2/level/f1d2"
+                                         },
+    "ffxiv_sea_s1_dun_s1d2_level_s1d2":  {
+                                             "name":  "Brayflox\u0027s Longstop",
+                                             "bg":  "ffxiv/sea_s1/dun/s1d2/level/s1d2"
+                                         },
+    "ffxiv_roc_r1_dun_r1d1_level_r1d1":  {
+                                             "name":  "Stone Vigil",
+                                             "bg":  "ffxiv/roc_r1/dun/r1d1/level/r1d1"
+                                         },
+    "ffxiv_wil_w1_dun_w1d4_level_w1d4":  {
+                                             "name":  "Castrum Meridianum",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d4/level/w1d4"
+                                         },
+    "ffxiv_wil_w1_dun_w1d5_level_w1d5":  {
+                                             "name":  "The Praetorium",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d5/level/w1d5"
+                                         },
+    "ex4_02_mid_m5_dun_m5d4_level_m5d4":  {
+                                              "name":  "Alzadaal\u0027s Legacy",
+                                              "bg":  "ex4/02_mid_m5/dun/m5d4/level/m5d4"
+                                          },
+    "ex4_05_zon_z5_rad_z5r1_level_z5r1":  {
+                                              "name":  "Aglaia",
+                                              "bg":  "ex4/05_zon_z5/rad/z5r1/level/z5r1"
+                                          },
+    "ffxiv_hou_xx_hou_h1m2_level_h1m2":  {
+                                             "name":  "Unnamed Island",
+                                             "bg":  "ffxiv/hou_xx/hou/h1m2/level/h1m2"
+                                         },
+    "ex4_03_kld_k5_evt_k5e4_level_k5e4":  {
+                                              "name":  "Restricted Archives",
+                                              "bg":  "ex4/03_kld_k5/evt/k5e4/level/k5e4"
+                                          },
+    "ex4_05_zon_z5_evt_z5e1_level_z5e1":  {
+                                              "name":  "The Omphalos",
+                                              "bg":  "ex4/05_zon_z5/evt/z5e1/level/z5e1"
+                                          },
+    "ffxiv_roc_r1_dun_r1d3_level_r1d3":  {
+                                             "name":  "Snowcloak",
+                                             "bg":  "ffxiv/roc_r1/dun/r1d3/level/r1d3"
+                                         },
+    "ffxiv_lak_l1_dun_l1d1_level_l1d1":  {
+                                             "name":  "The Keeper of the Lake",
+                                             "bg":  "ffxiv/lak_l1/dun/l1d1/level/l1d1"
+                                         },
+    "ex1_02_dra_d2_dun_d2d2_level_d2d2":  {
+                                              "name":  "The Aery",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d2/level/d2d2"
+                                          },
+    "ffxiv_roc_r1_fld_r1fd_level_r1fd":  {
+                                             "name":  "Steps of Faith",
+                                             "bg":  "ffxiv/roc_r1/fld/r1fd/level/r1fd"
+                                         },
+    "ex4_06_wil_w5_dun_w5d1_level_w5d1":  {
+                                              "name":  "The Sil\u0027dihn Subterrane",
+                                              "bg":  "ex4/06_wil_w5/dun/w5d1/level/w5d1"
+                                          },
+    "ex4_05_zon_z5_dun_z5d1_level_z5d1":  {
+                                              "name":  "The Fell Court of Troia",
+                                              "bg":  "ex4/05_zon_z5/dun/z5d1/level/z5d1"
+                                          },
+    "ex4_05_zon_z5_fld_z5fa_level_z5fa":  {
+                                              "name":  "Storm\u0027s Crown",
+                                              "bg":  "ex4/05_zon_z5/fld/z5fa/level/z5fa"
+                                          },
+    "ex4_04_uvs_u5_evt_u5e3_level_u5e3":  {
+                                              "name":  "Elysion",
+                                              "bg":  "ex4/04_uvs_u5/evt/u5e3/level/u5e3"
+                                          },
+    "ex4_06_wil_w5_dun_w5d2_level_w5d2":  {
+                                              "name":  "Another Sil\u0027dihn Subterrane",
+                                              "bg":  "ex4/06_wil_w5/dun/w5d2/level/w5d2"
+                                          },
+    "ex4_05_zon_z5_evt_z5e4_level_z5e4":  {
+                                              "name":  "Zero\u0027s Domain",
+                                              "bg":  "ex4/05_zon_z5/evt/z5e4/level/z5e4"
+                                          },
+    "ex4_02_mid_m5_evt_m5e4_level_m5e4":  {
+                                              "name":  "Meghaduta Guest Chambers",
+                                              "bg":  "ex4/02_mid_m5/evt/m5e4/level/m5e4"
+                                          },
+    "ex4_03_kld_k5_evt_k5e5_level_k5e5":  {
+                                              "name":  "The Aitiascope",
+                                              "bg":  "ex4/03_kld_k5/evt/k5e5/level/k5e5"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r5_level_n5r5":  {
+                                              "name":  "The Caustic Purgatory",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r5/level/n5r5"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r6_level_n5r6":  {
+                                              "name":  "The Pestilent Purgatory",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r6/level/n5r6"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r7_level_n5r7":  {
+                                              "name":  "The Hollow Purgatory",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r7/level/n5r7"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r8_level_n5r8":  {
+                                              "name":  "Stygian Insenescence Cells",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r8/level/n5r8"
+                                          },
+    "ffxiv_fst_f1_evt_f1ea_level_f1ea":  {
+                                             "name":  "Sneaky Hollow",
+                                             "bg":  "ffxiv/fst_f1/evt/f1ea/level/f1ea"
+                                         },
+    "ex4_02_mid_m5_fld_m5fa_level_m5fa":  {
+                                              "name":  "Mount Ordeals",
+                                              "bg":  "ex4/02_mid_m5/fld/m5fa/level/m5fa"
+                                          },
+    "ex4_02_mid_m5_dun_m5d5_level_m5d5":  {
+                                              "name":  "Lapis Manalis",
+                                              "bg":  "ex4/02_mid_m5/dun/m5d5/level/m5d5"
+                                          },
+    "ffxiv_fst_f1_evt_f1eb_level_f1eb":  {
+                                             "name":  "Sylphstep",
+                                             "bg":  "ffxiv/fst_f1/evt/f1eb/level/f1eb"
+                                         },
+    "ex4_07_lak_l5_cnt_l5c1_level_l5c1":  {
+                                              "name":  "Eureka Orthos",
+                                              "bg":  "ex4/07_lak_l5/cnt/l5c1/level/l5c1"
+                                          },
+    "ex4_07_lak_l5_cnt_l5c2_level_l5c2":  {
+                                              "name":  "Eureka Orthos",
+                                              "bg":  "ex4/07_lak_l5/cnt/l5c2/level/l5c2"
+                                          },
+    "ex4_07_lak_l5_cnt_l5c3_level_l5c3":  {
+                                              "name":  "Eureka Orthos",
+                                              "bg":  "ex4/07_lak_l5/cnt/l5c3/level/l5c3"
+                                          },
+    "ex4_07_lak_l5_cnt_l5c4_level_l5c4":  {
+                                              "name":  "Eureka Orthos",
+                                              "bg":  "ex4/07_lak_l5/cnt/l5c4/level/l5c4"
+                                          },
+    "ex4_07_lak_l5_cnt_l5c5_level_l5c5":  {
+                                              "name":  "Eureka Orthos",
+                                              "bg":  "ex4/07_lak_l5/cnt/l5c5/level/l5c5"
+                                          },
+    "ex4_07_lak_l5_cnt_l5c6_level_l5c6":  {
+                                              "name":  "Eureka Orthos",
+                                              "bg":  "ex4/07_lak_l5/cnt/l5c6/level/l5c6"
+                                          },
+    "ex1_02_dra_d2_dun_d2d5_level_d2d5":  {
+                                              "name":  "The Antitower",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d5/level/d2d5"
+                                          },
+    "ex1_02_dra_d2_dun_d2d6_level_d2d6":  {
+                                              "name":  "Sohr Khai",
+                                              "bg":  "ex1/02_dra_d2/dun/d2d6/level/d2d6"
+                                          },
+    "ex1_01_roc_r2_dun_r2d3_level_r2d3":  {
+                                              "name":  "Xelphatol",
+                                              "bg":  "ex1/01_roc_r2/dun/r2d3/level/r2d3"
+                                          },
+    "ffxiv_fst_f1_dun_f1da_level_f1da":  {
+                                             "name":  "Baelsar\u0027s Wall",
+                                             "bg":  "ffxiv/fst_f1/dun/f1da/level/f1da"
+                                         },
+    "ffxiv_pvp_xx_pvp_s5p4_level_s5p4":  {
+                                             "name":  "The Clockwork Castletown",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s5p4/level/s5p4"
+                                         },
+    "ex4_05_zon_z5_rad_z5r2_level_z5r2":  {
+                                              "name":  "Euphrosyne",
+                                              "bg":  "ex4/05_zon_z5/rad/z5r2/level/z5r2"
+                                          },
+    "ex2_05_zon_z3_ome_z3oz_level_z3oz":  {
+                                              "name":  "The Interdimensional Rift",
+                                              "bg":  "ex2/05_zon_z3/ome/z3oz/level/z3oz"
+                                          },
+    "ex4_01_nvt_n5_cnt_n5c1_level_n5c1":  {
+                                              "name":  "The Shifting Gymnasion Agonon",
+                                              "bg":  "ex4/01_nvt_n5/cnt/n5c1/level/n5c1"
+                                          },
+    "ex4_07_lak_l5_cnt_l5c0_level_l5c0":  {
+                                              "name":  "Eureka Orthos",
+                                              "bg":  "ex4/07_lak_l5/cnt/l5c0/level/l5c0"
+                                          },
+    "ex4_02_mid_m5_evt_m5e6_level_m5e6":  {
+                                              "name":  "Khadga",
+                                              "bg":  "ex4/02_mid_m5/evt/m5e6/level/m5e6"
+                                          },
+    "ex4_03_kld_k5_dun_k5d2_level_k5d2":  {
+                                              "name":  "The Aetherfont",
+                                              "bg":  "ex4/03_kld_k5/dun/k5d2/level/k5d2"
+                                          },
+    "ffxiv_sea_s1_pvp_s1p6_level_s1p6":  {
+                                             "name":  "The Fold",
+                                             "bg":  "ffxiv/sea_s1/pvp/s1p6/level/s1p6"
+                                         },
+    "ex4_08_est_e5_dun_e5d1_level_e5d1":  {
+                                              "name":  "Mount Rokkon",
+                                              "bg":  "ex4/08_est_e5/dun/e5d1/level/e5d1"
+                                          },
+    "ffxiv_pvp_xx_pvp_s5p5_level_s5p5":  {
+                                             "name":  "The Red Sands",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s5p5/level/s5p5"
+                                         },
+    "ex4_05_zon_z5_fld_z5fb_level_z5fb":  {
+                                              "name":  "The Voidcast Dais",
+                                              "bg":  "ex4/05_zon_z5/fld/z5fb/level/z5fb"
+                                          },
+    "ex2_03_ocn_o3_dun_o3d1_level_o3d1":  {
+                                              "name":  "The Sirensong Sea",
+                                              "bg":  "ex2/03_ocn_o3/dun/o3d1/level/o3d1"
+                                          },
+    "ex2_02_est_e3_dun_e3d3_level_e3d3":  {
+                                              "name":  "Doma Castle",
+                                              "bg":  "ex2/02_est_e3/dun/e3d3/level/e3d3"
+                                          },
+    "ex2_01_gyr_g3_dun_g3d1_level_g3d1":  {
+                                              "name":  "Castrum Abania",
+                                              "bg":  "ex2/01_gyr_g3/dun/g3d1/level/g3d1"
+                                          },
+    "ex4_01_nvt_n5_rad_n5r9_level_n5r9":  {
+                                              "name":  "The Aetherial Slough",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5r9/level/n5r9"
+                                          },
+    "ex4_01_nvt_n5_rad_n5ra_level_n5ra":  {
+                                              "name":  "The DÃ¦mons\u0027 Nest",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5ra/level/n5ra"
+                                          },
+    "ex4_01_nvt_n5_rad_n5rb_level_n5rb":  {
+                                              "name":  "The Chamber of Fourteen",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5rb/level/n5rb"
+                                          },
+    "ex4_01_nvt_n5_rad_n5rc_level_n5rc":  {
+                                              "name":  "Ascension",
+                                              "bg":  "ex4/01_nvt_n5/rad/n5rc/level/n5rc"
+                                          },
+    "ex4_08_est_e5_dun_e5d2_level_e5d2":  {
+                                              "name":  "Another Mount Rokkon",
+                                              "bg":  "ex4/08_est_e5/dun/e5d2/level/e5d2"
+                                          },
+    "ex4_02_mid_m5_evt_m5e7_level_m5e7":  {
+                                              "name":  "Senatus",
+                                              "bg":  "ex4/02_mid_m5/evt/m5e7/level/m5e7"
+                                          },
+    "ex4_02_mid_m5_evt_m5e5_level_m5e5":  {
+                                              "name":  "Estinien\u0027s Chambers",
+                                              "bg":  "ex4/02_mid_m5/evt/m5e5/level/m5e5"
+                                          },
+    "ex4_05_zon_z5_evt_z5e5_level_z5e5":  {
+                                              "name":  "The Red Moon",
+                                              "bg":  "ex4/05_zon_z5/evt/z5e5/level/z5e5"
+                                          },
+    "ffxiv_ocn_o1_ang_o1a2_level_o1a2":  {
+                                             "name":  "The Endeavor",
+                                             "bg":  "ffxiv/ocn_o1/ang/o1a2/level/o1a2"
+                                         },
+    "ex4_05_zon_z5_dun_z5d2_level_z5d2":  {
+                                              "name":  "The Lunar Subterrane",
+                                              "bg":  "ex4/05_zon_z5/dun/z5d2/level/z5d2"
+                                          },
+    "ffxiv_wil_w1_evt_w1ek_level_w1ek":  {
+                                             "name":  "Blunderville",
+                                             "bg":  "ffxiv/wil_w1/evt/w1ek/level/w1ek"
+                                         },
+    "ffxiv_wil_w1_fld_w1fd_level_w1fd":  {
+                                             "name":  "The Memory of Embers",
+                                             "bg":  "ffxiv/wil_w1/fld/w1fd/level/w1fd"
+                                         },
+    "ex5_02_ykt_y6_dun_y6d1_level_y6d1":  {
+                                              "name":  "Ihuykatumu",
+                                              "bg":  "ex5/02_ykt_y6/dun/y6d1/level/y6d1"
+                                          },
+    "ex4_05_zon_z5_fld_z5fc_level_z5fc":  {
+                                              "name":  "The Abyssal Fracture",
+                                              "bg":  "ex4/05_zon_z5/fld/z5fc/level/z5fc"
+                                          },
+    "ex5_02_ykt_y6_evt_y6e1_level_y6e1":  {
+                                              "name":  "Sunperch",
+                                              "bg":  "ex5/02_ykt_y6/evt/y6e1/level/y6e1"
+                                          },
+    "ex5_01_xkt_x6_evt_x6e1_level_x6e1":  {
+                                              "name":  "Earthen Sky Hideout",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6e1/level/x6e1"
+                                          },
+    "ex2_01_gyr_g3_dun_g3d4_level_g3d4":  {
+                                              "name":  "The Drowned City of Skalla",
+                                              "bg":  "ex2/01_gyr_g3/dun/g3d4/level/g3d4"
+                                          },
+    "ex2_02_est_e3_dun_e3d7_level_e3d7":  {
+                                              "name":  "The Burn",
+                                              "bg":  "ex2/02_est_e3/dun/e3d7/level/e3d7"
+                                          },
+    "ex4_09_ocn_o5_dun_o5d1_level_o5d1":  {
+                                              "name":  "Aloalo Island",
+                                              "bg":  "ex4/09_ocn_o5/dun/o5d1/level/o5d1"
+                                          },
+    "ex4_05_zon_z5_rad_z5r3_level_z5r3":  {
+                                              "name":  "Thaleia",
+                                              "bg":  "ex4/05_zon_z5/rad/z5r3/level/z5r3"
+                                          },
+    "ex4_09_ocn_o5_dun_o5d2_level_o5d2":  {
+                                              "name":  "Another Aloalo Island",
+                                              "bg":  "ex4/09_ocn_o5/dun/o5d2/level/o5d2"
+                                          },
+    "ex5_02_ykt_y6_twn_y6t1_level_y6t1":  {
+                                              "name":  "Tuliyollal",
+                                              "bg":  "ex5/02_ykt_y6/twn/y6t1/level/y6t1"
+                                          },
+    "ex5_01_xkt_x6_twn_x6t1_level_x6t1":  {
+                                              "name":  "Solution Nine",
+                                              "bg":  "ex5/01_xkt_x6/twn/x6t1/level/x6t1"
+                                          },
+    "ex5_02_ykt_y6_fld_y6f1_level_y6f1":  {
+                                              "name":  "Urqopacha",
+                                              "bg":  "ex5/02_ykt_y6/fld/y6f1/level/y6f1"
+                                          },
+    "ex5_02_ykt_y6_fld_y6f2_level_y6f2":  {
+                                              "name":  "Kozama\u0027uka",
+                                              "bg":  "ex5/02_ykt_y6/fld/y6f2/level/y6f2"
+                                          },
+    "ex5_02_ykt_y6_fld_y6f3_level_y6f3":  {
+                                              "name":  "Yak T\u0027el",
+                                              "bg":  "ex5/02_ykt_y6/fld/y6f3/level/y6f3"
+                                          },
+    "ex5_01_xkt_x6_fld_x6f1_level_x6f1":  {
+                                              "name":  "Shaaloani",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6f1/level/x6f1"
+                                          },
+    "ex5_01_xkt_x6_fld_x6f2_level_x6f2":  {
+                                              "name":  "Heritage Found",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6f2/level/x6f2"
+                                          },
+    "ex5_01_xkt_x6_fld_x6f3_level_x6f3":  {
+                                              "name":  "Living Memory",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6f3/level/x6f3"
+                                          },
+    "ex5_02_ykt_y6_dun_y6d2_level_y6d2":  {
+                                              "name":  "Worqor Zormor",
+                                              "bg":  "ex5/02_ykt_y6/dun/y6d2/level/y6d2"
+                                          },
+    "ex5_02_ykt_y6_dun_y6d3_level_y6d3":  {
+                                              "name":  "The Skydeep Cenote",
+                                              "bg":  "ex5/02_ykt_y6/dun/y6d3/level/y6d3"
+                                          },
+    "ex5_02_ykt_y6_fld_y6fa_level_y6fa":  {
+                                              "name":  "Worqor Lar Dor",
+                                              "bg":  "ex5/02_ykt_y6/fld/y6fa/level/y6fa"
+                                          },
+    "ffxiv_wil_w1_evt_w1el_level_w1el":  {
+                                             "name":  "Blunderville Square",
+                                             "bg":  "ffxiv/wil_w1/evt/w1el/level/w1el"
+                                         },
+    "ex5_01_xkt_x6_dun_x6d1_level_x6d1":  {
+                                              "name":  "Vanguard",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d1/level/x6d1"
+                                          },
+    "ex5_01_xkt_x6_dun_x6d3_level_x6d3":  {
+                                              "name":  "Alexandria",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d3/level/x6d3"
+                                          },
+    "ex5_01_xkt_x6_fld_x6fa_level_x6fa":  {
+                                              "name":  "Summit of Everkeep",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6fa/level/x6fa"
+                                          },
+    "ex5_01_xkt_x6_fld_x6fb_level_x6fb":  {
+                                              "name":  "Interphos",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6fb/level/x6fb"
+                                          },
+    "ex5_01_xkt_x6_dun_x6d4_level_x6d4":  {
+                                              "name":  "Tender Valley",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d4/level/x6d4"
+                                          },
+    "ex5_01_xkt_x6_dun_x6d5_level_x6d5":  {
+                                              "name":  "Strayborough",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d5/level/x6d5"
+                                          },
+    "ex5_02_ykt_y6_twn_y6ti_level_y6ti":  {
+                                              "name":  "The For\u0027ard Cabins",
+                                              "bg":  "ex5/02_ykt_y6/twn/y6ti/level/y6ti"
+                                          },
+    "ex5_02_ykt_y6_evt_y6e3_level_y6e3":  {
+                                              "name":  "Main Deck",
+                                              "bg":  "ex5/02_ykt_y6/evt/y6e3/level/y6e3"
+                                          },
+    "ex5_01_xkt_x6_evt_x6e2_level_x6e2":  {
+                                              "name":  "The Backroom",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6e2/level/x6e2"
+                                          },
+    "ex5_01_xkt_x6_dun_x6d2_level_x6d2":  {
+                                              "name":  "Origenics",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d2/level/x6d2"
+                                          },
+    "ex5_02_ykt_y6_cnt_y6c1_level_y6c1":  {
+                                              "name":  "Cenote Ja Ja Gural",
+                                              "bg":  "ex5/02_ykt_y6/cnt/y6c1/level/y6c1"
+                                          },
+    "ex5_02_ykt_y6_evt_y6e2_level_y6e2":  {
+                                              "name":  "Skydeep Cenote Inner Chamber",
+                                              "bg":  "ex5/02_ykt_y6/evt/y6e2/level/y6e2"
+                                          },
+    "ex5_01_xkt_x6_evt_x6e4_level_x6e4":  {
+                                              "name":  "Tritails Training",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6e4/level/x6e4"
+                                          },
+    "ex5_01_xkt_x6_evt_x6e5_level_x6e5":  {
+                                              "name":  "Greenroom",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6e5/level/x6e5"
+                                          },
+    "ex5_01_xkt_x6_rad_x6r1_level_x6r1":  {
+                                              "name":  "Scratching Ring",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r1/level/x6r1"
+                                          },
+    "ex5_01_xkt_x6_rad_x6r2_level_x6r2":  {
+                                              "name":  "Lovely Lovering",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r2/level/x6r2"
+                                          },
+    "ex5_01_xkt_x6_rad_x6r3_level_x6r3":  {
+                                              "name":  "Blasting Ring",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r3/level/x6r3"
+                                          },
+    "ex5_01_xkt_x6_rad_x6r4_level_x6r4":  {
+                                              "name":  "The Thundering",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r4/level/x6r4"
+                                          },
+    "ffxiv_fst_f1_dun_f1dc_level_f1dc":  {
+                                             "name":  "Manor Basement",
+                                             "bg":  "ffxiv/fst_f1/dun/f1dc/level/f1dc"
+                                         },
+    "ffxiv_cos_c1_hou_c1w1_level_c1w1":  {
+                                             "name":  "Sinus Ardorum",
+                                             "bg":  "ffxiv/cos_c1/hou/c1w1/level/c1w1"
+                                         },
+    "ex3_01_nvt_n4_goe_n4gw_level_n4gw":  {
+                                              "name":  "A Future Rewritten",
+                                              "bg":  "ex3/01_nvt_n4/goe/n4gw/level/n4gw"
+                                          },
+    "ffxiv_lak_l1_rad_l1rz_level_l1rz":  {
+                                             "name":  "Sphere of Naught",
+                                             "bg":  "ffxiv/lak_l1/rad/l1rz/level/l1rz"
+                                         },
+    "ex5_01_xkt_x6_dun_x6d6_level_x6d6":  {
+                                              "name":  "Yuweyawata",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d6/level/x6d6"
+                                          },
+    "ex5_01_xkt_x6_fld_x6fc_level_x6fc":  {
+                                              "name":  "Interphos",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6fc/level/x6fc"
+                                          },
+    "ex5_01_xkt_x6_evt_x6e7_level_x6e7":  {
+                                              "name":  "Zorgor the Boundless",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6e7/level/x6e7"
+                                          },
+    "ffxiv_fst_f1_evt_f1ec_level_f1ec":  {
+                                             "name":  "Starlight Stalls",
+                                             "bg":  "ffxiv/fst_f1/evt/f1ec/level/f1ec"
+                                         },
+    "ex5_05_zon_z6_rad_z6r1_level_z6r1":  {
+                                              "name":  "Jeuno: The First Walk",
+                                              "bg":  "ex5/05_zon_z6/rad/z6r1/level/z6r1"
+                                          },
+    "ffxiv_hou_xx_ind_h1i1_level_h1i1":  {
+                                             "name":  "",
+                                             "bg":  "ffxiv/hou_xx/ind/h1i1/level/h1i1"
+                                         },
+    "ffxiv_hou_xx_ind_h1i2_level_h1i2":  {
+                                             "name":  "",
+                                             "bg":  "ffxiv/hou_xx/ind/h1i2/level/h1i2"
+                                         },
+    "ffxiv_hou_xx_ind_h1i3_level_h1i3":  {
+                                             "name":  "",
+                                             "bg":  "ffxiv/hou_xx/ind/h1i3/level/h1i3"
+                                         },
+    "ex5_03_ocn_o6_btl_o6b1_level_o6b1":  {
+                                              "name":  "South Horn",
+                                              "bg":  "ex5/03_ocn_o6/btl/o6b1/level/o6b1"
+                                          },
+    "ffxiv_wil_w1_evt_w1em_level_w1em":  {
+                                             "name":  "Hall of the Unbound",
+                                             "bg":  "ffxiv/wil_w1/evt/w1em/level/w1em"
+                                         },
+    "ex5_01_xkt_x6_rad_x6r5_level_x6r5":  {
+                                              "name":  "Groovy Ring",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r5/level/x6r5"
+                                          },
+    "ex5_01_xkt_x6_rad_x6r6_level_x6r6":  {
+                                              "name":  "Rebel Ring",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r6/level/x6r6"
+                                          },
+    "ex5_01_xkt_x6_rad_x6r7_level_x6r7":  {
+                                              "name":  "Demolition Site",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r7/level/x6r7"
+                                          },
+    "ex5_01_xkt_x6_rad_x6r8_level_x6r8":  {
+                                              "name":  "Hunter\u0027s Ring",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r8/level/x6r8"
+                                          },
+    "ex5_05_zon_z6_evt_z6e1_level_z6e1":  {
+                                              "name":  "Lower Jeuno",
+                                              "bg":  "ex5/05_zon_z6/evt/z6e1/level/z6e1"
+                                          },
+    "ex5_01_xkt_x6_dun_x6d7_level_x6d7":  {
+                                              "name":  "The Underkeep",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d7/level/x6d7"
+                                          },
+    "ffxiv_wil_w1_dun_w1d3_level_w1d3":  {
+                                             "name":  "The Sunken Temple of Qarn",
+                                             "bg":  "ffxiv/wil_w1/dun/w1d3/level/w1d3"
+                                         },
+    "ex5_01_xkt_x6_evt_x6e8_level_x6e8":  {
+                                              "name":  "Break Room",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6e8/level/x6e8"
+                                          },
+    "ex5_03_ocn_o6_evt_o6e1_level_o6e1":  {
+                                              "name":  "Phantom Village",
+                                              "bg":  "ex5/03_ocn_o6/evt/o6e1/level/o6e1"
+                                          },
+    "ex5_01_xkt_x6_fld_x6fd_level_x6fd":  {
+                                              "name":  "Recollection",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6fd/level/x6fd"
+                                          },
+    "ffxiv_pvp_xx_pvp_l1p3_level_l1p3":  {
+                                             "name":  "Carteneau Flats: Borderland Ruins",
+                                             "bg":  "ffxiv/pvp_xx/pvp/l1p3/level/l1p3"
+                                         },
+    "ex5_01_xkt_x6_evt_x6e9_level_x6e9":  {
+                                              "name":  "Throne Room",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6e9/level/x6e9"
+                                          },
+    "ex5_03_ocn_o6_evt_o6e2_level_o6e2":  {
+                                              "name":  "Main Deck",
+                                              "bg":  "ex5/03_ocn_o6/evt/o6e2/level/o6e2"
+                                          },
+    "ex5_01_xkt_x6_cnt_x6c1_level_x6c1":  {
+                                              "name":  "Vault Oneiron",
+                                              "bg":  "ex5/01_xkt_x6/cnt/x6c1/level/x6c1"
+                                          },
+    "ex5_06_nvt_n6_cnt_n6c0_level_n6c0":  {
+                                              "name":  "Pilgrim\u0027s Traverse",
+                                              "bg":  "ex5/06_nvt_n6/cnt/n6c0/level/n6c0"
+                                          },
+    "ex5_06_nvt_n6_cnt_n6c1_level_n6c1":  {
+                                              "name":  "Pilgrim\u0027s Traverse",
+                                              "bg":  "ex5/06_nvt_n6/cnt/n6c1/level/n6c1"
+                                          },
+    "ex5_06_nvt_n6_cnt_n6c2_level_n6c2":  {
+                                              "name":  "Pilgrim\u0027s Traverse",
+                                              "bg":  "ex5/06_nvt_n6/cnt/n6c2/level/n6c2"
+                                          },
+    "ex5_06_nvt_n6_cnt_n6c3_level_n6c3":  {
+                                              "name":  "Pilgrim\u0027s Traverse",
+                                              "bg":  "ex5/06_nvt_n6/cnt/n6c3/level/n6c3"
+                                          },
+    "ex5_06_nvt_n6_cnt_n6c4_level_n6c4":  {
+                                              "name":  "Pilgrim\u0027s Traverse",
+                                              "bg":  "ex5/06_nvt_n6/cnt/n6c4/level/n6c4"
+                                          },
+    "ex5_06_nvt_n6_cnt_n6c5_level_n6c5":  {
+                                              "name":  "Pilgrim\u0027s Traverse",
+                                              "bg":  "ex5/06_nvt_n6/cnt/n6c5/level/n6c5"
+                                          },
+    "ex5_06_nvt_n6_cnt_n6c6_level_n6c6":  {
+                                              "name":  "Pilgrim\u0027s Traverse",
+                                              "bg":  "ex5/06_nvt_n6/cnt/n6c6/level/n6c6"
+                                          },
+    "ffxiv_cos_c1_hou_c1w2_level_c1w2":  {
+                                             "name":  "Phaenna",
+                                             "bg":  "ffxiv/cos_c1/hou/c1w2/level/c1w2"
+                                         },
+    "ex5_01_xkt_x6_dun_x6d8_level_x6d8":  {
+                                              "name":  "The Meso Terminal",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d8/level/x6d8"
+                                          },
+    "ffxiv_pvp_xx_pvp_s5p6_level_s5p6":  {
+                                             "name":  "The Bayside Battleground",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s5p6/level/s5p6"
+                                         },
+    "ex5_01_xkt_x6_fld_x6fe_level_x6fe":  {
+                                              "name":  "The Ageless Necropolis",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6fe/level/x6fe"
+                                          },
+    "ex5_02_ykt_y6_evt_y6e5_level_y6e5":  {
+                                              "name":  "Zirgorteh the Open-armed",
+                                              "bg":  "ex5/02_ykt_y6/evt/y6e5/level/y6e5"
+                                          },
+    "ffxiv_fst_f1_dun_f1dd_level_f1dd":  {
+                                             "name":  "The PÃ¢tisserie",
+                                             "bg":  "ffxiv/fst_f1/dun/f1dd/level/f1dd"
+                                         },
+    "ex5_01_xkt_x6_evt_x6eb_level_x6eb":  {
+                                              "name":  "Containment Complex 10-29",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6eb/level/x6eb"
+                                          },
+    "ex5_01_xkt_x6_fld_x6ff_level_x6ff":  {
+                                              "name":  "The Windward Wilds",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6ff/level/x6ff"
+                                          },
+    "ex5_05_zon_z6_rad_z6r2_level_z6r2":  {
+                                              "name":  "San d\u0027Oria: The Second Walk",
+                                              "bg":  "ex5/05_zon_z6/rad/z6r2/level/z6r2"
+                                          },
+    "ex5_01_xkt_x6_fld_x6fg_level_x6fg":  {
+                                              "name":  "Hell on Rails",
+                                              "bg":  "ex5/01_xkt_x6/fld/x6fg/level/x6fg"
+                                          },
+    "ffxiv_cos_c1_hou_c1w3_level_c1w3":  {
+                                             "name":  "Oizys",
+                                             "bg":  "ffxiv/cos_c1/hou/c1w3/level/c1w3"
+                                         },
+    "ffxiv_pvp_xx_pvp_y6p1_level_y6p1":  {
+                                             "name":  "Worqor Chirteh",
+                                             "bg":  "ffxiv/pvp_xx/pvp/y6p1/level/y6p1"
+                                         },
+    "ex5_01_xkt_x6_dun_x6d9_level_x6d9":  {
+                                              "name":  "Mistwake",
+                                              "bg":  "ex5/01_xkt_x6/dun/x6d9/level/x6d9"
+                                          },
+    "ex5_07_mid_m6_dun_m6d1_level_m6d1":  {
+                                              "name":  "The Merchant\u0027s Tale",
+                                              "bg":  "ex5/07_mid_m6/dun/m6d1/level/m6d1"
+                                          },
+    "ffxiv_cos_c1_hou_c1w4_level_c1w4":  {
+                                             "name":  "Auxesia",
+                                             "bg":  "ffxiv/cos_c1/hou/c1w4/level/c1w4"
+                                         },
+    "ex5_01_xkt_x6_rad_x6r9_level_x6r9":  {
+                                              "name":  "Ring Noir",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6r9/level/x6r9"
+                                          },
+    "ex5_01_xkt_x6_rad_x6ra_level_x6ra":  {
+                                              "name":  "The X-Ring",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6ra/level/x6ra"
+                                          },
+    "ex5_01_xkt_x6_rad_x6rb_level_x6rb":  {
+                                              "name":  "The Crown",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6rb/level/x6rb"
+                                          },
+    "ex5_01_xkt_x6_rad_x6rc_level_x6rc":  {
+                                              "name":  "Arcadia",
+                                              "bg":  "ex5/01_xkt_x6/rad/x6rc/level/x6rc"
+                                          },
+    "ex5_01_xkt_x6_evt_x6ec_level_x6ec":  {
+                                              "name":  "Kanilokka Corpus Substructure",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6ec/level/x6ec"
+                                          },
+    "ex5_01_xkt_x6_evt_x6ed_level_x6ed":  {
+                                              "name":  "Alexandria Crater",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6ed/level/x6ed"
+                                          },
+    "ffxiv_sea_s1_evt_s1e9_level_s1e9":  {
+                                             "name":  "The Gold Saucer",
+                                             "bg":  "ffxiv/sea_s1/evt/s1e9/level/s1e9"
+                                         },
+    "ffxiv_fst_f1_evt_f1ed_level_f1ed":  {
+                                             "name":  "Lilyswim",
+                                             "bg":  "ffxiv/fst_f1/evt/f1ed/level/f1ed"
+                                         },
+    "ex5_07_mid_m6_evt_m6e1_level_m6e1":  {
+                                              "name":  "The Maiden\u0027s Home",
+                                              "bg":  "ex5/07_mid_m6/evt/m6e1/level/m6e1"
+                                          },
+    "ex5_01_xkt_x6_evt_x6ee_level_x6ee":  {
+                                              "name":  "Bentini Depot",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6ee/level/x6ee"
+                                          },
+    "ex5_01_xkt_x6_evt_x6ef_level_x6ef":  {
+                                              "name":  "Tritails Training",
+                                              "bg":  "ex5/01_xkt_x6/evt/x6ef/level/x6ef"
+                                          },
+    "ex5_07_mid_m6_dun_m6d2_level_m6d2":  {
+                                              "name":  "The Clyteum",
+                                              "bg":  "ex5/07_mid_m6/dun/m6d2/level/m6d2"
+                                          },
+    "ex5_03_ocn_o6_btl_o6b2_level_o6b2":  {
+                                              "name":  "North Horn",
+                                              "bg":  "ex5/03_ocn_o6/btl/o6b2/level/o6b2"
+                                          },
+    "ffxiv_pvp_xx_pvp_s5p7_level_s5p7":  {
+                                             "name":  "Archeia Harmonias",
+                                             "bg":  "ffxiv/pvp_xx/pvp/s5p7/level/s5p7"
+                                         },
+    "ffxiv_wil_w1_evt_w1en_level_w1en":  {
+                                             "name":  "The Gold Saucer",
+                                             "bg":  "ffxiv/wil_w1/evt/w1en/level/w1en"
+                                         },
+    "ffxiv_wil_w1_evt_w1eo_level_w1eo":  {
+                                             "name":  "Keybound Square",
+                                             "bg":  "ffxiv/wil_w1/evt/w1eo/level/w1eo"
+                                         },
+    "ex4_05_zon_z5_fld_z5fd_level_z5fd":  {
+                                              "name":  "The Unmaking",
+                                              "bg":  "ex4/05_zon_z5/fld/z5fd/level/z5fd"
+                                          },
+    "ex2_05_zon_z3_ome_z3oy_level_z3oy":  {
+                                              "name":  "Sigmascape V4.0",
+                                              "bg":  "ex2/05_zon_z3/ome/z3oy/level/z3oy"
+                                          },
+    "ex2_02_est_e3_dun_e3d1_level_e3d1":  {
+                                              "name":  "Shisui of the Violet Tides",
+                                              "bg":  "ex2/02_est_e3/dun/e3d1/level/e3d1"
+                                          },
+    "ex5_05_zon_z6_rad_z6r3_level_z6r3":  {
+                                              "name":  "Windurst: The Third Walk",
+                                              "bg":  "ex5/05_zon_z6/rad/z6r3/level/z6r3"
+                                          },
+    "ffxiv_fst_f1_dun_f1de_level_f1de":  {
+                                             "name":  "The Phantoms\u0027 Feast",
+                                             "bg":  "ffxiv/fst_f1/dun/f1de/level/f1de"
+                                         },
+    "ffxiv_hou_xx_ind_h2i1_level_h2i1":  {
+                                             "name":  "",
+                                             "bg":  "ffxiv/hou_xx/ind/h2i1/level/h2i1"
+                                         },
+    "ffxiv_hou_xx_ind_h2i2_level_h2i2":  {
+                                             "name":  "",
+                                             "bg":  "ffxiv/hou_xx/ind/h2i2/level/h2i2"
+                                         },
+    "ffxiv_hou_xx_ind_h2i3_level_h2i3":  {
+                                             "name":  "",
+                                             "bg":  "ffxiv/hou_xx/ind/h2i3/level/h2i3"
+                                         }
+}

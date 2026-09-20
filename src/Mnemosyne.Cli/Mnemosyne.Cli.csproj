@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mnemosyne.Core\Mnemosyne.Core.csproj" />
+    <ProjectReference Include="..\Mnemosyne.Client\Mnemosyne.Client.csproj" />
+    <ProjectReference Include="..\Mnemosyne.Protocol\Mnemosyne.Protocol.csproj" />
+    <ProjectReference Include="..\Mnemosyne.Builder\Mnemosyne.Builder.csproj" />
+    <!-- the toolbox drives ops through ZoneService in process as well as over the pipe
+         (reachcells): a running service — a live game session — must not be restarted just to
+         test a handler, and ipc-test still covers the deployed one end to end -->
+    <ProjectReference Include="..\Mnemosyne.Service\Mnemosyne.Service.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

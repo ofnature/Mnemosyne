@@ -1,0 +1,13 @@
+bin/
+obj/
+*.user
+.vs/
+.idea/
+
+# Reference clones — not part of this repo
+external/
+
+# Markdown stays local (working notes) — only the README and docs are published.
+*.md
+!README.md
+!docs/*.md

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Mnemosyne.Builder/Mnemosyne.Builder.csproj" />
+    <Project Path="src/Mnemosyne.Cli/Mnemosyne.Cli.csproj" />
+    <Project Path="src/Mnemosyne.Client/Mnemosyne.Client.csproj" />
+    <Project Path="src/Mnemosyne.Core/Mnemosyne.Core.csproj" />
+    <Project Path="src/Mnemosyne.Protocol/Mnemosyne.Protocol.csproj" />
+    <Project Path="src/Mnemosyne.Service/Mnemosyne.Service.csproj" />
+    <Project Path="src/Mnemosyne.Viewer/Mnemosyne.Viewer.csproj" />
+  </Folder>
+</Solution>

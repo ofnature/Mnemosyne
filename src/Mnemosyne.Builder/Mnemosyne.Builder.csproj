@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Mnemosyne.Core\Mnemosyne.Core.csproj" />
+    <ProjectReference Include="..\Mnemosyne.Protocol\Mnemosyne.Protocol.csproj" />
+    <ProjectReference Include="..\..\external\ffxiv_navmesh\DotRecast\src\DotRecast.Core\DotRecast.Core.csproj" />
+    <ProjectReference Include="..\..\external\ffxiv_navmesh\DotRecast\src\DotRecast.Detour\DotRecast.Detour.csproj" />
+    <ProjectReference Include="..\..\external\ffxiv_navmesh\DotRecast\src\DotRecast.Recast\DotRecast.Recast.csproj" />
+    <ProjectReference Include="..\..\external\ffxiv_navmesh\DotRecast\src\DotRecast.Detour.Extras\DotRecast.Detour.Extras.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lumina" Version="7.6.1" />
+    <PackageReference Include="Lumina.Excel" Version="7.5.0" />
+    <!-- struct definitions only (Transform, MeshPCB, ...); no game function calls, so no
+         resolver init needed. Comes from the local Dalamud dev install. -->
+    <Reference Include="FFXIVClientStructs">
+      <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\FFXIVClientStructs.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="InteropGenerator.Runtime">
+      <HintPath>$(AppData)\XIVLauncher\addon\Hooks\dev\InteropGenerator.Runtime.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>
