@@ -72,6 +72,60 @@ public static class Components
             Console.WriteLine($"  {hi.Id,2} -> {lo.Id,-2} {g.Horiz,5:f1}m {phi.Y - plo.Y,6:f1}m   {Fmt(phi),-26} {Fmt(plo),-26}");
         }
 
+        // ---- the transitions this mesh implies (added 2026-09-20) -------------------------------
+        // Every small closest-approach is one of three things, and the drop decides which:
+        //   * seam     (drop within step height)  - the mesh split a floor that should be walkable;
+        //             fix the build (see Mistwake's ledge filter) or link it.
+        //   * step-off (a drop of a yalm or a few) - no data needed: a follower that is allowed to
+        //             keep walking past the edge just lands.
+        //   * ride     (anything larger)          - the rail case: the game carries you, no mesh
+        //             will ever walk it, so the transition has to be named and executed as a leg.
+        // This is the dry-run for transition/link generation: it says how many of each a zone
+        // needs before anyone opens the viewer. Small islands are paired against the large ones
+        // (both ends of a small-small gap usually sit next to a large island); pairs are
+        // prefiltered by bounding-box distance so the poly pass only runs where it can matter.
+        var smalls = islands.Where(i => !big.Contains(i)).ToList();
+        var nearby = new List<(Island A, Island B, Vector3 Pa, Vector3 Pb, float Horiz)>();
+        foreach (var small in smalls)
+        {
+            foreach (var b in big)
+            {
+                if (BoxGap(small, b) > 12)
+                    continue;
+                if (ClosestApproach(small, b) is { } sg)
+                    nearby.Add((small, b, sg.Pa, sg.Pb, sg.Horiz));
+            }
+        }
+
+        var transitions = gaps.Concat(nearby)
+            .Where(g => g.Horiz <= 3.5f)
+            .Select(g => (g.A, g.B, g.Horiz, Drop: MathF.Abs(g.Pa.Y - g.Pb.Y), g.Pa, g.Pb))
+            .OrderBy(t => t.Horiz)
+            .ToList();
+        if (transitions.Count > 0)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"transitions this mesh implies (closest approach <= 3.5 m): {transitions.Count}");
+            Console.WriteLine($"  {"kind",-9} {"count",5}  gap (min..max)   drop (min..max)   example");
+            foreach (var (kind, minDrop, maxDrop) in new[]
+            {
+                ("seam", 0f, 0.6f),        // within AgentMaxClimb - walkable in principle
+                ("step-off", 0.6f, 5f),
+                ("ride", 5f, float.MaxValue),
+            })
+            {
+                var of = transitions.Where(t => t.Drop > minDrop && t.Drop <= maxDrop).ToList();
+                if (of.Count == 0)
+                    continue;
+                var ex = of[0];
+                Console.WriteLine($"  {kind,-9} {of.Count,5}  {of.Min(t => t.Horiz),5:f1}..{of.Max(t => t.Horiz),4:f1} m   "
+                    + $"{of.Min(t => t.Drop),5:f1}..{of.Max(t => t.Drop),4:f1} m   "
+                    + $"#{ex.A.Id} -> #{ex.B.Id} at {Fmt(ex.Pa.Y >= ex.Pb.Y ? ex.Pa : ex.Pb)}");
+            }
+            Console.WriteLine("  seams: fix the build or link. step-offs: a follower that keeps walking past the edge."
+                + " rides: name them, the game carries you (Mistwake's rail).");
+        }
+
         Profile(islands, islandOf.Count > 0 ? big.Count : 0);
 
         // One island in detail: where its ends are and what each end is nearest. For a slide,
@@ -333,6 +387,17 @@ public static class Components
             island.Area += area;
             island.Centroid += (v[0] + v[k] + v[k + 1]) / 3 * area;
         }
+    }
+
+    /// <summary>Cheap lower bound on the gap between two islands' bounding boxes, so the
+    /// poly-vs-poly pass only runs on pairs that could possibly be close — that is what keeps the
+    /// "every island against the large ones" sweep cheap on a 1,000-island zone.</summary>
+    private static float BoxGap(Island a, Island b)
+    {
+        var dx = MathF.Max(0, MathF.Max(a.Min.X - b.Max.X, b.Min.X - a.Max.X));
+        var dy = MathF.Max(0, MathF.Max(a.Min.Y - b.Max.Y, b.Min.Y - a.Max.Y));
+        var dz = MathF.Max(0, MathF.Max(a.Min.Z - b.Max.Z, b.Min.Z - a.Max.Z));
+        return MathF.Sqrt(dx * dx + dy * dy + dz * dz);
     }
 
     private static (Vector3 Pa, Vector3 Pb, float Horiz)? ClosestApproach(Island a, Island b)
