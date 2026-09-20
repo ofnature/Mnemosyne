@@ -614,6 +614,9 @@ static async Task<int> IpcTest()
 
     var hello = await client.HelloAsync();
     Console.WriteLine($"hello: app={hello.App} v{hello.Version}, protocol {hello.Protocol}, meshVersion {hello.MeshVersion}");
+    Console.WriteLine(hello.ExePath is { Length: > 0 } exe
+        ? $"build: {exe} ({hello.BuiltAt ?? "unknown"})"
+        : "build: (service predates hello's build fields - it may be older than the tree)");
     if (hello.App != "mnemosyne")
     {
         Console.WriteLine($"IPC TEST FAILED: connected to '{hello.App}', not the real service (is the stub still running?)");

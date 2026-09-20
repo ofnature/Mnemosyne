@@ -29,6 +29,7 @@ Console.CancelKeyPress += (_, e) =>
 
 Console.WriteLine($"Mnemosyne service v{ZoneService.AppVersion} listening on \\\\.\\pipe\\{MnemosynePipe.PipeName}");
 Console.WriteLine($"Cache: {MeshCache.DefaultDirectory} ({MeshCache.Enumerate().Count(e => e.IsSupported)} current-version zones)");
+Console.WriteLine($"build: {ServiceBuild.Exe} ({ServiceBuild.BuiltAt})");
 Console.WriteLine("Ctrl+C to stop");
 
 int nextClientId = 0;

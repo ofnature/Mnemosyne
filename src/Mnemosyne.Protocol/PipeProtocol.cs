@@ -98,6 +98,11 @@ public sealed class HelloResponse : Response
     public string? App { get; set; }
     public string? Version { get; set; }
     public int MeshVersion { get; set; }
+    /// <summary>The exe the answering service process actually started from, and when that file
+    /// was written. Present since 2026-09-20; older services omit both and clients must treat
+    /// their absence as "unknown", not as a fault.</summary>
+    public string? ExePath { get; set; }
+    public string? BuiltAt { get; set; }
 }
 
 public sealed class ZoneDto

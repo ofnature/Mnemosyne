@@ -81,6 +81,8 @@ public sealed partial class ZoneService
                     App = AppName,
                     Version = AppVersion,
                     MeshVersion = (int)global::Navmesh.Navmesh.Version,
+                    ExePath = ServiceBuild.Exe,
+                    BuiltAt = ServiceBuild.BuiltAt,
                 },
                 "listZones" => ListZones(req),
                 "zoneStatus" => ZoneStatus(req, clientId),
