@@ -48,5 +48,8 @@ public class NavmeshSettings
     // current values mean 128x128x128 L1 tiles -> 16x16x16 L2 tiles -> 2x2x2 voxels
     public int[] NumTiles = [16, 8, 8];
 
-
+    /// <summary>A copy, so one caller can vary the settings for a single build without touching
+    /// the shared per-territory instance the customization registry hands out. `NumTiles` is
+    /// shared by reference — a caller that changes it on a clone owns that decision, and none do.</summary>
+    public NavmeshSettings Clone() => (NavmeshSettings)MemberwiseClone();
 }

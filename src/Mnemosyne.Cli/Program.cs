@@ -125,6 +125,57 @@ if (args.Length > 0 && args[0] == "bench")
 if (args.Length > 0 && args[0] == "build")
 {
     var target = args.Length > 1 ? args[1] : "s1t1";
+    // Island-sweep support: vary the settings for a single build, and write the result somewhere
+    // that is not the live store. Without --out this command still overwrites
+    // %APPDATA%\Mnemosyne\built, which is what a human rebuilding a zone wants and what a sweep
+    // must never do.
+    string? Flag(string name)
+    {
+        var prefix = name + "=";
+        foreach (var a in args)
+        {
+            if (a.StartsWith(prefix, StringComparison.Ordinal))
+                return a[prefix.Length..];
+        }
+        return null;
+    }
+
+    var outDir = Flag("--out");
+    var clear = Flag("--clear");
+    var cell = Flag("--cell");
+    var cellH = Flag("--ch");
+    var radius = Flag("--radius");
+    Action<Navmesh.NavmeshSettings>? tweak = null;
+    if (clear != null || cell != null || cellH != null || radius != null)
+    {
+        tweak = s =>
+        {
+            if (clear != null)
+            {
+                if (string.Equals(clear, "all", StringComparison.OrdinalIgnoreCase))
+                {
+                    s.Filtering = Navmesh.NavmeshSettings.Filter.None;
+                }
+                else
+                {
+                    foreach (var name in clear.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                    {
+                        if (Enum.TryParse<Navmesh.NavmeshSettings.Filter>(name, ignoreCase: true, out var f))
+                            s.Filtering &= ~f;
+                        else
+                            Console.WriteLine($"  unknown filter '{name}' (expected {string.Join('/', Enum.GetNames<Navmesh.NavmeshSettings.Filter>())}, or 'all')");
+                    }
+                }
+                Console.WriteLine($"  filtering now: {s.Filtering}");
+            }
+            if (cell != null && float.TryParse(cell, out var cs))
+                s.CellSize = cs;
+            if (cellH != null && float.TryParse(cellH, out var ch))
+                s.CellHeight = ch;
+            if (radius != null && float.TryParse(radius, out var r))
+                s.AgentRadius = r;
+        };
+    }
     // Resolve through the shared lookup so the built store counts as a reference too.
     // Gridania's vnavmesh cache files are all stale-version, so without that fallback this
     // command refuses to rebuild exactly the zones that most need rebuilding.
@@ -146,7 +197,7 @@ if (args.Length > 0 && args[0] == "build")
     var reference = MeshCache.Load(entry.Path);
     var buildSw = System.Diagnostics.Stopwatch.StartNew();
     var built = Mnemosyne.Builder.ZoneBuilder.Build(sqpack, bgPath, reference.Volume != null,
-        (done, total) => { if (done % 64 == 0 || done == total) Console.WriteLine($"  tile {done}/{total}"); });
+        (done, total) => { if (done % 64 == 0 || done == total) Console.WriteLine($"  tile {done}/{total}"); }, tweak);
     buildSw.Stop();
 
     (int Tiles, int Polys, int Verts) Stats(DtNavMesh m)
@@ -164,6 +215,13 @@ if (args.Length > 0 && args[0] == "build")
     var bs = Stats(built.Mesh);
     var rs = Stats(reference.Mesh);
     Console.WriteLine($"built in {buildSw.Elapsed.TotalSeconds:f1} s: tiles {bs.Tiles} (ref {rs.Tiles}), polys {bs.Polys} (ref {rs.Polys}), verts {bs.Verts} (ref {rs.Verts}), volume: {built.Volume != null} (ref {reference.Volume != null})");
+    // Shape, not just size: island count and how much of the walkable area the largest island
+    // holds is what the filter sweep compares. Polys alone cannot tell over-trimming (everything
+    // cut into confetti) from a zone that is genuinely a thousand small walkable pieces.
+    var bsum = Mnemosyne.Cli.Components.Summarize(built.Mesh);
+    var rsum = Mnemosyne.Cli.Components.Summarize(reference.Mesh);
+    Console.WriteLine($"islands built: {bsum.Islands} (largest {bsum.LargestShare * 100:f1}% of {bsum.Area:f0} m2)");
+    Console.WriteLine($"islands   ref: {rsum.Islands} (largest {rsum.LargestShare * 100:f1}% of {rsum.Area:f0} m2)");
 
     // sample walk path on both meshes: pick two far-apart points guaranteed connected on the
     // reference mesh (flood from a central poly), so the comparison tests real routing
@@ -209,7 +267,9 @@ if (args.Length > 0 && args[0] == "build")
     Console.WriteLine($"path (reference): {(pRef == null ? "none" : $"{pRef.Waypoints.Count} wps, {PathLen(pRef.Waypoints):f0}m{(pRef.Partial ? " partial" : "")}")}");
     Console.WriteLine($"path (built):     {(pBuilt == null ? "none" : $"{pBuilt.Waypoints.Count} wps, {PathLen(pBuilt.Waypoints):f0}m{(pBuilt.Partial ? " partial" : "")}")}");
 
-    var builtDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mnemosyne", "built");
+    var builtDir = outDir != null
+        ? outDir
+        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mnemosyne", "built");
     Directory.CreateDirectory(builtDir);
     var outPath = Path.Combine(builtDir, entry.Key + ".navmesh");
     using (var stream = File.Create(outPath))

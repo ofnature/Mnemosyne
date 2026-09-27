@@ -321,6 +321,19 @@ public static class Components
         return true;
     }
 
+    /// <summary>One line of shape for any mesh: how many walkable polys, how many islands they fall
+    /// into, the walkable area, and the share of that area in the biggest island. The island sweep
+    /// compares these between filter configurations to tell over-trimming from a zone that is
+    /// genuinely fragmented.</summary>
+    public static (int Polys, int Islands, float Area, double LargestShare) Summarize(DtNavMesh mesh)
+    {
+        var islands = FindIslands(mesh, out _);
+        var polys = islands.Sum(i => i.Polys.Count);
+        var area = islands.Sum(i => i.Area);
+        var largest = islands.Count == 0 ? 0f : islands.Max(i => i.Area);
+        return (polys, islands.Count, area, area > 0.01f ? largest / area : 0);
+    }
+
     private static List<Island> FindIslands(DtNavMesh mesh, out Dictionary<long, Island> islandOf)
     {
         islandOf = [];

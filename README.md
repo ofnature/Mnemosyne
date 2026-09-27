@@ -38,7 +38,9 @@ exits. Two consequences worth knowing:
   reads at the new exe, and only then stops the old one.
 
 State lives under `%APPDATA%\Mnemosyne`: built meshes in `built\`, the service's own log in
-`service.log`, and the exe marker the plugin reads.
+`service.log`, and the exe marker the plugin reads. Copies that Ariadne staged from its own package
+live in `service\<version>\` — and they never displace a hand-built service, because the plugin
+resolves a configured path first, then the marker, then its bundled payload.
 
 ## Projects
 
@@ -69,9 +71,41 @@ Mnemosyne.Cli <command>
   pipe), `bench`, `fly-bench`, `plan-test`, `override-test`, `padcheck`, `snags`, `capture-test`
 - plus the rest in `src/Mnemosyne.Cli/Program.cs`
 
+### Varying one build's settings (the island sweep)
+
+`build` takes flags, so a single build can be varied without touching the live store:
+
+```
+Mnemosyne.Cli build <zone-substring> [--out=<dir>] [--clear=<filter,...|all>] [--cell=<f>] [--ch=<f>] [--radius=<f>]
+```
+
+`--out` writes the result elsewhere. Without it `build` overwrites
+`%APPDATA%\Mnemosyne\built\<zone>.navmesh` — the mesh the running service serves — which is what a
+human rebuilding a zone wants, and what a sweep must never do.
+
+The flags exist for this:
+
+```bash
+bash tools/island-sweep.sh <zone> [--quick]     # same zone under several filter/cell configurations
+python tools/island-sweep-report.py scratch/sweep-<zone>
+```
+
+Both write into `scratch/` (gitignored) and read the live store only as a reference. The report's
+island count and largest-island share answer the question that matters: is the fragmentation caused
+by the walkable-area filters — in which case clearing one collapses the island count — or is the zone
+genuinely made of many small walkable pieces, in which case the fix is connectivity (off-mesh links,
+region merge) and not filter tuning. Every build prints the settings it actually used
+(`filters = ...`, `cell = ...`), so "identical to the baseline" is never ambiguous. The three
+territories that hand-clear `LedgeSpans` in their customizations are exactly the ones where tweak
+ordering matters, which is why the tweak is applied after the customization has had its say.
+
 ## Requirements
 
-- Windows, and a .NET 10 runtime for the service and tools.
+- Windows, and a .NET 10 runtime for the service and tools — **unless you are only consuming this
+  through Ariadne**. The [Ariadne](https://github.com/ofnature/Ariadne) plugin package carries a
+  self-contained copy of the service and its CLI under `service/`, runtime included, which it stages
+  to `%APPDATA%\Mnemosyne\service\<version>\` and launches by itself. Building from source is for
+  changing the service, not for running it.
 - For building meshes: the game's installed data files.
 - For queries: a cached mesh is enough — the game need not be running.
 

@@ -41,7 +41,8 @@ public class NavmeshBuilder
     private int _voxelizerNumY = 1;
     private int _voxelizerNumZ = 1;
 
-    public NavmeshBuilder(SceneDefinition scene, NavmeshCustomization customization)
+    public NavmeshBuilder(SceneDefinition scene, NavmeshCustomization customization,
+        Action<NavmeshSettings>? tweakSettings = null)
     {
         Settings = customization.Settings;
         var flyable = customization.IsFlyingSupported(scene);
@@ -51,10 +52,21 @@ public class NavmeshBuilder
         Scene = new(scene);
         customization.CustomizeScene(Scene);
 
+        if (tweakSettings != null)
+        {
+            // The customization has had its say by now (that is where a territory turns a filter
+            // off because it fragments the zone), so the tweak takes effect after it — and before
+            // anything derived from the settings is computed below, so a tweaked cell size reaches
+            // the tiling math too. Applied to a copy: the registry shares one settings instance per
+            // territory, and a swept build must not be able to alter the next one.
+            Settings = Settings.Clone();
+            tweakSettings(Settings);
+        }
+
         BoundsMin = new(-1024);
         BoundsMax = new(1024);
         NumTilesX = NumTilesZ = Settings.NumTiles[0];
-        Console.WriteLine($"starting building {NumTilesX}x{NumTilesZ} navmesh, customization = {customization.GetType()} v{customization.Version}");
+        Console.WriteLine($"starting building {NumTilesX}x{NumTilesZ} navmesh, customization = {customization.GetType()} v{customization.Version}, filters = {Settings.Filtering}, cell = {Settings.CellSize}");
 
         // create empty navmesh
         var navmeshParams = new DtNavMeshParams();

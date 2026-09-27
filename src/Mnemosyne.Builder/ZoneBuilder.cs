@@ -8,14 +8,16 @@ namespace Mnemosyne.Builder;
 public static class ZoneBuilder
 {
     // convenience overload so hosts don't need Lumina types
-    public static global::Navmesh.Navmesh Build(string sqpackDir, string bgPath, bool flyable, Action<int, int>? progress = null) =>
-        Build(new GameData(sqpackDir), bgPath, 0, flyable, progress);
+    public static global::Navmesh.Navmesh Build(string sqpackDir, string bgPath, bool flyable, Action<int, int>? progress = null,
+        Action<NavmeshSettings>? tweakSettings = null) =>
+        Build(new GameData(sqpackDir), bgPath, 0, flyable, progress, tweakSettings);
 
     // fully automatic: flyability resolved from the TerritoryType sheet (same rule as vnavmesh)
-    public static global::Navmesh.Navmesh BuildAuto(string sqpackDir, string bgPath, Action<int, int>? progress = null)
+    public static global::Navmesh.Navmesh BuildAuto(string sqpackDir, string bgPath, Action<int, int>? progress = null,
+        Action<NavmeshSettings>? tweakSettings = null)
     {
         var game = new GameData(sqpackDir);
-        return Build(game, bgPath, 0, IsFlyable(game, bgPath), progress);
+        return Build(game, bgPath, 0, IsFlyable(game, bgPath), progress, tweakSettings);
     }
 
     public static bool IsFlyable(GameData game, string bgPath)
@@ -112,17 +114,19 @@ public static class ZoneBuilder
         }
     }
 
-    public static global::Navmesh.Navmesh Build(GameData game, string bgPath, uint territoryId, bool flyable, Action<int, int>? progress = null)
+    public static global::Navmesh.Navmesh Build(GameData game, string bgPath, uint territoryId, bool flyable, Action<int, int>? progress = null,
+        Action<NavmeshSettings>? tweakSettings = null)
     {
         if (territoryId == 0)
             territoryId = TerritoryIdFor(game, bgPath);
-        return BuildScene(game, LgbSceneReader.Read(game, bgPath, territoryId), flyable, progress);
+        return BuildScene(game, LgbSceneReader.Read(game, bgPath, territoryId), flyable, progress, tweakSettings);
     }
 
     // Shared by both entry points. The offline path reconstructs the scene from LGB files;
     // buildZone hands us the game's own live layout instead. Everything downstream - reading
     // collision out of sqpack, rasterizing, tiling - is identical either way.
-    private static global::Navmesh.Navmesh BuildScene(GameData game, SceneDefinition scene, bool flyable, Action<int, int>? progress)
+    private static global::Navmesh.Navmesh BuildScene(GameData game, SceneDefinition scene, bool flyable, Action<int, int>? progress,
+        Action<NavmeshSettings>? tweakSettings = null)
     {
         SceneExtractor.FileReader = path =>
         {
@@ -153,7 +157,7 @@ public static class ZoneBuilder
         if (customization != NavmeshCustomizationRegistry.Default)
             Console.WriteLine($"using {customization.GetType().Name} (territory {scene.TerritoryID}, v{customization.Version})");
 
-        var builder = new NavmeshBuilder(scene, customization);
+        var builder = new NavmeshBuilder(scene, customization, tweakSettings);
         int done = 0, total = builder.NumTilesX * builder.NumTilesZ;
         builder.BuildTiles(() => progress?.Invoke(Interlocked.Increment(ref done), total));
 
