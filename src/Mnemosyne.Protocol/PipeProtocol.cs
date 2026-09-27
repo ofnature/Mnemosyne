@@ -177,6 +177,14 @@ public sealed class OnMeshResponse : Response
 public sealed class BitmapResponse : Response
 {
     public string? Path { get; set; }
+
+    /// <summary>The world-space region the rasterized image covers (spec'd 2026-08-25 for vnavmesh's
+    /// `(min, max)` return shape). Ariadne's client has read these since that date, and since
+    /// 2026-09-27 it answers NaN when they are absent rather than a zero-area region at the origin —
+    /// so leaving them out is now visible to a consumer as "no bounds", not as a plausible place.
+    /// `NavmeshBitmap` computes both; the service just has to say them.</summary>
+    public float[]? Min { get; set; }
+    public float[]? Max { get; set; }
 }
 
 /// <summary>reachableCells: a world-aligned grid of walkable surfaces with reachability from

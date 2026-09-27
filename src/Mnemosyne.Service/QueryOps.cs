@@ -137,6 +137,7 @@ public sealed partial class ZoneService
         Directory.CreateDirectory(dir);
         var outPath = Path.Combine(dir, name);
 
+        float[] boundsMin, boundsMax;
         lock (zone.Lock)
         {
             var bitmap = NavmeshBitmapBuilder.Build(zone.Mesh,
@@ -144,8 +145,12 @@ public sealed partial class ZoneService
                 req.PixelSize ?? 0.5f,
                 Vec(req.MinBounds), Vec(req.MaxBounds));
             bitmap.Save(outPath);
+            // the region is half the answer: a consumer cannot place an image without it, and the
+            // builder has already worked it out (spec: docs/mnemosyne-protocol.md -> buildBitmap)
+            boundsMin = Arr(bitmap.MinBounds);
+            boundsMax = Arr(bitmap.MaxBounds);
         }
-        return new BitmapResponse { Id = req.Id, Ok = true, Path = outPath };
+        return new BitmapResponse { Id = req.Id, Ok = true, Path = outPath, Min = boundsMin, Max = boundsMax };
     }
 
     // ---- reachableCells: the exploration query (spec: docs/mnemosyne-protocol.md) --------

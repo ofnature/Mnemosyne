@@ -188,6 +188,17 @@ public static class Conformance
         });
         Check("buildBitmap (Nav.BuildBitmap)", bmp.Ok && File.Exists(bmp.Path), bmp.Path ?? bmp.Error ?? "");
 
+        // The bounds are half the answer — a consumer cannot place the image without them, and until
+        // 2026-09-27 this service omitted them, so an unbounded call had nothing to report and the
+        // client answered a zero-area region (then NaN). Both forms are checked here so the omission
+        // cannot come back quietly.
+        var unboundedBounds = bmp.Min is { Length: 3 } && bmp.Max is { Length: 3 }
+            && bmp.Max![0] > bmp.Min![0] && bmp.Max[2] > bmp.Min[2];
+        Check("buildBitmap reports bounds (unbounded request)", unboundedBounds,
+            unboundedBounds
+                ? $"x {bmp.Min![0]:f0}->{bmp.Max![0]:f0}, z {bmp.Min[2]:f0}->{bmp.Max[2]:f0}"
+                : "no min/max in the response");
+
         var bmpBounded = await client.SendAsync<BitmapResponse>(new Request
         {
             Op = "buildBitmap", CacheKey = key, StartingPoints = [from], Filename = "conformance_bounded.bmp",
@@ -196,6 +207,10 @@ public static class Conformance
         });
         Check("buildBitmap bounded (Nav.BuildBitmapBounded)", bmpBounded.Ok && File.Exists(bmpBounded.Path),
             bmpBounded.Path ?? bmpBounded.Error ?? "");
+
+        var boundedBounds = bmpBounded.Min is { Length: 3 } && bmpBounded.Max is { Length: 3 };
+        Check("buildBitmap bounded reports bounds", bmpBounded.Ok && boundedBounds,
+            boundedBounds ? $"x {bmpBounded.Min![0]:f0}->{bmpBounded.Max![0]:f0}" : "no min/max in the response");
 
         // Phase 4: served walk routes must keep clear of geometry. Recast's raw route hugs
         // walls (0.00m clearance measured on 7 of 8 waypoints in Ul'dah), which is what a
