@@ -280,6 +280,163 @@ if (args.Length > 0 && args[0] == "build")
     return 0;
 }
 
+// linktest: the meshes are fragmented into thousands of islands, and the island sweep showed that is
+// neither the walkable-area filters nor agent-radius erosion - it is real geometry for the configured
+// agent. The remaining lever is connectivity, and this tests the narrowest useful form of it: take an
+// existing mesh's largest islands, find the pairs separated by a small gap at nearly the same height
+// (a seam the rasterizer split, not a place the agent has to climb), add those as off-mesh connections
+// in a fresh build, and measure whether a path between the two points goes from unroutable to routable.
+//
+// Deliberately conservative: only same-height pairs a couple of metres apart are ever linked, because
+// a bad auto-applied link silently reroutes everything.
+if (args.Length > 0 && args[0] == "linktest")
+{
+    var linkTarget = args.Length > 1 ? args[1] : "s1t1";
+    string? LinkFlag(string name)
+    {
+        var prefix = name + "=";
+        foreach (var a in args)
+        {
+            if (a.StartsWith(prefix, StringComparison.Ordinal))
+                return a[prefix.Length..];
+        }
+        return null;
+    }
+
+    var linkOut = LinkFlag("--out") ?? Path.Combine("scratch", "links");
+    var seamMaxGap = float.TryParse(LinkFlag("--max-gap"), out var gapArg) ? gapArg : 2f;
+    var seamMaxDrop = float.TryParse(LinkFlag("--max-drop"), out var dropArg) ? dropArg : 0.5f;
+    var seamTop = int.TryParse(LinkFlag("--top"), out var topArg) ? topArg : 12;
+
+    if (Mnemosyne.Cli.Probe.ResolveForBuild(linkTarget) is not { } linkEntry)
+    {
+        Console.WriteLine($"no zone (of any mesh version) matches '{linkTarget}'");
+        return 1;
+    }
+    if (ZoneNames.Lookup(linkEntry.Key)?.Bg is not { Length: > 0 } linkBg)
+    {
+        Console.WriteLine("no bg path known for zone");
+        return 1;
+    }
+
+    var linkRef = MeshCache.Load(linkEntry.Path);
+    var seams = Mnemosyne.Cli.Components.SeamCandidates(linkRef.Mesh, seamMaxGap, seamMaxDrop, seamTop);
+    var refLinks = CountOffMesh(linkRef.Mesh);
+    Console.WriteLine($"zone: {linkEntry.Key}");
+    Console.WriteLine($"seam candidates: {seams.Count} (largest {seamTop} islands, gap <= {seamMaxGap}m, height difference <= {seamMaxDrop}m)");
+    Console.WriteLine($"off-mesh connections already in that mesh: {refLinks}");
+    foreach (var s in seams)
+        Console.WriteLine($"  gap {s.Gap:f2}m  drop {s.Drop:f2}m  ({s.From.X:f1},{s.From.Y:f1},{s.From.Z:f1}) -> ({s.To.X:f1},{s.To.Y:f1},{s.To.Z:f1})");
+    if (seams.Count == 0)
+    {
+        Console.WriteLine("nothing to link: the largest islands are already further apart than that");
+        return 0;
+    }
+
+    var linkPfRef = new MeshPathfinder(linkRef.Mesh);
+    int routedBefore = 0;
+    foreach (var s in seams)
+    {
+        var seamPath = linkPfRef.FindWalkPath(s.From, s.To);
+        if (seamPath is { Partial: false, Waypoints.Count: > 1 })
+            ++routedBefore;
+    }
+    Console.WriteLine($"routable before: {routedBefore}/{seams.Count}");
+
+    var linkLauncher = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XIVLauncher", "launcherConfigV3.json");
+    var linkGameRoot = System.Text.Json.JsonDocument.Parse(File.ReadAllText(linkLauncher)).RootElement.GetProperty("GamePath").GetString()!;
+    var linkSqpack = Path.Combine(linkGameRoot, "game", "sqpack");
+
+    // Optional control: the same build with no seam links. Without it, "after" could be crediting
+    // links somebody else added (a customization, or generated jump/climb links) to this experiment.
+    MeshPathfinder? controlPf = null;
+    int controlLinks = 0, controlRouted = 0;
+    if (args.Contains("--control"))
+    {
+        Console.WriteLine("control build: same zone, no seam links ...");
+        var control = Mnemosyne.Builder.ZoneBuilder.Build(linkSqpack, linkBg, linkRef.Volume != null);
+        controlLinks = CountOffMesh(control.Mesh);
+        controlPf = new MeshPathfinder(control.Mesh);
+        foreach (var s in seams)
+        {
+            var c = controlPf.FindWalkPath(s.From, s.To);
+            if (c is { Partial: false, Waypoints.Count: > 1 })
+                ++controlRouted;
+        }
+        Console.WriteLine($"  control: {controlLinks} off-mesh connections, routable {controlRouted}/{seams.Count}");
+    }
+
+    Console.WriteLine($"building '{linkEntry.Key}' with {seams.Count} seam link(s) ...");
+    var linked = Mnemosyne.Builder.ZoneBuilder.Build(linkSqpack, linkBg, linkRef.Volume != null,
+        (done, total) => { if (done % 64 == 0 || done == total) Console.WriteLine($"  tile {done}/{total}"); },
+        seamLinks: seams.Select(s => (s.From, s.To)).ToList());
+
+    var builtLinks = CountOffMesh(linked.Mesh);
+    var linkPfBuilt = new MeshPathfinder(linked.Mesh);
+    int routedAfter = 0;
+    Console.WriteLine();
+    Console.WriteLine(controlPf == null
+        ? "   gap   drop   reference        linked"
+        : "   gap   drop   reference        control          linked");
+    foreach (var s in seams)
+    {
+        var before = linkPfRef.FindWalkPath(s.From, s.To);
+        var after = linkPfBuilt.FindWalkPath(s.From, s.To);
+        var ctrl = controlPf?.FindWalkPath(s.From, s.To);
+        var okBefore = before is { Partial: false, Waypoints.Count: > 1 };
+        var okAfter = after is { Partial: false, Waypoints.Count: > 1 };
+        var okCtrl = ctrl is { Partial: false, Waypoints.Count: > 1 };
+        if (okAfter)
+            ++routedAfter;
+        var beforeText = before == null ? "none" : okBefore ? $"{before.Waypoints.Count} wps" : $"partial ({before.Waypoints.Count})";
+        var afterText = after == null ? "none" : okAfter ? $"{after.Waypoints.Count} wps" : $"partial ({after.Waypoints.Count})";
+        var row = $"  {s.Gap:f2}  {s.Drop:f2}   {beforeText,-15}";
+        if (controlPf != null)
+        {
+            var ctrlText = ctrl == null ? "none" : okCtrl ? $"{ctrl.Waypoints.Count} wps" : $"partial ({ctrl.Waypoints.Count})";
+            row += $"{ctrlText,-17}";
+        }
+        Console.WriteLine(row + afterText);
+    }
+    Console.WriteLine();
+    Console.WriteLine(controlPf == null
+        ? $"off-mesh connections: reference {refLinks}, linked {builtLinks}"
+        : $"off-mesh connections: reference {refLinks}, control {controlLinks}, linked {builtLinks} (+{builtLinks - controlLinks} from this test)");
+    if (builtLinks - controlLinks < seams.Count)
+        Console.WriteLine($"  {seams.Count - (builtLinks - controlLinks)} candidate(s) were not added: an off-mesh connection cannot span two tiles");
+    Console.WriteLine(controlPf == null
+        ? $"routable: reference {routedBefore}/{seams.Count}, linked {routedAfter}/{seams.Count}"
+        : $"routable: reference {routedBefore}/{seams.Count}, control {controlRouted}/{seams.Count}, linked {routedAfter}/{seams.Count}");
+
+    Directory.CreateDirectory(linkOut);
+    var linkOutPath = Path.Combine(linkOut, linkEntry.Key + ".navmesh");
+    using (var linkStream = File.Create(linkOutPath))
+    using (var linkWriter = new BinaryWriter(linkStream))
+        linked.Serialize(linkWriter);
+    Console.WriteLine($"saved: {linkOutPath} ({new FileInfo(linkOutPath).Length / 1024.0 / 1024.0:f1} MB)");
+    Console.WriteLine(routedAfter > routedBefore
+        ? "LINK TEST: the seams route now"
+        : "LINK TEST: nothing changed - read the table before believing a link helped");
+    return 0;
+
+    static int CountOffMesh(DtNavMesh mesh)
+    {
+        int n = 0;
+        for (int i = 0; i < mesh.GetMaxTiles(); ++i)
+        {
+            var tile = mesh.GetTile(i);
+            if (tile?.data?.header == null)
+                continue;
+            for (int p = 0; p < tile.data.header.polyCount; ++p)
+            {
+                if (tile.data.polys[p].GetPolyType() == 1) // DT_POLYTYPE_OFFMESH_CONNECTION
+                    ++n;
+            }
+        }
+        return n;
+    }
+}
+
 // override-test (milestone 8a): block a spot mid-path via a sidecar override and verify
 // the service's findPath detours around it
 if (args.Length > 0 && args[0] == "override-test")

@@ -99,6 +99,33 @@ region merge) and not filter tuning. Every build prints the settings it actually
 territories that hand-clear `LedgeSpans` in their customizations are exactly the ones where tweak
 ordering matters, which is why the tweak is applied after the customization has had its say.
 
+### Testing connectivity (linktest)
+
+Measured on the worst offender, the filters and the agent radius are both innocent: clearing filters
+*adds* islands, and shrinking the radius from 0.5 m to 0.25 m raises them by 28%. The fragments are
+places a 0.5 m agent genuinely cannot pass, so the remaining lever is connectivity. `linktest` tests
+the narrowest useful form of it:
+
+```
+Mnemosyne.Cli linktest <zone-substring> [--control] [--max-gap=2] [--max-drop=0.5] [--top=12] [--out=<dir>]
+```
+
+It takes an existing mesh's largest islands, finds the pairs separated by a small gap at nearly the
+same height — a seam the rasterizer split, not a place the agent has to climb — adds them as
+bidirectional off-mesh connections in a fresh build, and reports whether a path between those two
+points goes from unroutable to routable. `--control` builds the same zone *without* the links first:
+a customization or generated jump/climb link can add connections of its own, and without the control
+"after" would credit those to this test.
+
+Two constraints worth knowing before scaling it up:
+
+- An off-mesh connection cannot span two tiles. Recast builds it into a single tile's poly mesh, and
+  `CreateParamsExtensions.AddOffMeshConnection` throws when the ends land in different tiles, so
+  candidates are attributed to the tile holding both ends and straddling pairs are reported as dropped.
+- Attribute by the tile's **own** box, not the rasterization box: that one is padded by the border size
+  and overlaps its neighbours, which quietly adds the same connection from every tile it touches
+  (six candidates became fifty connections before this was fixed).
+
 ## Requirements
 
 - Windows, and a .NET 10 runtime for the service and tools — **unless you are only consuming this

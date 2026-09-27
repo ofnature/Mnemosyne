@@ -334,6 +334,29 @@ public static class Components
         return (polys, islands.Count, area, area > 0.01f ? largest / area : 0);
     }
 
+    /// <summary>Pairs of islands close enough to link with an off-mesh connection: a gap this small
+    /// at a height difference this small is a seam the rasterizer split, not a place the agent has to
+    /// climb. Restricted to the largest islands on purpose — the tail is thousands of pieces, and a
+    /// bad auto-applied link silently reroutes everything.</summary>
+    public static List<(Vector3 From, Vector3 To, float Gap, float Drop)> SeamCandidates(
+        DtNavMesh mesh, float maxGap = 2f, float maxDrop = 0.5f, int topIslands = 12)
+    {
+        var islands = FindIslands(mesh, out _).OrderByDescending(i => i.Area).Take(topIslands).ToList();
+        var found = new List<(Vector3 From, Vector3 To, float Gap, float Drop)>();
+        for (int i = 0; i < islands.Count; ++i)
+        {
+            for (int j = i + 1; j < islands.Count; ++j)
+            {
+                if (ClosestApproach(islands[i], islands[j]) is not { } approach)
+                    continue;
+                var drop = MathF.Abs(approach.Pa.Y - approach.Pb.Y);
+                if (approach.Horiz <= maxGap && drop <= maxDrop)
+                    found.Add((approach.Pa, approach.Pb, approach.Horiz, drop));
+            }
+        }
+        return [.. found.OrderBy(f => f.Gap)];
+    }
+
     private static List<Island> FindIslands(DtNavMesh mesh, out Dictionary<long, Island> islandOf)
     {
         islandOf = [];

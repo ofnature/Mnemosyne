@@ -9,8 +9,9 @@ public static class ZoneBuilder
 {
     // convenience overload so hosts don't need Lumina types
     public static global::Navmesh.Navmesh Build(string sqpackDir, string bgPath, bool flyable, Action<int, int>? progress = null,
-        Action<NavmeshSettings>? tweakSettings = null) =>
-        Build(new GameData(sqpackDir), bgPath, 0, flyable, progress, tweakSettings);
+        Action<NavmeshSettings>? tweakSettings = null,
+        IReadOnlyList<(System.Numerics.Vector3 From, System.Numerics.Vector3 To)>? seamLinks = null) =>
+        Build(new GameData(sqpackDir), bgPath, 0, flyable, progress, tweakSettings, seamLinks);
 
     // fully automatic: flyability resolved from the TerritoryType sheet (same rule as vnavmesh)
     public static global::Navmesh.Navmesh BuildAuto(string sqpackDir, string bgPath, Action<int, int>? progress = null,
@@ -115,18 +116,20 @@ public static class ZoneBuilder
     }
 
     public static global::Navmesh.Navmesh Build(GameData game, string bgPath, uint territoryId, bool flyable, Action<int, int>? progress = null,
-        Action<NavmeshSettings>? tweakSettings = null)
+        Action<NavmeshSettings>? tweakSettings = null,
+        IReadOnlyList<(System.Numerics.Vector3 From, System.Numerics.Vector3 To)>? seamLinks = null)
     {
         if (territoryId == 0)
             territoryId = TerritoryIdFor(game, bgPath);
-        return BuildScene(game, LgbSceneReader.Read(game, bgPath, territoryId), flyable, progress, tweakSettings);
+        return BuildScene(game, LgbSceneReader.Read(game, bgPath, territoryId), flyable, progress, tweakSettings, seamLinks);
     }
 
     // Shared by both entry points. The offline path reconstructs the scene from LGB files;
     // buildZone hands us the game's own live layout instead. Everything downstream - reading
     // collision out of sqpack, rasterizing, tiling - is identical either way.
     private static global::Navmesh.Navmesh BuildScene(GameData game, SceneDefinition scene, bool flyable, Action<int, int>? progress,
-        Action<NavmeshSettings>? tweakSettings = null)
+        Action<NavmeshSettings>? tweakSettings = null,
+        IReadOnlyList<(System.Numerics.Vector3 From, System.Numerics.Vector3 To)>? seamLinks = null)
     {
         SceneExtractor.FileReader = path =>
         {
@@ -157,7 +160,7 @@ public static class ZoneBuilder
         if (customization != NavmeshCustomizationRegistry.Default)
             Console.WriteLine($"using {customization.GetType().Name} (territory {scene.TerritoryID}, v{customization.Version})");
 
-        var builder = new NavmeshBuilder(scene, customization, tweakSettings);
+        var builder = new NavmeshBuilder(scene, customization, tweakSettings, seamLinks);
         int done = 0, total = builder.NumTilesX * builder.NumTilesZ;
         builder.BuildTiles(() => progress?.Invoke(Interlocked.Increment(ref done), total));
 
