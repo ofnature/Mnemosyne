@@ -107,24 +107,32 @@ places a 0.5 m agent genuinely cannot pass, so the remaining lever is connectivi
 the narrowest useful form of it:
 
 ```
-Mnemosyne.Cli linktest <zone-substring> [--control] [--max-gap=2] [--max-drop=0.5] [--top=12] [--out=<dir>]
+Mnemosyne.Cli linktest <zone-substring> [--max-gap=2] [--max-drop=0.5] [--top=12] [--out=<dir>]
 ```
 
-It takes an existing mesh's largest islands, finds the pairs separated by a small gap at nearly the
-same height — a seam the rasterizer split, not a place the agent has to climb — adds them as
-bidirectional off-mesh connections in a fresh build, and reports whether a path between those two
-points goes from unroutable to routable. `--control` builds the same zone *without* the links first:
-a customization or generated jump/climb link can add connections of its own, and without the control
-"after" would credit those to this test.
+It loads an existing mesh, finds pairs of large islands separated by a small gap at nearly the same
+height — a seam the rasterizer split, not a place the agent has to climb — links them both ways at mesh
+level with `LinkPoints`, saves the result into `scratch/`, and reports whether a path between the two
+points goes from unroutable to routable. On `ffxiv_roc_r1_fld_r1f1_level_r1f1`:
 
-Two constraints worth knowing before scaling it up:
+| candidates | before | after | off-mesh polys added |
+| --- | --- | --- | --- |
+| 6 (largest 12 islands, gap ≤ 2 m) | 0/6 routable | **6/6** | 24 |
+| 41 (largest 40 islands, gap ≤ 3 m) | 0/41 routable | **41/41** | 164 |
 
-- An off-mesh connection cannot span two tiles. Recast builds it into a single tile's poly mesh, and
-  `CreateParamsExtensions.AddOffMeshConnection` throws when the ends land in different tiles, so
-  candidates are attributed to the tile holding both ends and straddling pairs are reported as dropped.
-- Attribute by the tile's **own** box, not the rasterization box: that one is padded by the border size
-  and overlaps its neighbours, which quietly adds the same connection from every tile it touches
-  (six candidates became fifty connections before this was fixed).
+**Why mesh level rather than the create-params route** (`AddOffMeshConnection`), which was this test's
+first version: that one requires both ends inside one tile — Recast builds the connection into a single
+tile's poly mesh, and the extension throws otherwise — so it silently drops every candidate that
+straddles a tile boundary. (Its attribution also has to use the tile's *own* box: the rasterization box
+is padded by the border size and overlaps its neighbours, which turned six candidates into fifty
+connections.) `LinkPoints` inserts a point-poly at each end plus an explicit tile link, so its link may
+reference any tile, it needs no rebuild, and it is the same mechanism the per-territory customizations
+already use for doorways and parapets. It costs two off-mesh polygons per directed link, which is why
+the wide run adds 164 for 82 links.
+
+Conservative by construction — same height (≤ 0.5 m) and short gaps (≤ 3 m) — because a link between
+distant points would reroute everything, and a bad auto-applied link is worse than no link. Widening
+those thresholds is a decision to take with numbers in hand, and the numbers are one `linktest` away.
 
 ## Requirements
 

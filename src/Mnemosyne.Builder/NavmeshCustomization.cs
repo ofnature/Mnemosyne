@@ -36,7 +36,12 @@ public class NavmeshCustomization
 
 	public virtual void CustomizeMesh(Navmesh mesh, List<uint> festivalLayers) { }
 
-	protected static (long refStart, long refEnd) LinkPoints(Navmesh nmesh, Vector3 startPos, Vector3 endPos, Navmesh.AreaId areaId = Navmesh.AreaId.ClientPath)
+	// Mesh-level off-mesh link: a point-poly at each end plus an explicit tile link. Unlike
+	// CreateParamsExtensions.AddOffMeshConnection this has no single-tile constraint (the link may
+	// reference a poly in any tile) and it needs no rebuild, so it works on a mesh that is already
+	// built or loaded — which is what the customizations use it for, and what the seam-link test uses
+	// it for. Public since 2026-09-27 so the CLI can link pairs it derived from geometry.
+	public static (long refStart, long refEnd) LinkPoints(Navmesh nmesh, Vector3 startPos, Vector3 endPos, Navmesh.AreaId areaId = Navmesh.AreaId.ClientPath)
 	{
 		var mesh = nmesh.Mesh;
 		var refstart = InsertPointPoly(mesh, startPos, areaId);

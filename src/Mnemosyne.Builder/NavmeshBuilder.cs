@@ -28,7 +28,6 @@ public class NavmeshBuilder
     public Navmesh Navmesh; // should not be accessed while building tiles
 
     private NavmeshCustomization customization;
-    private readonly IReadOnlyList<(Vector3 From, Vector3 To)>? _seamLinks;
 
     private int _walkableClimbVoxels;
     private int _walkableHeightVoxels;
@@ -43,11 +42,9 @@ public class NavmeshBuilder
     private int _voxelizerNumZ = 1;
 
     public NavmeshBuilder(SceneDefinition scene, NavmeshCustomization customization,
-        Action<NavmeshSettings>? tweakSettings = null,
-        IReadOnlyList<(Vector3 From, Vector3 To)>? seamLinks = null)
+        Action<NavmeshSettings>? tweakSettings = null)
     {
         Settings = customization.Settings;
-        _seamLinks = seamLinks;
         var flyable = customization.IsFlyingSupported(scene);
         this.customization = customization;
 
@@ -372,38 +369,6 @@ public class NavmeshBuilder
                 Settings.EdgeJumpHeight
             );
             addConnections(bl.Build(cfg, JumpLinkType.EDGE_JUMP));
-        }
-
-        // Seam links: connections derived from an existing mesh's island structure, added exactly the
-        // way the jump links above are — an off-mesh connection is a 2-vertex poly of type
-        // DT_POLYTYPE_OFFMESH_CONNECTION that the query routes through. Bidirectional, unlike a jump
-        // link: a seam is walkable in both directions by definition.
-        if (_seamLinks is { Count: > 0 })
-        {
-            // Attribute by the tile's own box, not by the rasterization box: the latter is padded by
-            // the border size and so overlaps its neighbours, which lets several tiles add the same
-            // connection (a connection belongs to exactly one tile — 6 candidates showed up 50 times
-            // before this).
-            var coreMinX = tileBoundsMin.X + _borderSizeWorld;
-            var coreMinZ = tileBoundsMin.Z + _borderSizeWorld;
-            var coreMaxX = tileBoundsMax.X - _borderSizeWorld;
-            var coreMaxZ = tileBoundsMax.Z - _borderSizeWorld;
-            bool InCore(Vector3 p) => p.X >= coreMinX && p.Z >= coreMinZ && p.X <= coreMaxX && p.Z <= coreMaxZ;
-
-            int added = 0;
-            foreach (var (from, to) in _seamLinks)
-            {
-                // Both ends have to be in this one tile: CreateParamsExtensions.AddOffMeshConnection
-                // throws on a connection that spans two, because Recast builds it into a single tile's
-                // poly mesh. Candidates that straddle a boundary are skipped, and the caller reports
-                // how many were dropped that way.
-                if (!InCore(from) || !InCore(to))
-                    continue;
-                navmeshConfig.AddOffMeshConnection(from, to, Settings.AgentRadius, bidirectional: true);
-                ++added;
-            }
-            if (added > 0)
-                Console.WriteLine($"tile {x}x{z}: +{added} seam link(s)");
         }
 
         var navmeshData = DtNavMeshBuilder.CreateNavMeshData(navmeshConfig);

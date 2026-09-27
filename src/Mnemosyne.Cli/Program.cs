@@ -313,12 +313,6 @@ if (args.Length > 0 && args[0] == "linktest")
         Console.WriteLine($"no zone (of any mesh version) matches '{linkTarget}'");
         return 1;
     }
-    if (ZoneNames.Lookup(linkEntry.Key)?.Bg is not { Length: > 0 } linkBg)
-    {
-        Console.WriteLine("no bg path known for zone");
-        return 1;
-    }
-
     var linkRef = MeshCache.Load(linkEntry.Path);
     var seams = Mnemosyne.Cli.Components.SeamCandidates(linkRef.Mesh, seamMaxGap, seamMaxDrop, seamTop);
     var refLinks = CountOffMesh(linkRef.Mesh);
@@ -333,80 +327,52 @@ if (args.Length > 0 && args[0] == "linktest")
         return 0;
     }
 
+    // Capture the "before" answers now: linking mutates the mesh in place, so a query after it would
+    // report the linked mesh in both columns.
+    var beforeTexts = new List<string>();
     var linkPfRef = new MeshPathfinder(linkRef.Mesh);
     int routedBefore = 0;
     foreach (var s in seams)
     {
         var seamPath = linkPfRef.FindWalkPath(s.From, s.To);
-        if (seamPath is { Partial: false, Waypoints.Count: > 1 })
+        var ok = seamPath is { Partial: false, Waypoints.Count: > 1 };
+        if (ok)
             ++routedBefore;
+        beforeTexts.Add(seamPath == null ? "none" : ok ? $"{seamPath.Waypoints.Count} wps" : $"partial ({seamPath.Waypoints.Count})");
     }
     Console.WriteLine($"routable before: {routedBefore}/{seams.Count}");
 
-    var linkLauncher = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XIVLauncher", "launcherConfigV3.json");
-    var linkGameRoot = System.Text.Json.JsonDocument.Parse(File.ReadAllText(linkLauncher)).RootElement.GetProperty("GamePath").GetString()!;
-    var linkSqpack = Path.Combine(linkGameRoot, "game", "sqpack");
-
-    // Optional control: the same build with no seam links. Without it, "after" could be crediting
-    // links somebody else added (a customization, or generated jump/climb links) to this experiment.
-    MeshPathfinder? controlPf = null;
-    int controlLinks = 0, controlRouted = 0;
-    if (args.Contains("--control"))
-    {
-        Console.WriteLine("control build: same zone, no seam links ...");
-        var control = Mnemosyne.Builder.ZoneBuilder.Build(linkSqpack, linkBg, linkRef.Volume != null);
-        controlLinks = CountOffMesh(control.Mesh);
-        controlPf = new MeshPathfinder(control.Mesh);
-        foreach (var s in seams)
-        {
-            var c = controlPf.FindWalkPath(s.From, s.To);
-            if (c is { Partial: false, Waypoints.Count: > 1 })
-                ++controlRouted;
-        }
-        Console.WriteLine($"  control: {controlLinks} off-mesh connections, routable {controlRouted}/{seams.Count}");
-    }
-
-    Console.WriteLine($"building '{linkEntry.Key}' with {seams.Count} seam link(s) ...");
-    var linked = Mnemosyne.Builder.ZoneBuilder.Build(linkSqpack, linkBg, linkRef.Volume != null,
-        (done, total) => { if (done % 64 == 0 || done == total) Console.WriteLine($"  tile {done}/{total}"); },
-        seamLinks: seams.Select(s => (s.From, s.To)).ToList());
-
-    var builtLinks = CountOffMesh(linked.Mesh);
-    var linkPfBuilt = new MeshPathfinder(linked.Mesh);
-    int routedAfter = 0;
-    Console.WriteLine();
-    Console.WriteLine(controlPf == null
-        ? "   gap   drop   reference        linked"
-        : "   gap   drop   reference        control          linked");
+    // Link at mesh level via LinkPoints: a point-poly at each end plus an explicit tile link. The
+    // create-params route this test first used requires both ends inside one tile — it throws
+    // otherwise, because Recast builds the connection into a single tile's poly mesh — so it silently
+    // drops every candidate straddling a boundary. This route has no such limit and needs no rebuild,
+    // which is also why the per-territory customizations use it.
+    Console.WriteLine($"linking {seams.Count} pair(s) both ways at mesh level ...");
     foreach (var s in seams)
     {
-        var before = linkPfRef.FindWalkPath(s.From, s.To);
-        var after = linkPfBuilt.FindWalkPath(s.From, s.To);
-        var ctrl = controlPf?.FindWalkPath(s.From, s.To);
-        var okBefore = before is { Partial: false, Waypoints.Count: > 1 };
+        global::Navmesh.NavmeshCustomization.LinkPoints(linkRef, s.From, s.To, global::Navmesh.Navmesh.AreaId.Shortcut);
+        global::Navmesh.NavmeshCustomization.LinkPoints(linkRef, s.To, s.From, global::Navmesh.Navmesh.AreaId.Shortcut);
+    }
+    var linked = linkRef;
+
+    var linkedLinks = CountOffMesh(linked.Mesh);
+    var linkPfLinked = new MeshPathfinder(linked.Mesh);
+    int routedAfter = 0;
+    Console.WriteLine();
+    Console.WriteLine("   gap   drop   before          after");
+    for (int i = 0; i < seams.Count; ++i)
+    {
+        var s = seams[i];
+        var after = linkPfLinked.FindWalkPath(s.From, s.To);
         var okAfter = after is { Partial: false, Waypoints.Count: > 1 };
-        var okCtrl = ctrl is { Partial: false, Waypoints.Count: > 1 };
         if (okAfter)
             ++routedAfter;
-        var beforeText = before == null ? "none" : okBefore ? $"{before.Waypoints.Count} wps" : $"partial ({before.Waypoints.Count})";
         var afterText = after == null ? "none" : okAfter ? $"{after.Waypoints.Count} wps" : $"partial ({after.Waypoints.Count})";
-        var row = $"  {s.Gap:f2}  {s.Drop:f2}   {beforeText,-15}";
-        if (controlPf != null)
-        {
-            var ctrlText = ctrl == null ? "none" : okCtrl ? $"{ctrl.Waypoints.Count} wps" : $"partial ({ctrl.Waypoints.Count})";
-            row += $"{ctrlText,-17}";
-        }
-        Console.WriteLine(row + afterText);
+        Console.WriteLine($"  {s.Gap:f2}  {s.Drop:f2}   {beforeTexts[i],-15}{afterText}");
     }
     Console.WriteLine();
-    Console.WriteLine(controlPf == null
-        ? $"off-mesh connections: reference {refLinks}, linked {builtLinks}"
-        : $"off-mesh connections: reference {refLinks}, control {controlLinks}, linked {builtLinks} (+{builtLinks - controlLinks} from this test)");
-    if (builtLinks - controlLinks < seams.Count)
-        Console.WriteLine($"  {seams.Count - (builtLinks - controlLinks)} candidate(s) were not added: an off-mesh connection cannot span two tiles");
-    Console.WriteLine(controlPf == null
-        ? $"routable: reference {routedBefore}/{seams.Count}, linked {routedAfter}/{seams.Count}"
-        : $"routable: reference {routedBefore}/{seams.Count}, control {controlRouted}/{seams.Count}, linked {routedAfter}/{seams.Count}");
+    Console.WriteLine($"off-mesh polys: before {refLinks}, after {linkedLinks} (+{linkedLinks - refLinks} for {seams.Count * 2} directed links)");
+    Console.WriteLine($"routable: before {routedBefore}/{seams.Count}, after {routedAfter}/{seams.Count}");
 
     Directory.CreateDirectory(linkOut);
     var linkOutPath = Path.Combine(linkOut, linkEntry.Key + ".navmesh");
