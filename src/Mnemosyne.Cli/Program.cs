@@ -380,6 +380,42 @@ if (args.Length > 0 && args[0] == "linktest")
     using (var linkWriter = new BinaryWriter(linkStream))
         linked.Serialize(linkWriter);
     Console.WriteLine($"saved: {linkOutPath} ({new FileInfo(linkOutPath).Length / 1024.0 / 1024.0:f1} MB)");
+
+    // --apply puts the linked mesh where the service serves from. With vnavmesh's own building off,
+    // that store is the only source of meshes for a session, so this is the step that makes a link
+    // live — and it keeps a copy of whatever it replaced, named the way the store already names its
+    // before-images, then prints the rollback rather than assuming anyone remembers it.
+    // --apply-to=<dir> aims the write somewhere else, which is how this path gets tested.
+    if (args.Contains("--apply"))
+    {
+        var applyRoot = LinkFlag("--apply-to")
+            ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mnemosyne");
+        var storeDir = Path.Combine(applyRoot, "built");
+        var storePath = Path.Combine(storeDir, linkEntry.Key + ".navmesh");
+        Directory.CreateDirectory(storeDir);
+        string rollback;
+        if (File.Exists(storePath))
+        {
+            var backupDir = Path.Combine(applyRoot, "backup");
+            Directory.CreateDirectory(backupDir);
+            var backupPath = Path.Combine(backupDir, linkEntry.Key + ".navmesh.before-seam-links");
+            File.Copy(storePath, backupPath, overwrite: true);
+            Console.WriteLine($"replaced mesh backed up to: {backupPath}");
+            rollback = $"copy that backup back over {storePath}";
+        }
+        else
+        {
+            Console.WriteLine("the store holds no mesh for this key yet, so this adds one");
+            rollback = $"delete {storePath}";
+        }
+        using (var storeStream = File.Create(storePath))
+        using (var storeWriter = new BinaryWriter(storeStream))
+            linked.Serialize(storeWriter);
+        Console.WriteLine($"applied: {storePath} ({new FileInfo(storePath).Length / 1024.0 / 1024.0:f1} MB)");
+        Console.WriteLine($"rollback: {rollback}");
+        Console.WriteLine("the service serves this on the next load of that zone; vnavmesh's cache is untouched — Ariadne seeds it");
+    }
+
     Console.WriteLine(routedAfter > routedBefore
         ? "LINK TEST: the seams route now"
         : "LINK TEST: nothing changed - read the table before believing a link helped");
