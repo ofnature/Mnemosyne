@@ -25,7 +25,7 @@ namespace Navmesh.Customizations;
 [CustomizationTerritory(820)]
 internal class Z0820Eulmore : NavmeshCustomization
 {
-    public override int Version => 3;
+    public override int Version => 4;
 
     public override (Vector3 Center, Vector3 HalfExtent)[] ClimbRegions =>
     [

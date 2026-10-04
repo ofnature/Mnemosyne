@@ -42,9 +42,9 @@ public class NavmeshCustomization
 	public virtual string[] DropColliderLayers => [];
 
 	// patched for Mnemosyne (2026-10-02): where a raised Settings.AgentMaxClimb applies, as boxes
-	// (centre, half-extent). Empty = everywhere, as vnavmesh does. With boxes, the builder also builds
-	// the zone at the default step height and blocks every riser the raise added outside them - so a
-	// raise for one staircase stays on that staircase (ClimbRisers; Eulmore's 1.0 y joined ~500 spots).
+	// (centre, half-extent). Empty = everywhere, as vnavmesh does. With boxes, the builder cuts every
+	// cell-to-cell step taller than the default outside them (NavmeshBuilder.LimitClimbToRegions) - so
+	// a raise for one staircase stays on that staircase (Eulmore's 1.0 y joined ~500 spots).
 	public virtual (Vector3 Center, Vector3 HalfExtent)[] ClimbRegions => [];
 
 	// Mesh-level off-mesh link: a point-poly at each end plus an explicit tile link. Unlike

@@ -3,10 +3,10 @@ using System.Numerics;
 
 namespace Navmesh;
 
-// The steep "riser" polys a raised step height (AgentMaxClimb) adds to a mesh. Shared by the builder,
-// which keeps a raise inside a customization's ClimbRegions and blocks it everywhere else, and by
-// `Mnemosyne.Cli climbcomb`, which lists what a raise joined. Added 2026-10-02 after Eulmore's 1.0 y
-// raise for one staircase joined ~500 other spots (Z0820Eulmore).
+// The steep "riser" polys a raised step height (AgentMaxClimb) adds to a mesh, for `Mnemosyne.Cli
+// climbcomb`, which lists what a raise joined. Added 2026-10-02 after Eulmore's 1.0 y raise for one
+// staircase joined ~500 other spots (Z0820Eulmore). It misses wide, gentle joins (a poly spanning floor
+// and a 1 m flower box), so the builder limits a raise on the cells instead (LimitClimbToRegions).
 public static class ClimbRisers
 {
     /// <summary>A poly climbing at least this much...</summary>

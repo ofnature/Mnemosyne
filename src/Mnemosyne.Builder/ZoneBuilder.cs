@@ -133,39 +133,6 @@ public static class ZoneBuilder
         return BuildScene(game, scene, flyable, progress, tweakSettings);
     }
 
-    /// <summary>A customization that raises the step height inside ClimbRegions only: build again at
-    /// the default step height and block the risers the raise added outside the regions.</summary>
-    private static void KeepClimbInRegions(SceneDefinition scene, NavmeshCustomization customization,
-        NavmeshBuilder raised, Action<NavmeshSettings>? tweakSettings)
-    {
-        var regions = customization.ClimbRegions;
-        var defaultClimb = new NavmeshSettings().AgentMaxClimb;
-        if (regions.Length == 0 || raised.Settings.AgentMaxClimb <= defaultClimb)
-            return;
-        var baseline = new NavmeshBuilder(scene, customization, s =>
-        {
-            tweakSettings?.Invoke(s);
-            s.AgentMaxClimb = defaultClimb;
-        });
-        baseline.BuildTiles(() => { });
-
-        int kept = 0, blocked = 0;
-        foreach (var riser in ClimbRisers.Added(baseline.Navmesh.Mesh, raised.Navmesh.Mesh))
-        {
-            var inside = regions.Any(r => MathF.Abs(riser.Center.X - r.Center.X) <= r.HalfExtent.X
-                && MathF.Abs(riser.Center.Y - r.Center.Y) <= r.HalfExtent.Y
-                && MathF.Abs(riser.Center.Z - r.Center.Z) <= r.HalfExtent.Z);
-            if (inside)
-            {
-                ++kept;
-                continue;
-            }
-            raised.Navmesh.Mesh.SetPolyFlags(riser.Ref, 0);
-            ++blocked;
-        }
-        Console.WriteLine($"step height {raised.Settings.AgentMaxClimb} kept to {regions.Length} region(s): {kept} riser(s) inside kept, {blocked} outside blocked");
-    }
-
     private static void DropScaffold(GameData game, SceneDefinition scene, string bgPath)
     {
         // plus any layers the zone's customization names (quest barriers past their quest)
@@ -225,7 +192,6 @@ public static class ZoneBuilder
         var builder = new NavmeshBuilder(scene, customization, tweakSettings);
         int done = 0, total = builder.NumTilesX * builder.NumTilesZ;
         builder.BuildTiles(() => progress?.Invoke(Interlocked.Increment(ref done), total));
-        KeepClimbInRegions(scene, customization, builder, tweakSettings);
 
         // The mesh pass is the manager's job in vnavmesh, not the builder's - it is where the
         // hand-authored links get stitched in, so skipping it silently drops them.

@@ -107,6 +107,7 @@ public sealed partial class ZoneService
                 "buildZone" => BuildZone(req),
                 "reportTraversal" => ReportTraversal(req),
                 "reachableCells" => ReachableCells(req),
+                "meshNear" => MeshNear(req),
                 _ => Error(req, $"unknown op '{req.Op}'"),
             };
         }

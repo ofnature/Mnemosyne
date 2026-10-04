@@ -30,6 +30,7 @@ public class NavmeshBuilder
     private NavmeshCustomization customization;
 
     private int _walkableClimbVoxels;
+    private int _defaultClimbVoxels; // the step height outside customization.ClimbRegions
     private int _walkableHeightVoxels;
     private int _walkableRadiusVoxels;
     private float _walkableNormalThreshold;
@@ -82,6 +83,7 @@ public class NavmeshBuilder
 
         // calculate derived parameters
         _walkableClimbVoxels = (int)MathF.Floor(Settings.AgentMaxClimb / Settings.CellHeight);
+        _defaultClimbVoxels = Math.Min(_walkableClimbVoxels, (int)MathF.Floor(new NavmeshSettings().AgentMaxClimb / Settings.CellHeight));
         _walkableHeightVoxels = (int)MathF.Ceiling(Settings.AgentHeight / Settings.CellHeight);
         _walkableRadiusVoxels = (int)MathF.Ceiling(Settings.AgentRadius / Settings.CellSize);
         _walkableNormalThreshold = Settings.AgentMaxSlopeDeg.Degrees().Cos();
@@ -208,23 +210,28 @@ public class NavmeshBuilder
         // each span contains an 'area id', which is either walkable (if normal is good) or not (otherwise); areas outside spans contains no geometry at all
         var shf = new RcHeightfield(_tileSizeXVoxels, _tileSizeZVoxels, tileBoundsMin.SystemToRecast(), tileBoundsMax.SystemToRecast(), Settings.CellSize, Settings.CellHeight, _borderSizeVoxels);
         var vox = Navmesh.Volume != null ? new Voxelizer(_voxelizerNumX, _voxelizerNumY, _voxelizerNumZ) : null;
-        var rasterizer = new NavmeshRasterizer(shf, _walkableNormalThreshold, _walkableClimbVoxels, _walkableHeightVoxels, Settings.Filtering.HasFlag(NavmeshSettings.Filter.Interiors), vox, Telemetry);
+        // A raised step height (customization.ClimbRegions) applies only in tiles that touch a region;
+        // every other tile builds at the default, as if the zone had no raise
+        var raisedTile = TouchesClimbRegion(tileBoundsMin, tileBoundsMax);
+        var climbVoxels = raisedTile || customization.ClimbRegions.Length == 0 ? _walkableClimbVoxels : _defaultClimbVoxels;
+        var rasterizer = new NavmeshRasterizer(shf, _walkableNormalThreshold, climbVoxels, _walkableHeightVoxels, Settings.Filtering.HasFlag(NavmeshSettings.Filter.Interiors), vox, Telemetry);
         rasterizer.Rasterize(Scene, SceneExtractor.MeshType.FileMesh | SceneExtractor.MeshType.CylinderMesh | SceneExtractor.MeshType.AnalyticShape, true, true); // rasterize normal geometry
         rasterizer.Rasterize(Scene, SceneExtractor.MeshType.Terrain | SceneExtractor.MeshType.AnalyticPlane, false, true); // rasterize terrain and bounding planes
 
         // 2. perform a bunch of postprocessing on a heightfield
-        if (Settings.Filtering.HasFlag(NavmeshSettings.Filter.LowHangingObstacles))
+        if (raisedTile)
         {
-            // mark non-walkable spans as walkable if their maximum is within climb distance of the span below
-            // this allows climbing stairs, walking over curbs, etc
-            RcFilters.FilterLowHangingWalkableObstacles(Telemetry, _walkableClimbVoxels, shf);
+            // the raised filters only inside the regions: run both, keep the raised result there
+            var original = SpanAreas(shf);
+            FilterClimb(shf, _walkableClimbVoxels);
+            var raised = SpanAreas(shf);
+            SetSpanAreas(shf, original, null);
+            FilterClimb(shf, _defaultClimbVoxels);
+            SetSpanAreas(shf, raised, (x, z, smax) => InClimbRegion(ColumnPoint(shf, x, z, smax)));
         }
-
-        if (Settings.Filtering.HasFlag(NavmeshSettings.Filter.LedgeSpans))
+        else
         {
-            // mark 'ledge' spans as non-walkable - spans that have too large height distance to the neighbour
-            // this reduces the impact of voxelization error
-            RcFilters.FilterLedgeSpans(Telemetry, _walkableHeightVoxels, _walkableClimbVoxels, shf);
+            FilterClimb(shf, climbVoxels);
         }
 
         if (Settings.Filtering.HasFlag(NavmeshSettings.Filter.WalkableLowHeightSpans))
@@ -239,7 +246,9 @@ public class NavmeshBuilder
         // note that spans from null areas are not added to the compact heightfield
         // also note that for each span, y is equal to the solid span's smax (makes sense - in solid, walkable voxel is one containing walkable geometry, so free area is 'above')
         // h is not really used beyond connectivity calculations (it's a distance to the next span - potentially of null area - or to maxheight)
-        var chf = RcCompacts.BuildCompactHeightfield(Telemetry, _walkableHeightVoxels, _walkableClimbVoxels, shf);
+        var chf = RcCompacts.BuildCompactHeightfield(Telemetry, _walkableHeightVoxels, climbVoxels, shf);
+        if (raisedTile)
+            LimitClimbToRegions(chf);
 
         // 4. mark spans that are too close to unwalkable as unwalkable, to account for actor's non-zero radius
         // this changes area of some spans from walkable to non-walkable
@@ -375,6 +384,95 @@ public class NavmeshBuilder
 
         Console.WriteLine($"built navmesh tile {x}x{z} in {timer.Value().TotalMilliseconds}ms");
         return (navmeshData, vox, builderResult);
+    }
+
+    private void FilterClimb(RcHeightfield shf, int climbVoxels)
+    {
+        if (Settings.Filtering.HasFlag(NavmeshSettings.Filter.LowHangingObstacles))
+        {
+            // mark non-walkable spans as walkable if their maximum is within climb distance of the span below
+            // this allows climbing stairs, walking over curbs, etc
+            RcFilters.FilterLowHangingWalkableObstacles(Telemetry, climbVoxels, shf);
+        }
+
+        if (Settings.Filtering.HasFlag(NavmeshSettings.Filter.LedgeSpans))
+        {
+            // mark 'ledge' spans as non-walkable - spans that have too large height distance to the neighbour
+            // this reduces the impact of voxelization error
+            RcFilters.FilterLedgeSpans(Telemetry, _walkableHeightVoxels, climbVoxels, shf);
+        }
+    }
+
+    // patched for Mnemosyne (2026-10-04): a step height raised for a few spots (the customization's
+    // ClimbRegions) must not reach anywhere else - Eulmore's 1.0 y for one staircase put routes on top
+    // of the Canopy's tables and bar counters. Tiles away from the regions build at the default
+    // (BuildTile); in a tile that touches one, the span filters keep their raised result only inside
+    // the regions, and LimitClimbToRegions cuts the cell-to-cell steps taller than the default outside
+    // them. Done on cells rather than the finished polys: a poly joining floor to a table top can be
+    // wide and gentle, not a riser (ClimbRisers misses it).
+    private bool InClimbRegion(Vector3 at) => customization.ClimbRegions.Any(r =>
+        MathF.Abs(at.X - r.Center.X) <= r.HalfExtent.X
+        && MathF.Abs(at.Y - r.Center.Y) <= r.HalfExtent.Y
+        && MathF.Abs(at.Z - r.Center.Z) <= r.HalfExtent.Z);
+
+    private bool TouchesClimbRegion(Vector3 min, Vector3 max) =>
+        _walkableClimbVoxels > _defaultClimbVoxels && customization.ClimbRegions.Any(r =>
+            r.Center.X + r.HalfExtent.X >= min.X && r.Center.X - r.HalfExtent.X <= max.X
+            && r.Center.Z + r.HalfExtent.Z >= min.Z && r.Center.Z - r.HalfExtent.Z <= max.Z);
+
+    private static Vector3 ColumnPoint(RcHeightfield shf, int x, int z, int y)
+        => new(shf.bmin.X + (x + 0.5f) * shf.cs, shf.bmin.Y + y * shf.ch, shf.bmin.Z + (z + 0.5f) * shf.cs);
+
+    private static List<int> SpanAreas(RcHeightfield shf)
+    {
+        var areas = new List<int>();
+        for (int i = 0; i < shf.width * shf.height; ++i)
+            for (var span = shf.spans[i]; span != 0; span = shf.Span(span).next)
+                areas.Add(shf.Span(span).area);
+        return areas;
+    }
+
+    private static void SetSpanAreas(RcHeightfield shf, List<int> areas, Func<int, int, int, bool>? where)
+    {
+        int k = 0;
+        for (int z = 0; z < shf.height; ++z)
+            for (int x = 0; x < shf.width; ++x)
+                for (var span = shf.spans[x + z * shf.width]; span != 0; span = shf.Span(span).next, ++k)
+                    if (where == null || where(x, z, shf.Span(span).smax))
+                        shf.Span(span).area = areas[k];
+    }
+
+    // the steps taller than the default, cut everywhere but the regions
+    private void LimitClimbToRegions(RcCompactHeightfield chf)
+    {
+        for (int z = 0; z < chf.height; ++z)
+        {
+            for (int x = 0; x < chf.width; ++x)
+            {
+                var cell = chf.cells[x + z * chf.width];
+                for (int i = cell.index; i < cell.index + cell.count; ++i)
+                {
+                    for (int dir = 0; dir < 4; ++dir)
+                    {
+                        var con = RcCommons.GetCon(ref chf.spans[i], dir);
+                        if (con == RcConstants.RC_NOT_CONNECTED)
+                            continue;
+                        var nx = x + RcCommons.GetDirOffsetX(dir);
+                        var nz = z + RcCommons.GetDirOffsetY(dir);
+                        var neighbour = chf.spans[chf.cells[nx + nz * chf.width].index + con];
+                        var lowY = Math.Min(chf.spans[i].y, neighbour.y);
+                        if (Math.Abs(neighbour.y - chf.spans[i].y) <= _defaultClimbVoxels)
+                            continue;
+                        if (InClimbRegion(new Vector3(chf.bmin.X + (x + 0.5f) * chf.cs, chf.bmin.Y + lowY * chf.ch, chf.bmin.Z + (z + 0.5f) * chf.cs)))
+                            continue;
+
+                        var cut = RcCompactSpanBuilder.NewBuilder(ref chf.spans[i]);
+                        RcCommons.SetCon(cut, dir, RcConstants.RC_NOT_CONNECTED);
+                        chf.spans[i] = cut.Build();
+                    }
+                }
+            }
+        }
     }
 }
 

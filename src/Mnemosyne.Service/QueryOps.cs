@@ -225,6 +225,131 @@ public sealed partial class ZoneService
         }
     }
 
+    /// <summary>meshNear: the served mesh around a point, for Ariadne's in-game overlay - what a
+    /// route can walk on, what is cut off from where you stand, and what is blocked, drawn over the
+    /// world instead of guessed at from logs. Polys are the served ones (overrides baked in), each
+    /// with its state and the edges that have no neighbour (the mesh's walls).</summary>
+    private Response MeshNear(Request req)
+    {
+        if (Vec(req.Point) is not { } p)
+            return Error(req, "point must be [x, y, z]");
+        var radius = req.Radius ?? 30f;
+        if (radius <= 0 || radius > 100)
+            return Error(req, "radius must be 0-100 yalms");
+        var zone = ZoneForQuery(req, out var error);
+        if (zone == null)
+            return error!;
+
+        const int MaxPolys = 4000;
+        lock (zone.Lock)
+        {
+            var mesh = zone.Mesh;
+            var query = new ReachableCellsQuery(mesh, _filter, zone.Overrides.Links);
+            HashSet<long>? component = null;
+            float[]? start = null;
+            if (query.TryStart(p, out var startRef, out var snapped))
+            {
+                component = zone.FloodFrom(startRef, () => query.Flood(startRef));
+                start = Arr(snapped);
+            }
+
+            var counts = new List<int>();
+            var verts = new List<float>();
+            var states = new List<int>();
+            var walls = new List<int>();
+            var links = new List<float[]>();
+            var truncated = false;
+            for (int t = 0; t < mesh.GetMaxTiles(); ++t)
+            {
+                var tile = mesh.GetTile(t);
+                var data = tile?.data;
+                if (data?.header == null || !Overlaps(data.header.bmin, data.header.bmax, p, radius))
+                    continue;
+                long refBase = mesh.GetPolyRefBase(tile);
+                for (int i = 0; i < data.header.polyCount; ++i)
+                {
+                    var poly = data.polys[i];
+                    if (!PolyNear(data, poly, p, radius))
+                        continue;
+                    if (poly.GetPolyType() == DtPolyTypes.DT_POLYTYPE_OFFMESH_CONNECTION)
+                    {
+                        int a = poly.verts[0] * 3, b = poly.verts[1] * 3;
+                        links.Add([data.verts[a], data.verts[a + 1], data.verts[a + 2], data.verts[b], data.verts[b + 1], data.verts[b + 2]]);
+                        continue;
+                    }
+                    if (counts.Count >= MaxPolys)
+                    {
+                        truncated = true;
+                        continue;
+                    }
+
+                    long polyRef = refBase | (uint)i;
+                    counts.Add(poly.vertCount);
+                    for (int k = 0; k < poly.vertCount; ++k)
+                    {
+                        var v = poly.verts[k] * 3;
+                        verts.Add(data.verts[v]);
+                        verts.Add(data.verts[v + 1]);
+                        verts.Add(data.verts[v + 2]);
+                    }
+                    states.Add(!_filter.PassFilter(polyRef, tile, poly) ? 3
+                        : component == null ? 0
+                        : component.Contains(polyRef) ? 1 : 2);
+
+                    var linked = 0;
+                    for (var l = tile.polyLinks[poly.index]; l != DtNavMesh.DT_NULL_LINK; l = tile.links[l].next)
+                        linked |= 1 << tile.links[l].edge;
+                    walls.Add(~linked & ((1 << poly.vertCount) - 1));
+                }
+            }
+
+            foreach (var link in zone.Overrides.Links)
+            {
+                if (Vec(link.From) is { } a && Vec(link.To) is { } b
+                    && (Horizontal(a, p) <= radius || Horizontal(b, p) <= radius))
+                    links.Add([a.X, a.Y, a.Z, b.X, b.Y, b.Z]);
+            }
+            var obstacles = zone.PadObstacles
+                .Where(o => Vec(o.Center) is { } c && Horizontal(c, p) <= radius + o.Radius && MathF.Abs(c.Y - p.Y) <= radius)
+                .Select(o => new[] { o.Center[0], o.Center[1], o.Center[2], o.Radius, o.Height })
+                .ToArray();
+
+            return new MeshNearResponse
+            {
+                Id = req.Id,
+                Ok = true,
+                Result = component == null ? Results.StartOffMesh : Results.Ok,
+                Start = start,
+                Counts = [.. counts],
+                Verts = [.. verts],
+                States = [.. states],
+                Walls = [.. walls],
+                Links = [.. links],
+                Obstacles = obstacles,
+                Truncated = truncated,
+            };
+        }
+
+        static float Horizontal(Vector3 a, Vector3 b) => MathF.Sqrt((a.X - b.X) * (a.X - b.X) + (a.Z - b.Z) * (a.Z - b.Z));
+
+        static bool Overlaps(DotRecast.Core.Numerics.RcVec3f min, DotRecast.Core.Numerics.RcVec3f max, Vector3 p, float r) =>
+            p.X + r >= min.X && p.X - r <= max.X && p.Z + r >= min.Z && p.Z - r <= max.Z
+            && p.Y + r >= min.Y && p.Y - r <= max.Y;
+
+        // any vertex within the radius horizontally and the same distance vertically
+        static bool PolyNear(DtMeshData data, DtPoly poly, Vector3 p, float r)
+        {
+            for (int k = 0; k < poly.vertCount; ++k)
+            {
+                var v = poly.verts[k] * 3;
+                var at = new Vector3(data.verts[v], data.verts[v + 1], data.verts[v + 2]);
+                if (Horizontal(at, p) <= r && MathF.Abs(at.Y - p.Y) <= r)
+                    return true;
+            }
+            return false;
+        }
+    }
+
     // ---- classified findPath answers (protocol doc, "Classified answers") ----------------
     // A bare "no path" made consumers disambiguate by experiment: retry, walk closer, rebuild
     // the mesh, give up - Odysseus grew a whole retry ladder out of it. These name the cause

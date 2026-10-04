@@ -236,6 +236,8 @@ if (args.Length > 0 && args[0] == "build")
         return (t, p, v);
     }
     var bs = Stats(built.Mesh);
+    if (reference != null && Stats(reference.Mesh).Polys == 0)
+        reference = null; // nothing to compare against
     if (reference == null)
     {
         Console.WriteLine($"built in {buildSw.Elapsed.TotalSeconds:f1} s: tiles {bs.Tiles}, polys {bs.Polys}, verts {bs.Verts}, volume: {built.Volume != null}");

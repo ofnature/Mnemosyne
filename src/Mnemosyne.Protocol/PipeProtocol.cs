@@ -28,6 +28,7 @@ public sealed class Request
     public string Op { get; set; } = ""; // hello | listZones | zoneStatus | getMesh | findPath | notifyMeshBuilt
                                          // | updateGameState | getGameState | nearestPoint | isPointOnMesh
                                          // | pointOnFloor | buildBitmap | buildZone | reportTraversal
+                                         // | reachableCells | meshNear
     public string? CacheKey { get; set; }
     public string? Path { get; set; }    // notifyMeshBuilt
     public float[]? From { get; set; }   // findPath: [x, y, z]
@@ -209,6 +210,21 @@ public sealed class ReachableCellsResponse : Response
     public bool ReachableOutside { get; set; }
     public float[]? Nearest { get; set; }  // accompanying startOffMesh, like findPath
     public ReachableCellsStatsDto? Stats { get; set; }
+}
+
+/// <summary>meshNear: the served mesh's polys around a point, for drawing it in game (spec:
+/// docs/mnemosyne-protocol.md). `counts`, `states` and `walls` are parallel, one entry per poly;
+/// `verts` holds each poly's vertices in order, `counts[i]` of them.</summary>
+public sealed class MeshNearResponse : Response
+{
+    public float[]? Start { get; set; }      // `point` snapped onto the mesh; absent when off it
+    public int[]? Counts { get; set; }
+    public float[]? Verts { get; set; }      // x, y, z per vertex
+    public int[]? States { get; set; }       // 0 walkable (no start) · 1 reachable · 2 cutOff · 3 blocked
+    public int[]? Walls { get; set; }        // bit j: edge j (vertex j to j+1) has no neighbour
+    public float[][]? Links { get; set; }    // [x1, y1, z1, x2, y2, z2]: off-mesh and override links
+    public float[][]? Obstacles { get; set; } // [x, y, z, radius, height]: what route padding keeps clear of
+    public bool Truncated { get; set; }      // more polys in range than one answer carries
 }
 
 public sealed class ReachableCellsStatsDto
