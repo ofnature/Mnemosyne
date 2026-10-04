@@ -33,6 +33,15 @@ public sealed partial class ZoneService
         /// disk means this copy is stale for every client sharing it.</summary>
         public DateTime OverridesStamp;
 
+        // which file this copy came from, and when that file was written: a capture rebuilt by
+        // this service, or a built mesh replaced by a capture, has to reach the warm copy too
+        public string MeshPath = "";
+        public DateTime MeshStamp;
+
+        // What padding steers round: the zone's recorded obstacles, plus the uncarved solids the
+        // service finds itself once the background audit has run (StartAutoObstacles).
+        public volatile IReadOnlyList<ObstacleShape> PadObstacles = [];
+
         // reachableCells floods, keyed by start poly: the component walk is the expensive half
         // of that query, and consumers ask repeatedly from the same spot with different windows.
         // Capped, because a component is a big set of poly refs and a sweeping consumer asks
@@ -87,7 +96,7 @@ public sealed partial class ZoneService
                 "listZones" => ListZones(req),
                 "zoneStatus" => ZoneStatus(req, clientId),
                 "getMesh" => GetMesh(req),
-                "findPath" => FindPath(req, clientId),
+                "findPath" => NoteFailedRoute(FindPath(req, clientId), req, clientId),
                 "notifyMeshBuilt" => NotifyMeshBuilt(req),
                 "updateGameState" => UpdateGameState(req, clientId),
                 "getGameState" => GetGameState(req),
@@ -330,6 +339,7 @@ public sealed partial class ZoneService
                 using (var writer = new BinaryWriter(stream))
                     navmesh.Serialize(writer);
                 File.Move(temp, builtPath, true);
+                File.WriteAllText(RevisionPathFor(builtPath), Mnemosyne.Builder.ZoneBuilder.Revision.ToString());
                 Console.WriteLine($"built '{cacheKey}' in {sw.Elapsed.TotalSeconds:f1} s -> {builtPath}");
                 return builtPath;
             }
@@ -339,6 +349,72 @@ public sealed partial class ZoneService
                 return null;
             }
         }
+    }
+
+    // ---- would a capture change this mesh? ------------------------------------------------
+    // Each mesh this service writes records the builder revision beside it; vnavmesh's files and
+    // our older ones have none (revision 0). A fix since a file's revision that applies to its
+    // zone means a live capture would build something different - that is what lights Ariadne's
+    // "Capture zone" button. One fix so far: revision 2's navimesh scaffold.
+    private readonly Lazy<Lumina.GameData?> _game = new(() =>
+        GamePaths.FindSqpackDir() is { } dir ? new Lumina.GameData(dir) : null);
+    private readonly Dictionary<string, (DateTime Stamp, string? Reason)> _recapture = [];
+
+    private static string RevisionPathFor(string meshPath) => meshPath + ".rev";
+
+    private static int StoredRevision(string meshPath)
+    {
+        try
+        {
+            return File.Exists(RevisionPathFor(meshPath)) && int.TryParse(File.ReadAllText(RevisionPathFor(meshPath)).Trim(), out var r) ? r : 0;
+        }
+        catch (IOException)
+        {
+            return 0;
+        }
+    }
+
+    private string? RecaptureReason(string cacheKey, string meshPath)
+    {
+        var stamp = File.GetLastWriteTimeUtc(meshPath);
+        lock (_recapture)
+            if (_recapture.TryGetValue(meshPath, out var known) && known.Stamp == stamp)
+                return known.Reason;
+
+        string? reason = null;
+        // a zone's customization changed since this mesh was built (Eulmore's step height,
+        // 2026-10-02): the header records the version it was built with
+        if (ZoneNames.Lookup(cacheKey)?.Bg is { Length: > 0 } zoneBg && _game.Value is { } zoneGame)
+        {
+            try
+            {
+                var (_, _, builtWith) = MeshCache.ReadHeader(meshPath);
+                var territory = Mnemosyne.Builder.ZoneBuilder.TerritoryIdFor(zoneGame, zoneBg);
+                var current = global::Navmesh.NavmeshCustomizationRegistry.ForTerritory(territory).Version;
+                if (territory != 0 && builtWith != current)
+                    reason = $"built with this zone's customization v{builtWith}; it is now v{current}";
+            }
+            catch (IOException)
+            {
+                // being rewritten: the next poll asks again
+            }
+        }
+        if (reason == null && StoredRevision(meshPath) < 2 && ZoneNames.Lookup(cacheKey)?.Bg is { Length: > 0 } bg && _game.Value is { } game)
+        {
+            try
+            {
+                var scaffold = Mnemosyne.Builder.NavimeshScaffold.Find(game, bg).Count;
+                if (scaffold > 0)
+                    reason = $"built before navimesh scaffold was left out ({scaffold} collider(s) here)";
+            }
+            catch (Exception e) when (e is IOException or InvalidDataException)
+            {
+                // unreadable layout: nothing to say either way
+            }
+        }
+        lock (_recapture)
+            _recapture[meshPath] = (stamp, reason);
+        return reason;
     }
 
     private Response ZoneStatus(Request req, int clientId = 0)
@@ -358,6 +434,7 @@ public sealed partial class ZoneService
                 Status = "cached",
                 Version = (int)version,
                 Customization = customization,
+                Recapture = RecaptureReason(req.CacheKey!, file),
                 Progress = BuildProgress,
                 Building = BuildProgress >= 0,
                 PathfindInProgress = PathfindQueued(clientId) > 0,
@@ -470,6 +547,47 @@ public sealed partial class ZoneService
             Customization = customization,
             Size = new FileInfo(file).Length,
         };
+    }
+
+    // ---- which requests fail, and for whom -------------------------------------------------
+    // Ariadne logs a failed route as its result alone, so a burst of 50 "targetOffMesh" a second in
+    // a dungeon could not be traced to what was asked for or who asked (The Burn, 2026-09-28: 564 of
+    // them, from four possible callers). The service is the one place that sees every request with
+    // its `to` and its connection. Logged once per client, result and yalm-rounded target per 10 s,
+    // so a per-frame loop shows up as a handful of lines naming the points it keeps asking about.
+    private readonly Dictionary<(int Client, string Result, int X, int Y, int Z), long> _failedRouteSeen = [];
+    private const long FailedRouteQuietMs = 10_000;
+
+    private Response NoteFailedRoute(Response response, Request req, int clientId)
+    {
+        if (response is not FindPathResponse route || (route.Result is null or Results.Ok && !route.Partial))
+            return response;
+        if (req.To is not { Length: 3 } to || req.From is not { Length: 3 } from)
+            return response;
+
+        var result = route.Result ?? (route.Partial ? "partial" : "failed");
+        if (route.Partial && result == Results.Ok)
+            result = "partial";
+        var key = (clientId, result, (int)MathF.Round(to[0]), (int)MathF.Round(to[1]), (int)MathF.Round(to[2]));
+        var now = Environment.TickCount64;
+        lock (_failedRouteSeen)
+        {
+            if (_failedRouteSeen.TryGetValue(key, out var last) && now - last < FailedRouteQuietMs)
+                return response;
+            _failedRouteSeen[key] = now;
+            if (_failedRouteSeen.Count > 4096)
+                _failedRouteSeen.Clear();
+        }
+
+        string? who;
+        lock (_gameStateLock)
+            who = _gameStates.TryGetValue(clientId, out var state) ? state.Character : null;
+        static string P(float[] v) => $"({v[0]:f1}, {v[1]:f1}, {v[2]:f1})";
+        Console.WriteLine($"findPath [{result}] {who ?? $"client {clientId}"}: {P(from)} -> {P(to)}"
+            + (route.Nearest is { Length: 3 } n ? $", nearest {P(n)}" : "")
+            + (route.Waypoints is { Length: > 0 } w ? $", ends {P(w[^1])}" : "")
+            + $" [{req.CacheKey}]");
+        return response;
     }
 
     // latest game state pushed by Ariadne (updateGameState); consumed by the viewer (getGameState)
@@ -606,6 +724,19 @@ public sealed partial class ZoneService
         }
         var avoidApplies = effAvoidRadius > 0;
 
+        // `avoid`: several circles for walk legs (hunt marks), soft - a cost, not a wall (see
+        // AvoidCostFilter). Each clamped like the single one, so none covers the start or goal.
+        var walkCircles = new List<(Vector3 Center, float Radius)>();
+        foreach (var c in req.Avoid ?? [])
+        {
+            if (c is not { Length: 4 } || c[3] <= 0)
+                continue;
+            var centre = new Vector3(c[0], c[1], c[2]);
+            var radius = MathF.Min(c[3], MathF.Min(DistanceXZ(from, centre), DistanceXZ(to, centre)) - 0.5f);
+            if (radius > 0)
+                walkCircles.Add((centre, radius));
+        }
+
         lock (zone.Lock)
         {
             List<Vector3> waypoints;
@@ -645,7 +776,7 @@ public sealed partial class ZoneService
                         {
                             var route = plan.Flatten();
                             PathPadding.Apply(zone.Mesh, route, req.Clearance ?? PathPadding.DefaultPad,
-                                zone.Overrides.Obstacles);
+                                zone.PadObstacles);
                             Console.WriteLine($"'{zone.Key}': {plan.Summary} ({plan.TotalSeconds:f1}s)");
 
                             // Legs index into the flat array. Padding only ever touches the
@@ -774,7 +905,7 @@ public sealed partial class ZoneService
                         // skip the tail's first waypoint: it is the landing point we already have
                         waypoints.AddRange(tail.Waypoints.Skip(1));
                         PathPadding.Apply(zone.Mesh, waypoints, req.Clearance ?? PathPadding.DefaultPad,
-                            zone.Overrides.Obstacles);
+                            zone.PadObstacles);
                         partial = false;
                         walkTailFrom = landing;
                         flyLegCount = waypoints.Count - (tail.Waypoints.Count - 1);
@@ -802,7 +933,7 @@ public sealed partial class ZoneService
                                 + $"{airEta:f1}s over {PathLength(waypoints):f0}m flying) - answering with the ground route");
                             waypoints = ground.Waypoints;
                             PathPadding.Apply(zone.Mesh, waypoints, req.Clearance ?? PathPadding.DefaultPad,
-                                zone.Overrides.Obstacles);
+                                zone.PadObstacles);
                             groundWasFaster = true;
                         }
                     }
@@ -811,7 +942,9 @@ public sealed partial class ZoneService
             }
             else
             {
-                var avoidFilter = avoidApplies ? new AvoidRadiusFilter(avoidCenter!.Value, effAvoidRadius) : null;
+                IDtQueryFilter? avoidFilter = avoidApplies ? new AvoidRadiusFilter(avoidCenter!.Value, effAvoidRadius) : null;
+                if (walkCircles.Count > 0)
+                    avoidFilter = new AvoidCostFilter(avoidFilter ?? new DtQueryDefaultFilter(), walkCircles);
                 var result = zone.Pathfinder.FindWalkPath(from, to, zone.Overrides.Links, avoidFilter);
                 // A hazard can plug the only corridor. Saying "no path" there is the worst
                 // of both worlds - the caller loses the route AND the reason. Fall back to
@@ -839,6 +972,9 @@ public sealed partial class ZoneService
                             result = retry;
                     }
                 }
+                // soft circles never seal a route; say so when the best one still runs through one
+                if (result is { Partial: false } && walkCircles.Count > 0 && AvoidCostFilter.RouteEnters(result.Waypoints, walkCircles))
+                    avoidIgnored = true;
                 if (result == null)
                     return ClassifyWalkFailure(req, zone, from, to);
                 if (result.DisconnectedTo is { } unreachable)
@@ -881,7 +1017,7 @@ public sealed partial class ZoneService
                 // the tolerance trim so the final waypoint, which the trim just chose, stays put.
                 var clearance = req.Clearance ?? PathPadding.DefaultPad;
                 if (clearance > 0)
-                    PathPadding.Apply(zone.Mesh, waypoints, clearance, zone.Overrides.Obstacles);
+                    PathPadding.Apply(zone.Mesh, waypoints, clearance, zone.PadObstacles);
             }
             float pathLength = 0;
             for (int i = 1; i < waypoints.Count; ++i)
@@ -995,21 +1131,38 @@ public sealed partial class ZoneService
         }
     }
 
+    private static DateTime MeshStampFor(string path)
+    {
+        try
+        {
+            return File.GetLastWriteTimeUtc(path);
+        }
+        catch (IOException)
+        {
+            return default;
+        }
+    }
+
     private LoadedZone GetOrLoad(string key, string path)
     {
         var stamp = OverridesStampFor(key);
+        var meshStamp = MeshStampFor(path);
         lock (_lock)
         {
             if (_zones.TryGetValue(key, out var existing))
             {
-                if (existing.OverridesStamp == stamp)
+                if (existing.OverridesStamp == stamp && existing.MeshPath == path && existing.MeshStamp == meshStamp)
                 {
                     existing.LastUse = Environment.TickCount64;
                     return existing;
                 }
-                // Someone edited this zone - the viewer, a solids audit, a promoted traversal.
-                // Drop the cached copy so every client picks the edit up on its next query.
-                Console.WriteLine($"'{key}': edits changed on disk, reloading for all clients");
+                // Someone edited this zone - the viewer, a solids audit, a promoted traversal -
+                // or its mesh was rebuilt. Found 2026-10-02: a capture this service rebuilt
+                // (Kholusia, 4.8 -> 6.5 MB) stayed unserved, because only edits and a client's
+                // notifyMeshBuilt dropped the warm copy. Drop it so every client gets the new one.
+                Console.WriteLine(existing.OverridesStamp != stamp
+                    ? $"'{key}': edits changed on disk, reloading for all clients"
+                    : $"'{key}': mesh file changed ({Path.GetFileName(Path.GetDirectoryName(path))}), reloading for all clients");
                 _zones.Remove(key);
             }
         }
@@ -1030,6 +1183,9 @@ public sealed partial class ZoneService
             Volume = loaded.Volume, // non-null only when the slow path decoded it anyway
             LastUse = Environment.TickCount64,
             OverridesStamp = stamp,
+            MeshPath = path,
+            MeshStamp = meshStamp,
+            PadObstacles = overrides.Obstacles,
         };
         Console.WriteLine($"loaded '{key}' in {sw.ElapsedMilliseconds} ms (fast: {loaded.FromFastCache}, hasVolume: {loaded.HasVolume}, overrides: {overrides.FlagEdits.Count} shapes/{overrides.Links.Count} links -> {overriddenPolys} polys)");
 
@@ -1044,8 +1200,83 @@ public sealed partial class ZoneService
                 Console.WriteLine($"evicted zone '{oldest.Key}'");
             }
             _zones[key] = zone;
-            return zone;
         }
+        StartAutoObstacles(zone);
+        return zone;
+    }
+
+    // ---- solids the mesh did not carve, found by the service itself (2026-10-04) ----------
+    // A thin solid - a tent pole, a lamppost, a market prop - leaves little or no hole in the mesh,
+    // so padding (which pushes off mesh edges) cannot see it, and raising the clearance pushed
+    // routes *into* the poles. Four mounted characters stuck on a tent pole in Amh Araeng's market.
+    // A recorded obstacle fixes it (padding treats it as a cylinder), but only on the PC holding the
+    // record. So every zone is audited once in the background (SolidAudit, ~15 s) and the result
+    // cached beside the mesh's stamp; padding then steers round them on any PC.
+    private static readonly SemaphoreSlim AutoObstacleGate = new(1, 1);
+    private const float AutoObstacleMinHeight = 1.5f; // as `solids`: tall enough to stop a body
+    private const float AutoObstacleMaxRadius = 2f;   // bigger is a building the mesh carves anyway
+
+    private static string AutoObstacleDirectory { get; } = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mnemosyne", "cache", "solids");
+
+    private sealed class AutoObstacleCache
+    {
+        public string MeshStamp { get; set; } = "";
+        public List<ObstacleShape> Obstacles { get; set; } = [];
+    }
+
+    private void StartAutoObstacles(LoadedZone zone)
+    {
+        if (_sqpackDir is not { } sqpack || ZoneNames.Lookup(zone.Key)?.Bg is not { Length: > 0 } bg)
+            return;
+        _ = Task.Run(async () =>
+        {
+            await AutoObstacleGate.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                var cachePath = Path.Combine(AutoObstacleDirectory, zone.Key + ".json");
+                var stamp = zone.MeshStamp.ToString("O");
+                List<ObstacleShape>? found = null;
+                try
+                {
+                    if (File.Exists(cachePath)
+                        && System.Text.Json.JsonSerializer.Deserialize<AutoObstacleCache>(File.ReadAllText(cachePath)) is { } cached
+                        && cached.MeshStamp == stamp)
+                        found = cached.Obstacles;
+                }
+                catch (Exception e) when (e is IOException or System.Text.Json.JsonException)
+                {
+                    // unreadable cache: audit again
+                }
+                if (found == null)
+                {
+                    var sw = System.Diagnostics.Stopwatch.StartNew();
+                    // its own GameData: the shared one serves request threads
+                    var clusters = Mnemosyne.Builder.SolidAudit.Find(new Lumina.GameData(sqpack), bg, zone.Mesh);
+                    found = [.. clusters
+                        .Where(c => c.Height >= AutoObstacleMinHeight && c.Radius <= AutoObstacleMaxRadius)
+                        .Select(c => new ObstacleShape
+                        {
+                            Center = [c.Pos.X, c.Pos.Y, c.Pos.Z],
+                            Radius = c.Radius,
+                            Height = c.Height,
+                            Note = $"auto: {Path.GetFileNameWithoutExtension(c.Asset)}",
+                        })];
+                    Directory.CreateDirectory(AutoObstacleDirectory);
+                    File.WriteAllText(cachePath, System.Text.Json.JsonSerializer.Serialize(new AutoObstacleCache { MeshStamp = stamp, Obstacles = found }));
+                    Console.WriteLine($"'{zone.Key}': {found.Count} uncarved solids found in {sw.Elapsed.TotalSeconds:f1} s - routes now pad round them");
+                }
+                zone.PadObstacles = [.. zone.Overrides.Obstacles, .. found];
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"'{zone.Key}': solid audit failed ({e.Message}) - padding uses recorded obstacles only");
+            }
+            finally
+            {
+                AutoObstacleGate.Release();
+            }
+        });
     }
 }
 

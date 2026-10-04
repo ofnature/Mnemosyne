@@ -1,4 +1,4 @@
-using DotRecast.Detour;
+﻿using DotRecast.Detour;
 using Navmesh;
 using System.Numerics;
 
@@ -13,7 +13,7 @@ namespace Mnemosyne.Core;
 // 38 m route sat at 0.00 m clearance.
 //
 // This is a post-process rather than a cost change on purpose: it works on meshes that are
-// already built and cached, needs no rebuild, and cannot make a route worse — a waypoint is
+// already built and cached, needs no rebuild, and cannot make a route worse â€” a waypoint is
 // only moved when the move both increases its clearance and lands on the mesh.
 public static class PathPadding
 {
@@ -29,7 +29,16 @@ public static class PathPadding
     /// times. It converges fast; more passes buy nothing.</summary>
     private const int Passes = 3;
 
-    /// <summary>Widen the corridor a route takes, in place. Endpoints are never moved — the
+    /// <summary>Closest two waypoints may sit. Padding a corner and then bending the leg beside it
+    /// put pairs 0.4-0.6 m apart at every corner of Eulmore's ramps (2026-10-02): the follower
+    /// turned sharply at each, zigzagged at the foot of the stairs and caught on the edge.</summary>
+    private const float MinSpacing = 1f;
+
+    /// <summary>What a merged leg must still clear: half a body, the same line the route
+    /// diagnostics draw as "inside body radius".</summary>
+    private const float MergeClearance = 0.5f;
+
+    /// <summary>Widen the corridor a route takes, in place. Endpoints are never moved â€” the
     /// caller asked to arrive at a specific spot, and a padded goal is the wrong goal.
     /// Returns how many waypoints ended up moved.</summary>
     public static int Apply(DtNavMesh mesh, List<Vector3> waypoints, float pad = DefaultPad,
@@ -40,7 +49,10 @@ public static class PathPadding
 
         var query = new DtNavMeshQuery(mesh);
         var filter = new DtQueryDefaultFilter();
-        var solids = obstacles ?? new List<ObstacleShape>();
+        // A zone can carry thousands of obstacles once the service records the uncarved solids
+        // it finds itself (8,807 in Amh Araeng), and padding asks for clearance thousands of times
+        // per route: look them up by grid cell, not by scanning the list.
+        var solids = new ObstacleIndex(obstacles ?? []);
         var moved = 0;
 
         for (int pass = 0; pass < Passes; ++pass)
@@ -61,15 +73,48 @@ public static class PathPadding
         }
 
         moved += PadLegs(query, filter, solids, waypoints, pad);
+        MergeCrowded(query, filter, solids, waypoints);
         return moved;
+    }
+
+    /// <summary>Drop a waypoint that sits within <see cref="MinSpacing"/> of the one before it,
+    /// when the leg that replaces it still clears <see cref="MergeClearance"/>. Endpoints stay.</summary>
+    private static void MergeCrowded(DtNavMeshQuery query, IDtQueryFilter filter,
+        ObstacleIndex solids, List<Vector3> waypoints)
+    {
+        for (int i = 1; i < waypoints.Count - 1;)
+        {
+            if (Vector3.Distance(waypoints[i - 1], waypoints[i]) >= MinSpacing
+                || LegClearance(query, filter, solids, waypoints[i - 1], waypoints[i + 1]) < MergeClearance)
+            {
+                ++i;
+                continue;
+            }
+            waypoints.RemoveAt(i);
+        }
+    }
+
+    private static float LegClearance(DtNavMeshQuery query, IDtQueryFilter filter,
+        ObstacleIndex solids, Vector3 a, Vector3 b)
+    {
+        var steps = Math.Min(64, Math.Max(2, (int)(Vector3.Distance(a, b) / 0.25f)));
+        var worst = float.MaxValue;
+        for (int step = 1; step < steps; ++step)
+        {
+            var c = Clearance(query, filter, solids, Vector3.Lerp(a, b, step / (float)steps));
+            if (c < 0)
+                return -1; // leaves the mesh: never merge across that
+            worst = MathF.Min(worst, c);
+        }
+        return worst;
     }
 
     /// <summary>Corners are not where a body spends its time. A leg can leave both its
     /// waypoints comfortably clear and still scrape a wall halfway along, which is precisely
-    /// the "it swings too close" complaint — so find the worst point on each leg and bend the
+    /// the "it swings too close" complaint â€” so find the worst point on each leg and bend the
     /// route around it by inserting a padded waypoint there.</summary>
     private static int PadLegs(DtNavMeshQuery query, IDtQueryFilter filter,
-        IReadOnlyList<ObstacleShape> solids, List<Vector3> waypoints, float pad)
+        ObstacleIndex solids, List<Vector3> waypoints, float pad)
     {
         const int MaxInsertions = 24; // a route that needs more than this is narrow everywhere
         var inserted = 0;
@@ -109,6 +154,8 @@ public static class PathPadding
                     continue;
                 if (Clearance(query, filter, solids, relief) <= worst + 0.05f)
                     continue; // no real gain; leave the leg straight
+                if (Vector3.Distance(relief, a) < MinSpacing || Vector3.Distance(relief, b) < MinSpacing)
+                    continue; // hard by a corner already padded: a second turn there is a zigzag
 
                 waypoints.Insert(i, relief);
                 ++inserted;
@@ -124,12 +171,14 @@ public static class PathPadding
     /// <summary>Clearance at a point: distance to the nearest thing you would walk into - a
     /// mesh boundary, or a recorded obstacle the mesh never carved. -1 when off the mesh.</summary>
     public static float Clearance(DtNavMeshQuery query, IDtQueryFilter filter, Vector3 p)
-        => Clearance(query, filter, NoObstacles, p);
-
-    private static readonly List<ObstacleShape> NoObstacles = new();
+        => Clearance(query, filter, ObstacleIndex.Empty, p);
 
     public static float Clearance(DtNavMeshQuery query, IDtQueryFilter filter,
         IReadOnlyList<ObstacleShape> solids, Vector3 p)
+        => Clearance(query, filter, new ObstacleIndex(solids), p);
+
+    private static float Clearance(DtNavMeshQuery query, IDtQueryFilter filter,
+        ObstacleIndex solids, Vector3 p)
     {
         query.FindNearestPoly(p.SystemToRecast(), new(2, 4, 2), filter, out var polyRef, out _, out _);
         if (polyRef == 0)
@@ -143,11 +192,11 @@ public static class PathPadding
     /// <summary>Distance to the nearest recorded obstacle's surface, and which way to escape.
     /// Obstacles are treated as vertical cylinders - a lamppost is one, and a low wall is
     /// close enough once the audit has broken it into clusters.</summary>
-    private static float ObstacleClearance(IReadOnlyList<ObstacleShape> solids, Vector3 p, out Vector3 away)
+    private static float ObstacleClearance(ObstacleIndex solids, Vector3 p, out Vector3 away)
     {
         away = Vector3.Zero;
         var best = float.MaxValue;
-        foreach (var o in solids)
+        foreach (var o in solids.Near(p, WallSearchRadius))
         {
             var centre = new Vector3(o.Center[0], o.Center[1], o.Center[2]);
             // only when we share its vertical span: a bollard under a bridge does not block
@@ -165,7 +214,7 @@ public static class PathPadding
     }
 
     private static bool TryPad(DtNavMeshQuery query, IDtQueryFilter filter,
-        IReadOnlyList<ObstacleShape> solids, Vector3 point, float pad, out Vector3 result)
+        ObstacleIndex solids, Vector3 point, float pad, out Vector3 result)
     {
         result = point;
         query.FindNearestPoly(point.SystemToRecast(), new(2, 4, 2), filter, out var polyRef, out _, out _);
@@ -212,5 +261,42 @@ public static class PathPadding
             return true;
         }
         return true;
+    }
+
+    /// <summary>Obstacles bucketed by 4 m grid cell, so a clearance query only looks at the
+    /// handful near it. Beyond <see cref="WallSearchRadius"/> plus the largest radius nothing can
+    /// matter: clearance is only ever compared with a wall distance searched that far.</summary>
+    private sealed class ObstacleIndex
+    {
+        private const float Cell = 4f;
+        public static readonly ObstacleIndex Empty = new([]);
+        private readonly Dictionary<(int, int), List<ObstacleShape>> _cells = [];
+        private readonly float _maxRadius;
+
+        public ObstacleIndex(IReadOnlyList<ObstacleShape> obstacles)
+        {
+            foreach (var o in obstacles)
+            {
+                var key = ((int)MathF.Floor(o.Center[0] / Cell), (int)MathF.Floor(o.Center[2] / Cell));
+                if (!_cells.TryGetValue(key, out var list))
+                    _cells[key] = list = [];
+                list.Add(o);
+                _maxRadius = MathF.Max(_maxRadius, o.Radius);
+            }
+        }
+
+        public IEnumerable<ObstacleShape> Near(Vector3 p, float reach)
+        {
+            if (_cells.Count == 0)
+                yield break;
+            var r = reach + _maxRadius;
+            int x0 = (int)MathF.Floor((p.X - r) / Cell), x1 = (int)MathF.Floor((p.X + r) / Cell);
+            int z0 = (int)MathF.Floor((p.Z - r) / Cell), z1 = (int)MathF.Floor((p.Z + r) / Cell);
+            for (int x = x0; x <= x1; ++x)
+                for (int z = z0; z <= z1; ++z)
+                    if (_cells.TryGetValue((x, z), out var list))
+                        foreach (var o in list)
+                            yield return o;
+        }
     }
 }

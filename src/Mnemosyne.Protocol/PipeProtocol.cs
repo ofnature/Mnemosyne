@@ -49,6 +49,7 @@ public sealed class Request
     public float? Clearance { get; set; }
     public float[]? AvoidCenter { get; set; }
     public float? AvoidRadius { get; set; }
+    public float[][]? Avoid { get; set; }      // findPath: [x, y, z, radius] circles, walk legs (2026-10-02)
 
     // Query.Mesh.* ops
     public float[]? Point { get; set; }
@@ -128,6 +129,8 @@ public sealed class ZoneStatusResponse : Response
     public bool Building { get; set; }
     public bool PathfindInProgress { get; set; } // this client's queries only
     public int PathfindNumQueued { get; set; }
+    /// <summary>With "cached": why a live capture would change the served mesh; null when it would not.</summary>
+    public string? Recapture { get; set; }
 }
 
 public sealed class GetMeshResponse : Response

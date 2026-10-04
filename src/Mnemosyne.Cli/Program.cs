@@ -35,6 +35,18 @@ if (args.Length > 0 && args[0] == "route")
 if (args.Length > 0 && args[0] == "clearmap")
     return Mnemosyne.Cli.ReachMap.RunClearance(args);
 
+// transitions: every scripted path in the dungeons, classified as ride / slide / lift / hazard
+if (args.Length > 0 && args[0] == "transitions")
+    return Mnemosyne.Cli.Transitions.Run(args);
+
+// climbcomb: what a raised step height joined besides the stairs it was raised for
+if (args.Length > 0 && args[0] == "climbcomb")
+    return Mnemosyne.Cli.ClimbComb.Run(args);
+
+// trace: replay route files leg by leg - what walks, what our data covers, what nobody explains
+if (args.Length > 0 && args[0] == "trace")
+    return Mnemosyne.Cli.Trace.Run(args);
+
 // layout: event objects (with EObj ids) and matching shared groups/models in a zone
 if (args.Length > 0 && args[0] == "layout")
     return Mnemosyne.Cli.LayoutList.Run(args);
@@ -145,8 +157,9 @@ if (args.Length > 0 && args[0] == "build")
     var cell = Flag("--cell");
     var cellH = Flag("--ch");
     var radius = Flag("--radius");
+    var climb = Flag("--climb"); // AgentMaxClimb: the tallest step up the mesh walks (Eulmore's curved stair)
     Action<Navmesh.NavmeshSettings>? tweak = null;
-    if (clear != null || cell != null || cellH != null || radius != null)
+    if (clear != null || cell != null || cellH != null || radius != null || climb != null)
     {
         tweak = s =>
         {
@@ -174,6 +187,8 @@ if (args.Length > 0 && args[0] == "build")
                 s.CellHeight = ch;
             if (radius != null && float.TryParse(radius, out var r))
                 s.AgentRadius = r;
+            if (climb != null && float.TryParse(climb, out var mc))
+                s.AgentMaxClimb = mc;
         };
     }
     // Resolve through the shared lookup so the built store counts as a reference too.
@@ -194,9 +209,17 @@ if (args.Length > 0 && args[0] == "build")
     var sqpack = Path.Combine(gameRoot, "game", "sqpack");
 
     Console.WriteLine($"building '{entry.Key}' from {bgPath} ...");
-    var reference = MeshCache.Load(entry.Path);
+    // The reference only feeds the comparison below. A zone whose only mesh is an older format
+    // (Il Mheg's is vnavmesh's from February) cannot be read, and that is exactly the zone worth
+    // rebuilding: build it anyway and skip the comparison.
+    global::Navmesh.Navmesh? reference = null;
+    try { reference = MeshCache.Load(entry.Path); }
+    catch (Exception e) { Console.WriteLine($"reference mesh unreadable ({e.Message}) - building without a comparison"); }
+    var flyable = reference != null
+        ? reference.Volume != null
+        : Mnemosyne.Builder.ZoneBuilder.IsFlyable(new Lumina.GameData(sqpack), bgPath);
     var buildSw = System.Diagnostics.Stopwatch.StartNew();
-    var built = Mnemosyne.Builder.ZoneBuilder.Build(sqpack, bgPath, reference.Volume != null,
+    var built = Mnemosyne.Builder.ZoneBuilder.Build(sqpack, bgPath, flyable,
         (done, total) => { if (done % 64 == 0 || done == total) Console.WriteLine($"  tile {done}/{total}"); }, tweak);
     buildSw.Stop();
 
@@ -213,6 +236,18 @@ if (args.Length > 0 && args[0] == "build")
         return (t, p, v);
     }
     var bs = Stats(built.Mesh);
+    if (reference == null)
+    {
+        Console.WriteLine($"built in {buildSw.Elapsed.TotalSeconds:f1} s: tiles {bs.Tiles}, polys {bs.Polys}, verts {bs.Verts}, volume: {built.Volume != null}");
+        var plainDir = outDir ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mnemosyne", "built");
+        Directory.CreateDirectory(plainDir);
+        var plainPath = Path.Combine(plainDir, entry.Key + ".navmesh");
+        using (var plainStream = File.Create(plainPath))
+        using (var plainWriter = new BinaryWriter(plainStream))
+            built.Serialize(plainWriter);
+        Console.WriteLine($"saved: {plainPath} ({new FileInfo(plainPath).Length / 1024.0 / 1024.0:f1} MB)");
+        return 0;
+    }
     var rs = Stats(reference.Mesh);
     Console.WriteLine($"built in {buildSw.Elapsed.TotalSeconds:f1} s: tiles {bs.Tiles} (ref {rs.Tiles}), polys {bs.Polys} (ref {rs.Polys}), verts {bs.Verts} (ref {rs.Verts}), volume: {built.Volume != null} (ref {reference.Volume != null})");
     // Shape, not just size: island count and how much of the walkable area the largest island
@@ -303,24 +338,84 @@ if (args.Length > 0 && args[0] == "linktest")
         return null;
     }
 
-    var linkOut = LinkFlag("--out") ?? Path.Combine("scratch", "links");
     var seamMaxGap = float.TryParse(LinkFlag("--max-gap"), out var gapArg) ? gapArg : 2f;
     var seamMaxDrop = float.TryParse(LinkFlag("--max-drop"), out var dropArg) ? dropArg : 0.5f;
     var seamTop = int.TryParse(LinkFlag("--top"), out var topArg) ? topArg : 12;
 
-    if (Mnemosyne.Cli.Probe.ResolveForBuild(linkTarget) is not { } linkEntry)
+    // --mesh=<file> links that exact file (a live capture in Mnemosyne\captured is what the service
+    // serves first, and the cache lookup never looks there); the key is the file name.
+    var meshArg = LinkFlag("--mesh");
+    (string Path, string Key)? linkFound = meshArg != null
+        ? (meshArg, Path.GetFileNameWithoutExtension(meshArg))
+        : Mnemosyne.Cli.Probe.ResolveForBuild(linkTarget);
+    if (linkFound is not { } linkEntry)
     {
         Console.WriteLine($"no zone (of any mesh version) matches '{linkTarget}'");
         return 1;
     }
     var linkRef = MeshCache.Load(linkEntry.Path);
-    var seams = Mnemosyne.Cli.Components.SeamCandidates(linkRef.Mesh, seamMaxGap, seamMaxDrop, seamTop);
+
+    // --anchor=x,y,z keeps only seams on the edge of ground reachable from that point (see
+    // SeamCandidatesFrom for why the unanchored search is not enough), and --limit caps how many.
+    var anchorArg = LinkFlag("--anchor")?.Split(',').Select(float.Parse).ToArray();
+    var anchor = anchorArg is { Length: 3 } ? new System.Numerics.Vector3(anchorArg[0], anchorArg[1], anchorArg[2]) : (System.Numerics.Vector3?)null;
+    var seamLimit = int.TryParse(LinkFlag("--limit"), out var limitArg) ? limitArg : 10;
+    var anchorStart = anchor;
+    var snapped = System.Numerics.Vector3.Zero;
+    // --min-area: the smallest far side worth linking. 200 m2 keeps specks out of a zone-wide
+    // search; a landing pad is smaller (Xelphatol's second shuttle sets you down on 15 m2)
+    var seamMinArea = float.TryParse(LinkFlag("--min-area"), out var areaArg) ? areaArg : 200f;
+    var candidates = anchor is { } a
+        ? Mnemosyne.Cli.Components.SeamCandidatesFrom(linkRef.Mesh, a, out snapped, seamMaxGap, seamMaxDrop, seamMinArea)
+            .Select(c => (c.From, c.To, c.Gap, c.Drop)).ToList()
+        : Mnemosyne.Cli.Components.SeamCandidates(linkRef.Mesh, seamMaxGap, seamMaxDrop, seamTop);
+    if (anchor != null)
+        anchorStart = snapped; // the ground beside the anchor, not an aetheryte's own plinth
+
+    // A seam is only a crack if nothing solid stands in it. The mesh cannot tell a crack from a wall
+    // between two floors - both are two islands at one height a step apart - and the first link tried
+    // in game was a wall. So every candidate is checked against the zone's collision at body height,
+    // and the walls are reported rather than linked. --no-collision skips it, for measuring the
+    // mechanism only.
+    var walls = new List<((System.Numerics.Vector3 From, System.Numerics.Vector3 To, float Gap, float Drop) Seam, float Height, System.Numerics.Vector3 Hit, string Asset)>();
+    if (!args.Contains("--no-collision") && candidates.Count > 0)
+    {
+        if (ZoneNames.Lookup(linkEntry.Key)?.Bg is { Length: > 0 } collisionBg && GamePaths.FindSqpackDir() is { } collisionSqpack)
+        {
+            var collision = new Mnemosyne.Builder.CollisionProbe(new Lumina.GameData(collisionSqpack), collisionBg,
+                [.. candidates.SelectMany(c => new[] { c.From, c.To })]);
+            Console.WriteLine($"collision check: {collision.TriangleCount} triangles near the candidates");
+            var clear = new List<(System.Numerics.Vector3 From, System.Numerics.Vector3 To, float Gap, float Drop)>();
+            foreach (var c in candidates)
+            {
+                if (collision.Blocker(c.From, c.To) is { } hit)
+                    walls.Add((c, hit.Height, hit.Hit, hit.Asset));
+                else
+                    clear.Add(c);
+            }
+            candidates = clear;
+        }
+        else
+        {
+            Console.WriteLine("collision check: no game data for this zone - candidates are UNCHECKED and may be walls");
+        }
+    }
+    var seams = anchor != null ? candidates.Take(seamLimit).ToList() : candidates;
     var refLinks = CountOffMesh(linkRef.Mesh);
     Console.WriteLine($"zone: {linkEntry.Key}");
-    Console.WriteLine($"seam candidates: {seams.Count} (largest {seamTop} islands, gap <= {seamMaxGap}m, height difference <= {seamMaxDrop}m)");
+    Console.WriteLine(anchor is { } an
+        ? $"seam candidates: {seams.Count} on the edge of the ground reachable from ({an.X:f1}, {an.Y:f1}, {an.Z:f1}), gap <= {seamMaxGap}m, height difference <= {seamMaxDrop}m, largest far sides first"
+        : $"seam candidates: {seams.Count} (largest {seamTop} islands, gap <= {seamMaxGap}m, height difference <= {seamMaxDrop}m)");
     Console.WriteLine($"off-mesh connections already in that mesh: {refLinks}");
     foreach (var s in seams)
         Console.WriteLine($"  gap {s.Gap:f2}m  drop {s.Drop:f2}m  ({s.From.X:f1},{s.From.Y:f1},{s.From.Z:f1}) -> ({s.To.X:f1},{s.To.Y:f1},{s.To.Z:f1})");
+    if (walls.Count > 0)
+    {
+        Console.WriteLine($"walls, correctly kept apart by the mesh ({walls.Count}):");
+        foreach (var w in walls)
+            Console.WriteLine($"  gap {w.Seam.Gap:f2}m  ({w.Seam.From.X:f1},{w.Seam.From.Y:f1},{w.Seam.From.Z:f1}) -> ({w.Seam.To.X:f1},{w.Seam.To.Y:f1},{w.Seam.To.Z:f1})"
+                + $"  blocked {w.Height:f1}y up by {Path.GetFileNameWithoutExtension(w.Asset)}");
+    }
     if (seams.Count == 0)
     {
         Console.WriteLine("nothing to link: the largest islands are already further apart than that");
@@ -334,7 +429,7 @@ if (args.Length > 0 && args[0] == "linktest")
     int routedBefore = 0;
     foreach (var s in seams)
     {
-        var seamPath = linkPfRef.FindWalkPath(s.From, s.To);
+        var seamPath = linkPfRef.FindWalkPath(anchorStart ?? s.From, s.To);
         var ok = seamPath is { Partial: false, Waypoints.Count: > 1 };
         if (ok)
             ++routedBefore;
@@ -363,7 +458,7 @@ if (args.Length > 0 && args[0] == "linktest")
     for (int i = 0; i < seams.Count; ++i)
     {
         var s = seams[i];
-        var after = linkPfLinked.FindWalkPath(s.From, s.To);
+        var after = linkPfLinked.FindWalkPath(anchorStart ?? s.From, s.To);
         var okAfter = after is { Partial: false, Waypoints.Count: > 1 };
         if (okAfter)
             ++routedAfter;
@@ -374,46 +469,65 @@ if (args.Length > 0 && args[0] == "linktest")
     Console.WriteLine($"off-mesh polys: before {refLinks}, after {linkedLinks} (+{linkedLinks - refLinks} for {seams.Count * 2} directed links)");
     Console.WriteLine($"routable: before {routedBefore}/{seams.Count}, after {routedAfter}/{seams.Count}");
 
-    Directory.CreateDirectory(linkOut);
-    var linkOutPath = Path.Combine(linkOut, linkEntry.Key + ".navmesh");
-    using (var linkStream = File.Create(linkOutPath))
-    using (var linkWriter = new BinaryWriter(linkStream))
-        linked.Serialize(linkWriter);
-    Console.WriteLine($"saved: {linkOutPath} ({new FileInfo(linkOutPath).Length / 1024.0 / 1024.0:f1} MB)");
+    // No linked mesh is saved any more. A mesh changed by LinkPoints does not survive serialization:
+    // the point-polys are written as polys with no off-mesh connection records behind them, and on
+    // Coerthas the reloaded file lost all 40 of them and the ground around Camp Dragonhead besides -
+    // the service answered "no mesh" at the aetheryte (2026-09-29). vnavmesh never hits this because
+    // it writes its cache *before* running a customization and re-runs the customization after every
+    // load. So the table above measures the mechanism in memory, and what goes live is below.
 
-    // --apply puts the linked mesh where the service serves from. With vnavmesh's own building off,
-    // that store is the only source of meshes for a session, so this is the step that makes a link
-    // live — and it keeps a copy of whatever it replaced, named the way the store already names its
-    // before-images, then prints the rollback rather than assuming anyone remembers it.
-    // --apply-to=<dir> aims the write somewhere else, which is how this path gets tested.
+    // --apply writes the seams as override links: the per-zone JSON the service already reads, which
+    // it stitches into routes at query time (chained, both ways) and reloads when the file changes.
+    // That is what the Mistwake slide runs on, and it touches no mesh file. Existing links are kept,
+    // the previous file is backed up, and the rollback is printed. --apply-to=<dir> writes
+    // <dir>\overrides\ instead of the live store.
     if (args.Contains("--apply"))
     {
         var applyRoot = LinkFlag("--apply-to")
             ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Mnemosyne");
-        var storeDir = Path.Combine(applyRoot, "built");
-        var storePath = Path.Combine(storeDir, linkEntry.Key + ".navmesh");
-        Directory.CreateDirectory(storeDir);
+        var overridesDir = Path.Combine(applyRoot, "overrides");
+        var overridesPath = Path.Combine(overridesDir, OverrideStore.BgKey(linkEntry.Key) + ".json");
+        Directory.CreateDirectory(overridesDir);
+        var jsonOptions = new System.Text.Json.JsonSerializerOptions { WriteIndented = true };
+        var zoneOverrides = File.Exists(overridesPath)
+            ? System.Text.Json.JsonSerializer.Deserialize<ZoneOverrides>(File.ReadAllText(overridesPath)) ?? new ZoneOverrides()
+            : new ZoneOverrides();
+
         string rollback;
-        if (File.Exists(storePath))
+        if (File.Exists(overridesPath))
         {
             var backupDir = Path.Combine(applyRoot, "backup");
             Directory.CreateDirectory(backupDir);
-            var backupPath = Path.Combine(backupDir, linkEntry.Key + ".navmesh.before-seam-links");
-            File.Copy(storePath, backupPath, overwrite: true);
-            Console.WriteLine($"replaced mesh backed up to: {backupPath}");
-            rollback = $"copy that backup back over {storePath}";
+            var backupPath = Path.Combine(backupDir, Path.GetFileName(overridesPath) + ".before-seam-links");
+            File.Copy(overridesPath, backupPath, overwrite: true);
+            Console.WriteLine($"previous overrides backed up to: {backupPath}");
+            rollback = $"copy that backup back over {overridesPath}";
         }
         else
         {
-            Console.WriteLine("the store holds no mesh for this key yet, so this adds one");
-            rollback = $"delete {storePath}";
+            rollback = $"delete {overridesPath}";
         }
-        using (var storeStream = File.Create(storePath))
-        using (var storeWriter = new BinaryWriter(storeStream))
-            linked.Serialize(storeWriter);
-        Console.WriteLine($"applied: {storePath} ({new FileInfo(storePath).Length / 1024.0 / 1024.0:f1} MB)");
+
+        static bool Same(float[] a, System.Numerics.Vector3 b) =>
+            a.Length == 3 && MathF.Abs(a[0] - b.X) < 0.05f && MathF.Abs(a[1] - b.Y) < 0.05f && MathF.Abs(a[2] - b.Z) < 0.05f;
+        int added = 0;
+        foreach (var seam in seams)
+        {
+            if (zoneOverrides.Links.Any(l => (Same(l.From, seam.From) && Same(l.To, seam.To)) || (Same(l.From, seam.To) && Same(l.To, seam.From))))
+                continue;
+            zoneOverrides.Links.Add(new OverrideLink
+            {
+                From = [seam.From.X, seam.From.Y, seam.From.Z],
+                To = [seam.To.X, seam.To.Y, seam.To.Z],
+                Bidirectional = true,
+                Note = $"seam link (linktest {DateTime.Now:yyyy-MM-dd}): gap {seam.Gap:f2} m, drop {seam.Drop:f2} m",
+            });
+            ++added;
+        }
+        File.WriteAllText(overridesPath, System.Text.Json.JsonSerializer.Serialize(zoneOverrides, jsonOptions));
+        Console.WriteLine($"applied: {added} link(s) added to {overridesPath} ({zoneOverrides.Links.Count} in total)");
         Console.WriteLine($"rollback: {rollback}");
-        Console.WriteLine("the service serves this on the next load of that zone; vnavmesh's cache is untouched — Ariadne seeds it");
+        Console.WriteLine("the service reloads a zone's overrides when the file changes; no mesh file was touched");
     }
 
     Console.WriteLine(routedAfter > routedBefore

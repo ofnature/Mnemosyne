@@ -65,7 +65,7 @@ Mnemosyne.Cli <command>
 ```
 
 - **Build**: `build` (a zone's mesh), `buildzone-test`
-- **Inspect**: `components`, `reachmap`, `reachcells`, `probe`, `flyprobe`, `layout`, `territories`,
+- **Inspect**: `trace` (route files, leg by leg), `transitions`, `components`, `reachmap`, `reachcells`, `probe`, `flyprobe`, `layout`, `territories`,
   `customizations`, `doors`, `solids`
 - **Verify**: `conformance` (against the reference build), `ipc-test` (a round trip through the real
   pipe), `bench`, `fly-bench`, `plan-test`, `override-test`, `padcheck`, `snags`, `capture-test`
@@ -107,13 +107,36 @@ places a 0.5 m agent genuinely cannot pass, so the remaining lever is connectivi
 the narrowest useful form of it:
 
 ```
-Mnemosyne.Cli linktest <zone-substring> [--max-gap=2] [--max-drop=0.5] [--top=12] [--out=<dir>]
+Mnemosyne.Cli linktest <zone-substring> [--anchor=x,y,z] [--limit=10] [--mesh=<file>]
+                        [--max-gap=2] [--max-drop=0.5] [--top=12] [--no-collision] [--apply [--apply-to=<dir>]]
 ```
 
-It loads an existing mesh, finds pairs of large islands separated by a small gap at nearly the same
+It loads an existing mesh, finds pairs of islands separated by a small gap at nearly the same
 height — a seam the rasterizer split, not a place the agent has to climb — links them both ways at mesh
-level with `LinkPoints`, saves the result into `scratch/`, and reports whether a path between the two
-points goes from unroutable to routable. On `ffxiv_roc_r1_fld_r1f1_level_r1f1`:
+level with `LinkPoints` in memory, and reports whether a route goes from unroutable to routable.
+
+**Use `--anchor`.** Without it the search takes the largest islands, and largest is not playable: all six
+Coerthas seams in the first table below turned out to be on a flat sheet at Y 19.8 and a ledge at Y 191,
+160–300 y under the ground Camp Dragonhead stands on and unreachable from it. `--anchor` (an aetheryte,
+a zone entrance) keeps only seams on the edge of the ground reachable from that point, largest far side
+first, and measures the route *from the anchor*. From Camp Dragonhead's aetheryte it finds ten, from
+40 y to 800 y away, and all ten go from a partial route that stops one step short to a complete one.
+
+**Every candidate is checked against collision.** The mesh cannot tell a crack from a wall between two
+floors, and the first link tried in game was masonry. `linktest` casts rays across each gap at 0.6, 1.2
+and 1.8 y against the zone's collision and lists what blocks as walls instead of linking them. From
+Camp Dragonhead that rejected 64 of 66, mostly rocks, terrain and gates.
+
+**`--apply` writes override links, not a mesh.** A mesh changed by `LinkPoints` does not survive
+serialization — the reloaded Coerthas file lost every link and the ground around the aetheryte
+(2026-09-29). vnavmesh avoids this by writing its cache *before* a customization runs and re-running it
+after every load. So `--apply` appends the seams as bidirectional `Links` to the zone's override JSON,
+which the service stitches into routes at query time and reloads on change; it keeps existing links,
+backs up the previous file and prints the rollback. `--mesh=<file>` links an exact file, such as a live
+capture in `captured\`, which the cache lookup does not search.
+
+Earlier measurements, on `ffxiv_roc_r1_fld_r1f1_level_r1f1` without an anchor (so they prove the
+mechanism, not a gameplay benefit):
 
 | candidates | before | after | off-mesh polys added |
 | --- | --- | --- | --- |
@@ -133,6 +156,38 @@ the wide run adds 164 for 82 links.
 Conservative by construction — same height (≤ 0.5 m) and short gaps (≤ 3 m) — because a link between
 distant points would reroute everything, and a bad auto-applied link is worse than no link. Widening
 those thresholds is a decision to take with numbers in hand, and the numbers are one `linktest` away.
+
+### Tracing a route (trace)
+
+```
+Mnemosyne.Cli trace [route-file-or-directory] [--all]
+```
+
+This replays a dungeon route file leg by leg against the mesh the service would serve, choosing it
+the way the service does: a live capture first, then vnavmesh's cache, then the offline build. It
+reads Theseus route files, and by default all of `%APPDATA%\XIVLauncher\pluginConfigs\Theseus\paths`.
+It also reads AutoDuty's files. For each leg that does not simply walk, it tries each layer of data
+in turn and names the first one that completes it:
+
+| verdict | meaning |
+| --- | --- |
+| `walk` / `DETOUR` | the mesh alone; a detour is over 3× the straight line + 10 y |
+| `fixed by override link` | the zone's override links, which the service already serves |
+| `covered by transition` | a listed ride, slide or lift, boarded at its trigger. The `transitions` spec's later findPath opt-in would route this |
+| `covered by field evidence` | a crossing characters were seen to make (evidence `LinkCandidates`) |
+| `by hand` | the route file crosses it itself: the leg starts at an `AutoMoveFor` or `Jump` step |
+| `after an interaction` | the route uses an `Interactable` on the way: a lever lift, or a door it opens |
+| `UNEXPLAINED` | none of the above: a mesh gap, or a crossing we have no data for |
+| `OFF MESH` | a step's position is over 5 y from walkable mesh |
+
+For an unexplained leg, the trace also says how far the best transition gets, and names a door or
+arena barrier within 8 y of where it stops. A ride lands at its spawn marker (`PopRange`) when it has
+one, because that is where the game hands the character over. Snapping the path's last point instead
+put Xelphatol's second shuttle on a sealed 15 m² pad. Legs that walk over collision
+from a `*navimesh*` layer are flagged. That collision is designer scaffolding for the game's own
+navigation, and the mesh treats it as floor; The Ghimlyt Dark's last drop has a 50 × 30 y board of it.
+With a directory, a table at the end has one row per route. A dungeon never entered on this machine
+has no mesh and is listed as such.
 
 ## Requirements
 

@@ -357,6 +357,88 @@ public static class Components
         return [.. found.OrderBy(f => f.Gap)];
     }
 
+    /// <summary>Seams on the edge of the ground a player can actually stand on: pairs between the
+    /// island holding <paramref name="anchor"/> (an aetheryte, a zone entrance) and any other island
+    /// of at least <paramref name="minArea"/> within a small gap at the same height.
+    ///
+    /// The largest-islands search above is blind to playability. On Coerthas Central Highlands its
+    /// six "fixed" seams were all on a flat sheet at Y 19.8 and a ledge at Y 191 — 160-300 y under the
+    /// terrain the aetheryte stands on, unreachable from it: the links worked and helped nobody.
+    /// Anchoring the search is what makes a candidate worth linking.
+    ///
+    /// Nearest vertices are found through a 2 m spatial hash of the anchor island, so a zone-sized
+    /// island costs one pass over the vertices instead of a vertex-by-vertex pair loop.</summary>
+    public static List<(Vector3 From, Vector3 To, float Gap, float Drop, float FarArea)> SeamCandidatesFrom(
+        DtNavMesh mesh, Vector3 anchor, out Vector3 start, float maxGap = 2f, float maxDrop = 0.5f, float minArea = 200f)
+    {
+        start = anchor;
+        var islands = FindIslands(mesh, out var islandOf);
+        // Not the nearest poly: the largest island within reach. An aetheryte stands on a plinth
+        // the mesh keeps as its own few-poly island (Namai, Yanxia: the route from the crystal went
+        // 2 m and stopped), and anchoring there finds nothing. The ground people walk on is the big
+        // piece next to it.
+        var query = new DtNavMeshQuery(mesh);
+        var around = new PolyCollector();
+        query.QueryPolygons(anchor.SystemToRecast(), new(8, 10, 8), new DtQueryDefaultFilter(), around);
+        var home = around.Refs.Where(islandOf.ContainsKey).Select(r => islandOf[r]).OrderByDescending(i => i.Area).FirstOrDefault();
+        if (home == null)
+            return [];
+        // a point on that island, so routes measured "from the anchor" start where a player stands
+        start = home.Verts.MinBy(v => Vector3.DistanceSquared(v, anchor));
+
+        const float bucket = 2f;
+        (int, int) Key(Vector3 v) => ((int)MathF.Floor(v.X / bucket), (int)MathF.Floor(v.Z / bucket));
+        var hash = new Dictionary<(int, int), List<Vector3>>();
+        foreach (var v in home.Verts)
+        {
+            var k = Key(v);
+            if (!hash.TryGetValue(k, out var list))
+                hash[k] = list = [];
+            list.Add(v);
+        }
+
+        var found = new List<(Vector3 From, Vector3 To, float Gap, float Drop, float FarArea)>();
+        var reach = (int)MathF.Ceiling(maxGap / bucket);
+        foreach (var other in islands)
+        {
+            if (other == home || other.Area < minArea)
+                continue;
+            float best = float.MaxValue;
+            Vector3 near = default, far = default;
+            foreach (var v in other.Verts)
+            {
+                var (kx, kz) = Key(v);
+                for (int dx = -reach; dx <= reach; ++dx)
+                    for (int dz = -reach; dz <= reach; ++dz)
+                    {
+                        if (!hash.TryGetValue((kx + dx, kz + dz), out var cell))
+                            continue;
+                        foreach (var h in cell)
+                        {
+                            if (MathF.Abs(h.Y - v.Y) > maxDrop)
+                                continue;
+                            var g = MathF.Sqrt((h.X - v.X) * (h.X - v.X) + (h.Z - v.Z) * (h.Z - v.Z));
+                            if (g < best)
+                            {
+                                best = g;
+                                near = h;
+                                far = v;
+                            }
+                        }
+                    }
+            }
+            if (best <= maxGap)
+                found.Add((near, far, best, MathF.Abs(near.Y - far.Y), other.Area));
+        }
+        return [.. found.OrderByDescending(f => f.FarArea)];
+    }
+
+    private sealed class PolyCollector : IDtPolyQuery
+    {
+        public readonly List<long> Refs = [];
+        public void Process(DtMeshTile tile, DtPoly poly, long refs) => Refs.Add(refs);
+    }
+
     private static List<Island> FindIslands(DtNavMesh mesh, out Dictionary<long, Island> islandOf)
     {
         islandOf = [];

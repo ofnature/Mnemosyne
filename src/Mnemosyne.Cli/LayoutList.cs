@@ -167,18 +167,21 @@ public static class LayoutList
     private static void Detail(LayerCommon.InstanceObject obj)
     {
         var tr = obj.Transform;
-        var world = Matrix4x4.CreateScale(tr.Scale.X, tr.Scale.Y, tr.Scale.Z)
-            * Matrix4x4.CreateFromYawPitchRoll(tr.Rotation.Y, tr.Rotation.X, tr.Rotation.Z)
-            * Matrix4x4.CreateTranslation(tr.Translation.X, tr.Translation.Y, tr.Translation.Z);
+        var world = Transitions.World(tr);
         switch (obj.Object)
         {
             case LayerCommon.EventRangeInstanceObject er:
                 Console.WriteLine($"               trigger {er.ParentData.TriggerBoxShape}, scale ({tr.Scale.X:f1}, {tr.Scale.Y:f1}, {tr.Scale.Z:f1}), "
                     + $"rotation y {tr.Rotation.Y * 180 / MathF.PI:f0} deg");
                 break;
+            case LayerCommon.CollisionBoxInstanceObject cb:
+                Console.WriteLine($"               collision {cb.ParentData.TriggerBoxShape}, scale ({tr.Scale.X:f1}, {tr.Scale.Y:f1}, {tr.Scale.Z:f1}), "
+                    + $"rotation ({tr.Rotation.X * 180 / MathF.PI:f0}, {tr.Rotation.Y * 180 / MathF.PI:f0}, {tr.Rotation.Z * 180 / MathF.PI:f0}) deg, "
+                    + $"attributes {cb.AttributeMask:X}/{cb.Attribute:X}");
+                break;
             case LayerCommon.ClientPathInstanceObject cp:
                 var points = cp.ParentData.ControlPointsArray ?? [];
-                Console.WriteLine($"               {points.Length} control points (ring={cp.Ring}), rotation y {tr.Rotation.Y * 180 / MathF.PI:f0} deg, scale {tr.Scale.X:f1}:");
+                Console.WriteLine($"               {points.Length} control points (ring={cp.Ring}), rotation ({tr.Rotation.X * 180 / MathF.PI:f0}, {tr.Rotation.Y * 180 / MathF.PI:f0}, {tr.Rotation.Z * 180 / MathF.PI:f0}) deg, scale {tr.Scale.X:f1}:");
                 var prev = (Vector3?)null;
                 float length = 0;
                 foreach (var c in points)

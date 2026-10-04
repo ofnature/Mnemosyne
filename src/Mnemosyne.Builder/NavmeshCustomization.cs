@@ -36,6 +36,17 @@ public class NavmeshCustomization
 
 	public virtual void CustomizeMesh(Navmesh mesh, List<uint> festivalLayers) { }
 
+	// patched for Mnemosyne (2026-10-02): collision boxes in these layers are left out of the
+	// build, matched the same way as navimesh scaffold (NavimeshScaffold). For quest barriers a
+	// character past the quest walks through - Eulmore's Skyfront passage to the aetheryte.
+	public virtual string[] DropColliderLayers => [];
+
+	// patched for Mnemosyne (2026-10-02): where a raised Settings.AgentMaxClimb applies, as boxes
+	// (centre, half-extent). Empty = everywhere, as vnavmesh does. With boxes, the builder also builds
+	// the zone at the default step height and blocks every riser the raise added outside them - so a
+	// raise for one staircase stays on that staircase (ClimbRisers; Eulmore's 1.0 y joined ~500 spots).
+	public virtual (Vector3 Center, Vector3 HalfExtent)[] ClimbRegions => [];
+
 	// Mesh-level off-mesh link: a point-poly at each end plus an explicit tile link. Unlike
 	// CreateParamsExtensions.AddOffMeshConnection this has no single-tile constraint (the link may
 	// reference a poly in any tile) and it needs no rebuild, so it works on a mesh that is already

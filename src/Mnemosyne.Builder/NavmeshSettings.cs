@@ -20,6 +20,9 @@ public class NavmeshSettings
     public float CellHeight = 0.25f;
     public float AgentHeight = 2.0f;
     public float AgentRadius = 0.5f;
+    // Raising this for a zone joins far more than the stairs it is raised for: run
+    // `Mnemosyne.Cli climbcomb <zone>` before shipping, and prune or keep what it lists
+    // (Eulmore at 1.0, 2026-10-02: 313 ledge shortcuts, 190 new connections).
     public float AgentMaxClimb = 0.5f;
     public float AgentMaxSlopeDeg = 55f;
     public Filter Filtering = Filter.LowHangingObstacles | Filter.LedgeSpans | Filter.WalkableLowHeightSpans;

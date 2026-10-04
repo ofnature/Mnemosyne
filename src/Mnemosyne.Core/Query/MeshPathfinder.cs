@@ -351,18 +351,25 @@ public sealed class MeshPathfinder(DtNavMesh mesh)
                 var data = tile.data;
                 if (data == null)
                     continue;
-                float cx = 0, cz = 0;
+                // 3D, not XZ: in a layered city the polys horizontally nearest are often a floor
+                // far below. Eulmore's aetheryte (2026-10-02): its plinth is an island of its own,
+                // and an XZ shortlist held only the Mainstay floor 34 y under it - the plaza ringing
+                // the crystal at its own height never made the eight, and moves "arrived" below.
+                float cx = 0, cy = 0, cz = 0;
                 for (var v = 0; v < poly.vertCount; ++v)
                 {
                     var at = poly.verts[v] * 3;
                     cx += data.verts[at];
+                    cy += data.verts[at + 1];
                     cz += data.verts[at + 2];
                 }
                 cx /= poly.vertCount;
+                cy /= poly.vertCount;
                 cz /= poly.vertCount;
                 var dx = cx - to.X;
+                var dy = cy - to.Y;
                 var dz = cz - to.Z;
-                cheap.Add((dx * dx + dz * dz, polyRef, data, poly));
+                cheap.Add((dx * dx + dy * dy + dz * dz, polyRef, data, poly));
             }
         }
 

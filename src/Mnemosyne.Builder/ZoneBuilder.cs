@@ -1,4 +1,4 @@
-using Lumina;
+﻿using Lumina;
 using Lumina.Data;
 using Navmesh;
 
@@ -7,6 +7,13 @@ namespace Mnemosyne.Builder;
 // Builds a zone's navmesh from game files, entirely outside the game process.
 public static class ZoneBuilder
 {
+    /// <summary>What this builder produces, as a number a stored mesh can be compared against.
+    /// Raise it when a change alters the mesh of zones already built, so the service can tell
+    /// which stored meshes a new capture would change.
+    ///   1  everything before 2026-09-30
+    ///   2  collision boxes in *navimesh* layers left out (<see cref="NavimeshScaffold"/>)</summary>
+    public const int Revision = 2;
+
     // convenience overload so hosts don't need Lumina types
     public static global::Navmesh.Navmesh Build(string sqpackDir, string bgPath, bool flyable, Action<int, int>? progress = null,
         Action<NavmeshSettings>? tweakSettings = null) =>
@@ -46,6 +53,8 @@ public static class ZoneBuilder
         var scene = CapturedScene.ToSceneDefinition(dto);
         if (scene.TerritoryID == 0 && bgPath is { Length: > 0 })
             scene.TerritoryID = TerritoryIdFor(game, bgPath);
+        if ((bgPath is { Length: > 0 } ? bgPath : BgFor(game, scene.TerritoryID)) is { Length: > 0 } bg)
+            DropScaffold(game, scene, bg);
         return BuildScene(game, scene, flyable, progress);
     }
 
@@ -54,8 +63,8 @@ public static class ZoneBuilder
     public static List<string> CaptureRoundTripDiff(GameData game, string bgPath, string cacheKey)
         => CapturedScene.RoundTripDiff(LgbSceneReader.Read(game, bgPath, 0), cacheKey);
 
-    /// <summary>Build the same freshly-read scene twice — once as-is, once after a capture
-    /// round-trip — inside one process. Isolates "the conversion changed the scene" from
+    /// <summary>Build the same freshly-read scene twice â€” once as-is, once after a capture
+    /// round-trip â€” inside one process. Isolates "the conversion changed the scene" from
     /// "something else about the two call paths differs".</summary>
     public static (int Direct, int Captured) CaptureBuildAB(GameData game, string bgPath, string cacheKey)
     {
@@ -119,7 +128,63 @@ public static class ZoneBuilder
     {
         if (territoryId == 0)
             territoryId = TerritoryIdFor(game, bgPath);
-        return BuildScene(game, LgbSceneReader.Read(game, bgPath, territoryId), flyable, progress, tweakSettings);
+        var scene = LgbSceneReader.Read(game, bgPath, territoryId);
+        DropScaffold(game, scene, bgPath);
+        return BuildScene(game, scene, flyable, progress, tweakSettings);
+    }
+
+    /// <summary>A customization that raises the step height inside ClimbRegions only: build again at
+    /// the default step height and block the risers the raise added outside the regions.</summary>
+    private static void KeepClimbInRegions(SceneDefinition scene, NavmeshCustomization customization,
+        NavmeshBuilder raised, Action<NavmeshSettings>? tweakSettings)
+    {
+        var regions = customization.ClimbRegions;
+        var defaultClimb = new NavmeshSettings().AgentMaxClimb;
+        if (regions.Length == 0 || raised.Settings.AgentMaxClimb <= defaultClimb)
+            return;
+        var baseline = new NavmeshBuilder(scene, customization, s =>
+        {
+            tweakSettings?.Invoke(s);
+            s.AgentMaxClimb = defaultClimb;
+        });
+        baseline.BuildTiles(() => { });
+
+        int kept = 0, blocked = 0;
+        foreach (var riser in ClimbRisers.Added(baseline.Navmesh.Mesh, raised.Navmesh.Mesh))
+        {
+            var inside = regions.Any(r => MathF.Abs(riser.Center.X - r.Center.X) <= r.HalfExtent.X
+                && MathF.Abs(riser.Center.Y - r.Center.Y) <= r.HalfExtent.Y
+                && MathF.Abs(riser.Center.Z - r.Center.Z) <= r.HalfExtent.Z);
+            if (inside)
+            {
+                ++kept;
+                continue;
+            }
+            raised.Navmesh.Mesh.SetPolyFlags(riser.Ref, 0);
+            ++blocked;
+        }
+        Console.WriteLine($"step height {raised.Settings.AgentMaxClimb} kept to {regions.Length} region(s): {kept} riser(s) inside kept, {blocked} outside blocked");
+    }
+
+    private static void DropScaffold(GameData game, SceneDefinition scene, string bgPath)
+    {
+        // plus any layers the zone's customization names (quest barriers past their quest)
+        var also = NavmeshCustomizationRegistry.ForTerritory(scene.TerritoryID).DropColliderLayers;
+        var removed = NavimeshScaffold.Remove(game, scene, bgPath, also);
+        if (removed > 0)
+            Console.WriteLine($"left out {removed} collider(s) from *navimesh* layers{(also.Length > 0 ? " and " + string.Join(", ", also) : "")}");
+    }
+
+    private static string? BgFor(GameData game, uint territoryId)
+    {
+        try
+        {
+            return territoryId == 0 ? null : game.GetExcelSheet<Lumina.Excel.Sheets.TerritoryType>()?.GetRowOrDefault(territoryId)?.Bg.ToString();
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     // Shared by both entry points. The offline path reconstructs the scene from LGB files;
@@ -160,6 +225,7 @@ public static class ZoneBuilder
         var builder = new NavmeshBuilder(scene, customization, tweakSettings);
         int done = 0, total = builder.NumTilesX * builder.NumTilesZ;
         builder.BuildTiles(() => progress?.Invoke(Interlocked.Increment(ref done), total));
+        KeepClimbInRegions(scene, customization, builder, tweakSettings);
 
         // The mesh pass is the manager's job in vnavmesh, not the builder's - it is where the
         // hand-authored links get stitched in, so skipping it silently drops them.

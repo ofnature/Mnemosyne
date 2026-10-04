@@ -128,6 +128,9 @@ public static class Probe
 
     internal static (string Path, string Key)? ResolveZone(string hint)
     {
+        // a mesh file given directly (a test build under scratch\, a live capture): the key is its name
+        if (hint.EndsWith(".navmesh", StringComparison.OrdinalIgnoreCase) && File.Exists(hint))
+            return (hint, Path.GetFileNameWithoutExtension(hint));
         var cached = MeshCache.Enumerate()
             .Where(e => e.IsSupported && e.Key.Contains(hint, StringComparison.OrdinalIgnoreCase))
             .OrderByDescending(e => new FileInfo(e.Path).Length)
