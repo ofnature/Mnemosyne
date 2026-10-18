@@ -133,6 +133,15 @@ public static class ZoneBuilder
         return BuildScene(game, scene, flyable, progress, tweakSettings);
     }
 
+    /// <summary>What a complete capture of this zone holds, read from its layout files:
+    /// placed collision (bg parts and colliders) and distinct collision meshes. The
+    /// yardstick CaptureCheck holds a live capture against.</summary>
+    public static (int Instances, int Meshes) LayoutCounts(GameData game, string bgPath)
+    {
+        var scene = LgbSceneReader.Read(game, bgPath, 0);
+        return (scene.BgParts.Count + scene.Colliders.Count, scene.MeshPaths.Count);
+    }
+
     private static void DropScaffold(GameData game, SceneDefinition scene, string bgPath)
     {
         // plus any layers the zone's customization names (quest barriers past their quest)

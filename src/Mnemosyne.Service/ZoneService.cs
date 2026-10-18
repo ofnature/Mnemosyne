@@ -315,6 +315,18 @@ public sealed partial class ZoneService
         var bgPath = ZoneNames.Lookup(cacheKey)?.Bg;
         if (scene == null && bgPath is not { Length: > 0 })
             return null;
+        if (scene != null && bgPath is { Length: > 0 } && CaptureShortfall(scene, bgPath) is { } shortfall)
+        {
+            // A capture taken while the zone was still loading builds a mesh missing whole floors,
+            // and as a capture it outranks the complete offline build (Mount Rokkon, 2026-10-18).
+            // Keep a stored capture if there is one, else build from game files.
+            var stored = CapturedPathFor(cacheKey)!;
+            Console.WriteLine($"'{cacheKey}': capture refused - {shortfall}; "
+                + (File.Exists(stored) ? "keeping the stored capture" : "building from game files instead"));
+            if (File.Exists(stored))
+                return stored;
+            scene = null;
+        }
         var builtPath = (scene != null ? CapturedPathFor(cacheKey) : BuiltPathFor(cacheKey))!;
         Directory.CreateDirectory(Path.GetDirectoryName(builtPath)!);
         {
@@ -349,6 +361,31 @@ public sealed partial class ZoneService
                 Console.WriteLine($"build failed for '{cacheKey}': {ex.Message}");
                 return null;
             }
+        }
+    }
+
+    /// <summary>A live capture holding under this share of the collision meshes the zone's layout
+    /// files place is one taken before the zone finished loading. Measured over 44 logged captures
+    /// (2026-10-18): the known-bad ones held 0-53%, every good one 94% or more.</summary>
+    private const float MinCaptureMeshShare = 0.75f;
+
+    /// <summary>Why a capture is too incomplete to build, or null when it is fine (or the layout
+    /// cannot be read to judge it).</summary>
+    private string? CaptureShortfall(SceneCaptureDto scene, string bgPath)
+    {
+        try
+        {
+            // its own GameData: this runs on the build thread, the shared one serves requests
+            var (_, layoutMeshes) = Mnemosyne.Builder.ZoneBuilder.LayoutCounts(new Lumina.GameData(_sqpackDir!), bgPath);
+            var captured = scene.MeshPaths.Length;
+            if (layoutMeshes == 0 || captured >= layoutMeshes * MinCaptureMeshShare)
+                return null;
+            return $"it holds {captured} of the {layoutMeshes} collision meshes the zone's layout places "
+                + $"({100f * captured / layoutMeshes:f0}%), so it was taken before the zone finished loading";
+        }
+        catch (Exception e) when (e is IOException or InvalidDataException or ArgumentException)
+        {
+            return null; // unreadable layout: build the capture as before
         }
     }
 
